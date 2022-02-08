@@ -1,9 +1,7 @@
-#include "services/transaction/transaction.hpp"
+#include "services/board/board.hpp"
 
 int main(int argc, char **argv)
 {
-  pr::test();
-
-  return 0;
+  return rrr::run();
 }
 

@@ -14,10 +14,16 @@ add_project_arguments (
   language: 'cpp'
 )
 
-#############################################################
+deps = [ 
+  dependency('threads'), 
+  dependency('ncurses'), 
+  dependency('menu'), 
+]
 
-deps = [ dependency('threads') ]
-args = []
+args = [
+  '-lncurses',
+  '-lmenu'
+]
 
 tools = subproject('tools')
 logger_dep = tools.get_variable('logger_dep')
@@ -25,8 +31,6 @@ exception_dep = tools.get_variable('exception_dep')
 
 deps += logger_dep
 deps += exception_dep
-
-#############################################################
 
 inc = []
 inc += include_directories('subprojects')

@@ -1,4 +1,4 @@
-deps += transaction_dep
+deps += board_dep
 
 executable(
   'rrr', 'main.cpp', 

@@ -1,4 +1,4 @@
 inc += include_directories('.')
 
-subdir('transaction')
+subdir('board')
 

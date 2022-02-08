@@ -1,10 +1,10 @@
 headers = [
-  'transaction.hpp'
+  'board.hpp'
 ]
 sources = []
 
 lib = library(
-  'transaction',
+  'board',
   include_directories : inc,
   install : true,
   sources: [headers, sources],
@@ -12,7 +12,7 @@ lib = library(
   cpp_args: args
 )
 
-transaction_dep = declare_dependency(
+board_dep = declare_dependency(
   include_directories: inc, 
   link_with: lib, 
 )
