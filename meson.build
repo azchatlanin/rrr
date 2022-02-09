@@ -28,9 +28,11 @@ args = [
 tools = subproject('tools')
 logger_dep = tools.get_variable('logger_dep')
 exception_dep = tools.get_variable('exception_dep')
+container_dep = tools.get_variable('container_dep')
 
 deps += logger_dep
 deps += exception_dep
+deps += container_dep
 
 inc = []
 inc += include_directories('subprojects')

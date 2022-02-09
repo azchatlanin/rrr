@@ -3,12 +3,6 @@ headers = [
 ]
 sources = []
 
-uuid_dep = dependency('uuid')
-if uuid_dep.found()
-  deps += uuid_dep
-  args += '-luuid'
-endif
-
 lib = library(
   'system',
   include_directories : inc,

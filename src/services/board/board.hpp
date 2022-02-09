@@ -1,9 +1,7 @@
 #pragma once
 
+#include <map>
 #include <curses.h>
-
-#include <memory>
-#include <json/json.h>
 
 namespace rrr
 {
