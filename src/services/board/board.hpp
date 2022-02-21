@@ -2,34 +2,41 @@
 
 #include <map>
 #include <curses.h>
+#include <menu.h>
+
+#include <panel.h>
+#include <string.h>
+#include "tools/src/logger/logger.hpp"
+
+#ifndef CTRL
+#define	CTRL(c)	(c & 037)
+#endif
 
 namespace rrr
 {
+  inline int start_x, start_y, width, height;
+
+  class board
+  {
+    public:
+      board() = default;
+      ~board() = default;
+
+    public:
+      void init();
+
+    private:
+      WINDOW* win;
+  };
+  
+
+
+
+
+  //----------------
   enum WIN_TYPE { LEFT, CENTER, RIGHT };
   inline std::map<WIN_TYPE, WINDOW*> w;
-  inline int start_x = 0, start_y = 0, width, height;
-
-  void init();
-  void win_draw();
-
-  inline int run()
-  {
-    init();
-    win_draw();
-
-    getch();
-    endwin(); 
-    return 0;
-  }
-  
-  inline void init()
-  {
-    initscr();			
-    cbreak();			
-    keypad(stdscr, TRUE);		
-    getmaxyx(stdscr, height, width);
-  }
-
+ 
   inline void win_draw()
   {
     refresh();

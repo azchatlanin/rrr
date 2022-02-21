@@ -21,6 +21,7 @@ deps = [
 ]
 
 args = [
+  '-lpanel',
   '-lncurses',
   '-lmenu'
 ]

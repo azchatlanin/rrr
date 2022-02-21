@@ -1,14 +1,12 @@
 headers = [
-  'board.hpp'
+  'menu_bar.hpp'
 ]
 sources = [
-  'board.cpp'
+  'menu_bar.cpp'
 ]
 
-deps += menu_bar_dep
-
 lib = library(
-  'board',
+  'menu_bar',
   include_directories : inc,
   install : true,
   sources: [headers, sources],
@@ -16,7 +14,7 @@ lib = library(
   cpp_args: args
 )
 
-board_dep = declare_dependency(
+menu_bar_dep = declare_dependency(
   include_directories: inc, 
   link_with: lib, 
 )
