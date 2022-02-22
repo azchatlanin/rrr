@@ -14,37 +14,35 @@
 
 namespace rrr
 {
+  using m_menu = std::map<std::string, std::string>;
+
   class menu 
   {
     public:
-      menu(std::string text, char trigger, std::string *items, int num_items) : text { text } , trigger { trigger }, items { items }, num_items { num_items }  {}
+      menu(std::string text, char trigger, m_menu&& items);
+      ~menu() = default;
+
       int start_x;
       std::string text;
       char trigger;
 
-      std::string* items;
+      m_menu items;
       int num_items;
       int selected_item;
 
-      void selected_next()
-      {
-        selected_item++;
-        if (selected_item >= num_items) selected_item = 0;
-      }
-
-      void selected_prew()
-      {
-        selected_item--;
-        if (selected_item < 0) selected_item = num_items - 1;
-      }
+      void selected_next();
+      void selected_prew();
   };
 
   class menu_bar
   {
     public:
-      menu_bar(WINDOW* win, std::vector<menu>&& menus) : win { win }, menus { menus } {}
+      menu_bar(WINDOW* win, std::vector<menu>&& menus);
+      ~menu_bar() = default;
+      
       WINDOW* win;
       WINDOW* menu_win;
+
       std::vector<menu> menus;
       int current_pos = 2;
       char selected;

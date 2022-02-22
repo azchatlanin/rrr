@@ -2,13 +2,31 @@
 
 namespace rrr
 {
+  menu::menu(std::string text, char trigger, m_menu&& items) : text { text }, trigger { trigger }, items { items } 
+  {}
+
+  void menu::selected_next()
+  {
+    selected_item++;
+    if (selected_item >= num_items) selected_item = 0;
+  }
+
+  void menu::selected_prew()
+  {
+    selected_item--;
+    if (selected_item < 0) selected_item = num_items - 1;
+  }
+
+  menu_bar::menu_bar(WINDOW* win, std::vector<menu>&& menus) : win { win }, menus { menus } 
+  {}
+
   void menu_bar::draw_menu_item(menu m)
   {
     int y_max, x_max;
     getmaxyx(menu_win, y_max, x_max);
     for (int i = 0; i < m.num_items; i++)
     {
-      mvwprintw(menu_win, i, 0, m.items[i].c_str());
+      mvwprintw(menu_win, i, 0, m.items[i]..c_str());
       if (m.selected_item == i)
       {
         mvwchgat(menu_win, i, 0, x_max, A_NORMAL, 1, NULL);

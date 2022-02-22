@@ -2,7 +2,7 @@
 
 namespace rrr
 {
-  inline int run()
+  int run()
   {
     board b;
     b.init();
