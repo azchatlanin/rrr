@@ -1,12 +1,10 @@
 #pragma once
 
-#include <map>
-#include <curses.h>
-#include <menu.h>
+#include <ncurses.h>
 
-#include <panel.h>
-#include <string.h>
 #include "tools/src/logger/logger.hpp"
+
+#include "system/config.hpp"
 
 #ifndef CTRL
 #define	CTRL(c)	(c & 037)
@@ -14,21 +12,18 @@
 
 namespace rrr
 {
-  using m_menu = std::map<std::string, std::string>;
-
   class menu 
   {
     public:
-      menu(std::string text, char trigger, m_menu&& items);
+      menu(std::string text, char trigger, m_menu items);
       ~menu() = default;
 
-      int start_x;
       std::string text;
+      int start_x;
       char trigger;
 
       m_menu items;
-      int num_items;
-      int selected_item;
+      m_menu::iterator selected_item;
 
       void selected_next();
       void selected_prew();
@@ -37,7 +32,7 @@ namespace rrr
   class menu_bar
   {
     public:
-      menu_bar(WINDOW* win, std::vector<menu>&& menus);
+      menu_bar(WINDOW* win);
       ~menu_bar() = default;
       
       WINDOW* win;
@@ -50,8 +45,8 @@ namespace rrr
       void init();
       void reset();
       void draw();
-      void draw_menu(menu m, bool is_selected);
-      void draw_menu_item(menu m);
+      void draw_menu(menu& m, bool is_selected);
+      void draw_menu_item(const menu& m);
       void press(char c);
   };
 }

@@ -1,13 +1,12 @@
 #!/bin/sh
 
 PROJECT_NAME="rrr"
-MODE1=$1
-TEST="meson test $MODE1 -C build"
+TEST="meson test -C build"
 RUN="./build/bin/$PROJECT_NAME"
 
 command meson compile -C build
 
-if [[ $MODE1 == "test" ]]; then
+if [[ $1 == "test" ]]; then
   command $TEST 
 else
   command $RUN

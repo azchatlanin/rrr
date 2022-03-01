@@ -2,44 +2,67 @@
 
 namespace rrr
 {
-  menu::menu(std::string text, char trigger, m_menu&& items) : text { text }, trigger { trigger }, items { items } 
-  {}
+  menu::menu(std::string text, char trigger, m_menu items) 
+    : text { text }, trigger { trigger }, items { items } 
+  {
+    selected_item = items.begin();
+  }
 
   void menu::selected_next()
   {
     selected_item++;
-    if (selected_item >= num_items) selected_item = 0;
+    if (selected_item == items.end()) selected_item = items.begin();
   }
 
   void menu::selected_prew()
   {
-    selected_item--;
-    if (selected_item < 0) selected_item = num_items - 1;
+    if (selected_item == items.begin()) selected_item = items.end();
+    if (selected_item != items.begin()) selected_item--;
   }
 
-  menu_bar::menu_bar(WINDOW* win, std::vector<menu>&& menus) : win { win }, menus { menus } 
-  {}
-
-  void menu_bar::draw_menu_item(menu m)
+  menu_bar::menu_bar(WINDOW* win) : win { win }
   {
-    int y_max, x_max;
-    getmaxyx(menu_win, y_max, x_max);
-    for (int i = 0; i < m.num_items; i++)
-    {
-      mvwprintw(menu_win, i, 0, m.items[i]..c_str());
-      if (m.selected_item == i)
-      {
-        mvwchgat(menu_win, i, 0, x_max, A_NORMAL, 1, NULL);
-      }
-      else 
-      {
-        mvwchgat(menu_win, i, 0, x_max, A_STANDOUT, 0, NULL);
-      }
-
-    }
+    menus.emplace_back(menu { "File", 'F', config::f_menu });
+    menus.emplace_back(menu { "Info", 'I', config::i_menu });
   }
 
-  void menu_bar::draw_menu(menu m, bool is_selected)
+  void menu_bar::init()
+  {
+    int pos = 0;
+    for(auto& m : menus)
+    {
+      m.start_x = current_pos;
+      current_pos += m.text.size() + 2;
+      for (const auto& t : m.items)
+        pos = pos < (t.first.size() + t.second.size() + 4) ? (t.first.size() + t.second.size() + 4) : pos;
+    }
+
+    int y_max, x_max, y_beg, x_beg;
+    getmaxyx(win, y_max, x_max);
+    getbegyx(win, y_beg, x_beg);
+
+    menu_win = newwin(y_max - 2, pos, y_beg + 1, x_beg + 1);
+    box(menu_win, 0, 0);
+
+    keypad(menu_win, true);
+    wrefresh(menu_win);
+  }
+
+  void menu_bar::draw()
+  {
+    for(auto& m : menus)
+    {
+      draw_menu(m, selected == m.trigger);
+    }
+    selected = -1;
+  }
+
+  void menu_bar::press(char c)
+  {
+    selected = c;
+  }
+
+  void menu_bar::draw_menu(menu& m, bool is_selected)
   {
     if (selected == m.trigger)
       wattron(win, A_STANDOUT);
@@ -47,9 +70,10 @@ namespace rrr
     wattroff(win, A_STANDOUT);
     wrefresh(win);
 
-    int ch;
     draw_menu_item(m);
     wrefresh(menu_win);
+
+    int ch;
     while (is_selected && (ch = wgetch(menu_win)))
     {
       switch (ch)
@@ -65,18 +89,26 @@ namespace rrr
       }
       draw_menu_item(m);
     }
+
     werase(menu_win);
     wrefresh(menu_win);
     reset();
   }
 
-  void menu_bar::draw()
+  void menu_bar::draw_menu_item(const menu& m)
   {
-    for(auto m : menus)
+    int x_max = getmaxx(menu_win);
+    int index = 0;
+
+    for (const auto& el : m.items)
     {
-      draw_menu(m, selected == m.trigger);
+      mvwprintw(menu_win, index, 0, std::string(el.first + " (" + el.second + ")").data() );
+      // el.second.compare(m.selected_item->second) ?
+      //   mvwchgat(menu_win, index, 0, x_max, A_NORMAL, 1, NULL) :
+      //   mvwchgat(menu_win, index, 0, x_max, A_STANDOUT, 0, NULL);
+      LOG(index, el.first);
+      index++;
     }
-    selected = -1;
   }
 
   void menu_bar::reset()
@@ -86,26 +118,5 @@ namespace rrr
       mvwprintw(win, 0, m.start_x, m.text.c_str());
     }
     wrefresh(win);
-  }
-
-  void menu_bar::init()
-  {
-    for(auto& m : menus)
-    {
-      m.start_x = current_pos;
-      current_pos += m.text.size() + 2;
-    }
-
-    int y_max, x_max, y_beg, x_beg;
-    getmaxyx(win, y_max, x_max);
-    getbegyx(win, y_beg, x_beg);
-    menu_win = newwin(y_max - 2, x_max - 2, y_beg + 1, x_beg + 1);
-    keypad(menu_win, true);
-    wrefresh(menu_win);
-  }
-
-  void menu_bar::press(char c)
-  {
-    selected = c;
   }
 }
