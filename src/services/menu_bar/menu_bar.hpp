@@ -2,7 +2,6 @@
 
 #include <ncurses.h>
 
-#include "tools/src/logger/logger.hpp"
 
 #include "system/config.hpp"
 

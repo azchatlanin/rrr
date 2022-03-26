@@ -2,7 +2,6 @@
 
 #include <curses.h>
 
-#include "tools/src/logger/logger.hpp"
 
 #ifndef CTRL
 #define	CTRL(c)	(c & 037)

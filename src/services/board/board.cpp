@@ -1,9 +1,9 @@
 #include "board.hpp"
+
 #include "menu_bar/menu_bar.hpp"
 
 namespace rrr
 {
-
   void board::init()
   {
     initscr();

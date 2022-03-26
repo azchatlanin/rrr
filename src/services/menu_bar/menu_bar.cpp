@@ -1,5 +1,7 @@
 #include "menu_bar.hpp"
 
+#include "logger/logger.hpp"
+
 namespace rrr
 {
   menu::menu(std::string text, char trigger, m_menu items) 
@@ -106,7 +108,7 @@ namespace rrr
       // el.second.compare(m.selected_item->second) ?
       //   mvwchgat(menu_win, index, 0, x_max, A_NORMAL, 1, NULL) :
       //   mvwchgat(menu_win, index, 0, x_max, A_STANDOUT, 0, NULL);
-      LOG(index, el.first);
+      hack::log()(index, el.first);
       index++;
     }
   }

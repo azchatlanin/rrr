@@ -3,16 +3,23 @@ project(
   'rrr', 
   'cpp', 
   version : '0.0.1', 
-  default_options : ['cpp_std=c++20']
+  default_options : ['cpp_std=c++2a']
 )
 
 add_project_arguments (
-  '-pedantic', 
+  '-Wpedantic',
+  '-Wshadow', 
   '-Wno-comment',
-  '-Wno-gnu-zero-variadic-macro-arguments',
   '-Wunused-but-set-variable',
   language: 'cpp'
 )
+
+compiler = meson.get_compiler('cpp')
+if compiler.get_id() == 'gcc'
+  message('Compiler: GCC')
+elif compiler.get_id() == 'clang'
+  message('Compiler: LLVM/clang')
+endif
 
 deps = [ 
   dependency('threads'), 
@@ -26,18 +33,18 @@ args = [
   '-lmenu'
 ]
 
-tools = subproject('tools')
-logger_dep = tools.get_variable('logger_dep')
-exception_dep = tools.get_variable('exception_dep')
-container_dep = tools.get_variable('container_dep')
-
-deps += logger_dep
-deps += exception_dep
-deps += container_dep
-
 inc = []
-inc += include_directories('subprojects')
+inc += include_directories('.')
+
+hack = subproject('hack')
+deps += hack.get_variable('logger_dep')
 
 subdir('src')
 subdir('bin')
 #subdir('tests')
+
+
+
+
+
+
