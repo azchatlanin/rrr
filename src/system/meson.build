@@ -1,12 +1,9 @@
-headers = [
-  'config.hpp',
-]
+headers = [ 'config.hpp' ]
 sources = []
 
 lib = library(
   'system',
   include_directories : inc,
-  install : true,
   sources: [headers, sources],
   dependencies : deps,
   cpp_args: args

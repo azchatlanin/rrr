@@ -7,9 +7,10 @@
 #define	CTRL(c)	(c & 037)
 #endif
 
+using m_menu = std::vector<std::pair<std::string, std::string>>;
+
 namespace rrr::config
 {
-  using m_menu = std::vector<std::pair<std::string, std::string>>;
 
   inline const m_menu f_menu = { 
     { "New", "N" }, 

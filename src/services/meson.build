@@ -1,4 +1,4 @@
 inc += include_directories('.')
-subdir('menu_bar')
-subdir('board')
+subdir('layer')
+subdir('info_bar')
 

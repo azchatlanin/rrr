@@ -1,21 +1,15 @@
-headers = [
-  'menu_bar.hpp'
-]
-sources = [
-  'menu_bar.cpp'
-]
-
-deps += menu_dep
+headers = ['layer.hpp']
+sources = ['layer.cpp']
 
 lib = library(
-  'menu_bar',
+  'layer',
   include_directories : inc,
   sources: [headers, sources],
   dependencies : deps,
   cpp_args: args
 )
 
-menu_bar_dep = declare_dependency(
+layer_dep = declare_dependency(
   include_directories: inc, 
   link_with: lib, 
 )

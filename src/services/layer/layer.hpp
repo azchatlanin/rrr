@@ -1,31 +1,40 @@
 #pragma once
 
 #include <curses.h>
-
-
-#ifndef CTRL
-#define	CTRL(c)	(c & 037)
-#endif
-
-
-template<typename T>
-void trwe() {}
+#include <memory>
+#include <vector>
 
 namespace rrr
 {
-  inline int start_x, start_y, width, height;
-
-  class board
+  class board 
   {
     public:
-      board() = default;
-      ~board() = default;
+      virtual ~board() {};
+      virtual void draw() = 0;
+  };
+     
+  class layer
+  {
+    public:
+      layer();
+      ~layer();
 
     public:
-      void init();
+      WINDOW* layer_win;
+
+    public:
+      static std::shared_ptr<layer> instance();
+      void draw();
+      void trigger(int);
+      void add(std::shared_ptr<board>);
 
     private:
-      WINDOW* board_win;
+      int start_x, start_y, width, height;
+      std::vector<std::shared_ptr<board>> boards;
+
+    private: 
+      void init();
+      void create_win();
   };
 
 

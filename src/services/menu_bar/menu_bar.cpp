@@ -4,25 +4,7 @@
 
 namespace rrr
 {
-  menu::menu(std::string text, char trigger, m_menu items) 
-    : text { text }, trigger { trigger }, items { items } 
-  {
-    selected_item = items.begin();
-  }
-
-  void menu::selected_next()
-  {
-    selected_item++;
-    if (selected_item == items.end()) selected_item = items.begin();
-  }
-
-  void menu::selected_prew()
-  {
-    if (selected_item == items.begin()) selected_item = items.end();
-    if (selected_item != items.begin()) selected_item--;
-  }
-
-  menu_bar::menu_bar(WINDOW* win) : win { win }
+  menu_bar::menu_bar(WINDOW* board_win_) : board_win { board_win_ }
   {
     menus.emplace_back(menu { "File", 'F', config::f_menu });
     menus.emplace_back(menu { "Info", 'I', config::i_menu });
@@ -40,8 +22,8 @@ namespace rrr
     }
 
     int y_max, x_max, y_beg, x_beg;
-    getmaxyx(win, y_max, x_max);
-    getbegyx(win, y_beg, x_beg);
+    getmaxyx(board_win, y_max, x_max);
+    getbegyx(board_win, y_beg, x_beg);
 
     menu_win = newwin(y_max - 2, pos, y_beg + 1, x_beg + 1);
     box(menu_win, 0, 0);
@@ -67,10 +49,10 @@ namespace rrr
   void menu_bar::draw_menu(menu& m, bool is_selected)
   {
     if (selected == m.trigger)
-      wattron(win, A_STANDOUT);
-    mvwprintw(win, 0, m.start_x, m.text.c_str());
-    wattroff(win, A_STANDOUT);
-    wrefresh(win);
+      wattron(board_win, A_STANDOUT);
+    mvwprintw(board_win, 0, m.start_x, m.text.c_str());
+    wattroff(board_win, A_STANDOUT);
+    wrefresh(board_win);
 
     draw_menu_item(m);
     wrefresh(menu_win);
@@ -99,7 +81,7 @@ namespace rrr
 
   void menu_bar::draw_menu_item(const menu& m)
   {
-    int x_max = getmaxx(menu_win);
+    //int x_max = getmaxx(menu_win);
     int index = 0;
 
     for (const auto& el : m.items)
@@ -108,7 +90,6 @@ namespace rrr
       // el.second.compare(m.selected_item->second) ?
       //   mvwchgat(menu_win, index, 0, x_max, A_NORMAL, 1, NULL) :
       //   mvwchgat(menu_win, index, 0, x_max, A_STANDOUT, 0, NULL);
-      hack::log()(index, el.first);
       index++;
     }
   }
@@ -116,9 +97,7 @@ namespace rrr
   void menu_bar::reset()
   {
     for(auto m : menus)
-    {
-      mvwprintw(win, 0, m.start_x, m.text.c_str());
-    }
-    wrefresh(win);
+      mvwprintw(board_win, 0, m.start_x, m.text.c_str());
+    wrefresh(board_win);
   }
 }
