@@ -34,7 +34,6 @@ args = [
 ]
 
 inc = []
-inc += include_directories('.', join_paths('.', 'subprojects'))
 
 hack = subproject('hack')
 deps += hack.get_variable('logger_dep')

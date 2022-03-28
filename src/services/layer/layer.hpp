@@ -11,20 +11,21 @@ namespace rrr
     public:
       virtual ~board() {};
       virtual void draw() = 0;
+      virtual void create_win() = 0;
   };
      
   class layer
   {
     public:
       layer();
-      ~layer();
 
     public:
-      WINDOW* layer_win;
+      WINDOW* win;
 
     public:
       static std::shared_ptr<layer> instance();
       void draw();
+      void rebuild();
       void trigger(int);
       void add(std::shared_ptr<board>);
 

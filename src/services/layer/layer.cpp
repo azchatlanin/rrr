@@ -1,7 +1,5 @@
 #include "layer.hpp"
 
-#include "menu_bar/menu_bar.hpp"
-
 namespace rrr
 {
   layer::layer()
@@ -9,13 +7,6 @@ namespace rrr
     init();
     create_win();
   };
-
-  layer::~layer()
-  {
-    wborder(layer_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-    wrefresh(layer_win);
-    delwin(layer_win);
-  }
 
   std::shared_ptr<layer> layer::instance()
   {
@@ -33,7 +24,8 @@ namespace rrr
     
     if (!has_colors()) throw "Don't set color";
     start_color();
-    init_pair(1, COLOR_BLACK, COLOR_RED);
+    init_pair(1, COLOR_BLUE, COLOR_BLACK);
+    init_pair(2, COLOR_YELLOW, COLOR_GREEN);
 
     getmaxyx(stdscr, height, width);
     refresh();
@@ -41,14 +33,19 @@ namespace rrr
   
   void layer::create_win()
   {
-    layer_win = newwin(height, width, start_y, start_x);
-    box(layer_win, 0 , 0);	
-    wrefresh(layer_win);
+    win = newwin(height, width, start_y, start_x);
+    box(win, 0 , 0);	
+    wrefresh(win);
   }
 
   void layer::draw()
   {
+    for(auto& b : boards) b->draw();
+  }
 
+  void layer::rebuild()
+  {
+    refresh();
   }
 
   void layer::trigger(int key)

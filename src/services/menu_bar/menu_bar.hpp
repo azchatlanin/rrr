@@ -1,32 +1,28 @@
 #pragma once
 
 #include <ncurses.h>
-
-#include "system/config.hpp"
-#include "menu/menu.hpp"
+#include "services/layer/layer.hpp"
 
 namespace rrr
 {
-  class menu_bar
+  using m_menu = std::vector<std::pair<std::string, std::string>>;
+
+  class menu_bar : public board
   {
     public:
-      menu_bar(WINDOW* win);
-      
-    public:
-      WINDOW* board_win;
-      WINDOW* menu_win;
-      std::vector<menu> menus;
-      int current_pos;
-      char selected;
+      menu_bar();
 
     public:
-      void init();
-      void draw();
-      void press(char c);
+      static std::shared_ptr<menu_bar> create();
+      void draw() override;
 
     private:
-      void draw_menu(menu& m, bool is_selected);
-      void draw_menu_item(const menu& m);
-      void reset();
+      int start_x, start_y, width, height;
+
+      m_menu main_menu;
+
+    private:
+      void create_win() override;
+      void fill_menu();
   };
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ncurses.h>
-#include "layer/layer.hpp"
+#include "services/layer/layer.hpp"
 
 namespace rrr
 {
@@ -11,7 +11,7 @@ namespace rrr
       info_bar();
 
     public:
-      WINDOW* info_bar_win;
+      WINDOW* win;
 
     public:
       static std::shared_ptr<info_bar> create();
@@ -19,8 +19,9 @@ namespace rrr
 
     private:
       int start_x, start_y, width, height;
+      std::string title = " Info ";
 
     private:
-      void create_win();
+      void create_win() override;
   };
 }

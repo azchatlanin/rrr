@@ -12,7 +12,7 @@ using m_menu = std::vector<std::pair<std::string, std::string>>;
 namespace rrr::config
 {
 
-  inline const m_menu f_menu = { 
+  inline const m_menu file_menu = { 
     { "New", "N" }, 
     { "Edit", "E" }, 
     { "Delete", "D" }, 
@@ -22,5 +22,5 @@ namespace rrr::config
     { "Quit", "Q" } 
   };
   
-  inline const m_menu i_menu = { { "rrr", "F1" } }; 
+  inline const m_menu info_menu = { { "rrr", "F1" } }; 
 }
