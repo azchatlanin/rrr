@@ -1,4 +1,4 @@
-![rrr's logo](./logo.png)
+![rrr's logo](./img_logo.png)
 
 *This is a simple file manager, with a set of functions that, it seems to me, can make it convenient.*
 *This project is my term paper. According to this, it will definitely be brought to its logical conclusion.*
