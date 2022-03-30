@@ -51,8 +51,8 @@ namespace rrr
     public: 
       explicit manager(std::shared_ptr<T>&& t, std::shared_ptr<Args>&&... args)
       {
-        vt.push_back(std::move(t));
-        (vt.push_back(std::move(args)), ...);
+        vt.push_back(t);
+        (vt.push_back(args), ...);
         for (auto v : vt) v->set(this);
       }
 

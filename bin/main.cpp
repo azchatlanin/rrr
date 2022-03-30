@@ -19,16 +19,13 @@ void init_nc()
   curs_set(0);
   cbreak();			
   keypad(stdscr, TRUE);
-
-  init_style();
-  
   refresh();
 }
 
 int main(int argc, char **argv)
 {
-  
   init_nc();
+  init_style();
 
   auto browser = rrr::browser::create();
   auto menu_bar = rrr::menu_bar::create();
@@ -36,7 +33,7 @@ int main(int argc, char **argv)
   
   rrr::manager<rrr::board,
                rrr::board,
-               rrr::board> manager { browser, menu_bar, info_bar };
+               rrr::board> manager { std::move(browser), std::move(menu_bar), std::move(info_bar) };
 
   manager.draw();
   
