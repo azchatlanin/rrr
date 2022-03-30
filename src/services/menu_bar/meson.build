@@ -1,8 +1,6 @@
 headers = ['menu_bar.hpp']
 sources = ['menu_bar.cpp']
 
-deps += layer_dep
-
 lib = library(
   'menu_bar',
   include_directories : inc,

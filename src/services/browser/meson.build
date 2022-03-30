@@ -1,15 +1,15 @@
-headers = ['layer.hpp']
-sources = ['layer.cpp']
+headers = ['browser.hpp']
+sources = ['browser.cpp']
 
 lib = library(
-  'layer',
+  'browser',
   include_directories : inc,
   sources: [headers, sources],
   dependencies : deps,
   cpp_args: args
 )
 
-layer_dep = declare_dependency(
+browser_dep = declare_dependency(
   include_directories: inc, 
   link_with: lib, 
 )

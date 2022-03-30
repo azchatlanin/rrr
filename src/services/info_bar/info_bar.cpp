@@ -4,7 +4,7 @@ namespace rrr
 {
   std::shared_ptr<info_bar> info_bar::create()
   {
-    static std::shared_ptr<info_bar> ib(new info_bar);
+    static std::shared_ptr<info_bar> ib = std::make_shared<info_bar>();
     return ib;
   }
 
@@ -15,20 +15,19 @@ namespace rrr
 
   void info_bar::create_win()
   {
-    auto lr = layer::instance().get();
-    int y_max, x_max;
-    getmaxyx(lr->win, y_max, x_max);
-    getbegyx(lr->win, start_y, start_x);
+    auto max_x = state::instance().get()->max_x;
+    auto max_y = state::instance().get()->max_y;
 
-    height = y_max / 6;
-    width = x_max / 6;
-
-    start_y = y_max - height;
-    start_x = x_max - width;
+    height = max_y / 7;
+    width = max_x / 7;
+    start_y = max_y - height;
+    start_x = max_x - width;
 
     win = newwin(height, width, start_y, start_x);
     box(win, 0, 0);
     keypad(win, true);
+
+    wrefresh(win);
   }
 
   void info_bar::draw()
@@ -43,4 +42,20 @@ namespace rrr
 
     wrefresh(win);
   }
+
+  void info_bar::rebuild()
+  {
+    wrefresh(win);
+  }
+
+  void info_bar::trigger(int key)
+  {
+    std::string str = std::to_string(key);
+    mvwaddstr(win, 10, 10, "   ");
+    mvwaddstr(win, 10, 10, str.c_str());
+    rebuild();
+  }
+
+  void info_bar::commit(event e)
+  {}
 }

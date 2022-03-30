@@ -1,24 +1,49 @@
-#include "services/layer/layer.hpp"
+#include "services/manager/manager.hpp"
+#include "services/browser/browser.hpp"
 #include "services/info_bar/info_bar.hpp"
 #include "services/menu_bar/menu_bar.hpp"
+
+void init_style()
+{
+  if (!has_colors()) throw "Don't set color";
+  start_color();
+
+  init_pair(1, COLOR_BLUE, COLOR_BLACK);
+  init_pair(2, COLOR_YELLOW, COLOR_GREEN);
+}
+
+void init_nc()
+{
+  initscr();
+  noecho();
+  curs_set(0);
+  cbreak();			
+  keypad(stdscr, TRUE);
+
+  init_style();
+  
+  refresh();
+}
 
 int main(int argc, char **argv)
 {
   
-  auto layer = rrr::layer::instance().get();
+  init_nc();
 
+  auto browser = rrr::browser::create();
   auto menu_bar = rrr::menu_bar::create();
   auto info_bar = rrr::info_bar::create();
+  
+  rrr::manager<rrr::board,
+               rrr::board,
+               rrr::board> manager { browser, menu_bar, info_bar };
 
-  layer->add(menu_bar);
-  layer->add(info_bar);
-
-  layer->draw();
+  manager.draw();
   
   while(int key = getch())
   {
-    layer->trigger(key);
-    layer->draw();
+    manager.trigger(key);
+    manager.draw();
     usleep(1000);
   }
   

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ncurses.h>
-#include "services/layer/layer.hpp"
+#include "services/manager/manager.hpp"
 
 namespace rrr
 {
@@ -16,9 +16,12 @@ namespace rrr
     public:
       static std::shared_ptr<info_bar> create();
       void draw() override;
+      void rebuild() override;
+      void trigger(int) override;
+      void commit(event) override;
 
     private:
-      int start_x, start_y, width, height;
+      int start_x = 0, start_y = 0, width, height;
       std::string title = " Info ";
 
     private:

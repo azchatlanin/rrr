@@ -4,38 +4,30 @@
 #include <memory>
 #include <vector>
 
+#include "services/manager/manager.hpp"
+
 namespace rrr
 {
-  class board 
+  class browser : public board
   {
     public:
-      virtual ~board() {};
-      virtual void draw() = 0;
-      virtual void create_win() = 0;
-  };
-     
-  class layer
-  {
-    public:
-      layer();
+      browser();
 
     public:
       WINDOW* win;
 
     public:
-      static std::shared_ptr<layer> instance();
-      void draw();
-      void rebuild();
-      void trigger(int);
-      void add(std::shared_ptr<board>);
+      static std::shared_ptr<browser> create();
+      void draw() override;
+      void rebuild() override;
+      void trigger(int) override;
+      void commit(event) override;
 
     private:
-      int start_x, start_y, width, height;
-      std::vector<std::shared_ptr<board>> boards;
+      int start_x = 0, start_y = 0, width, height;
 
     private: 
-      void init();
-      void create_win();
+      void create_win() override;
   };
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ncurses.h>
-#include "services/layer/layer.hpp"
+#include "services/manager/manager.hpp"
 
 namespace rrr
 {
@@ -15,6 +15,9 @@ namespace rrr
     public:
       static std::shared_ptr<menu_bar> create();
       void draw() override;
+      void rebuild() override;
+      void trigger(int) override;
+      void commit(event) override;
 
     private:
       int start_x, start_y, width, height;

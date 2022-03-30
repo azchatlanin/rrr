@@ -1,0 +1,47 @@
+#include "browser.hpp"
+
+#include "logger/logger.hpp"
+
+namespace rrr
+{
+  browser::browser()
+  {
+    create_win();
+  };
+
+  std::shared_ptr<browser> browser::create()
+  {
+    static std::shared_ptr<browser> br = std::make_shared<browser>();
+    return br;
+  }
+  
+  void browser::create_win()
+  {
+    getmaxyx(stdscr, height, width);
+    state::instance().get()->max_y = height;
+    state::instance().get()->max_x = width;
+
+    width -= width / 7;
+
+    win = newwin(height, width, start_y, start_x);
+    box(win, 0 , 0);	
+    wrefresh(win);
+  }
+
+  void browser::draw()
+  {
+  }
+
+  void browser::rebuild()
+  {
+    wrefresh(win);
+  }
+
+  void browser::trigger(int key)
+  {
+  }
+
+  void browser::commit(event e)
+  {
+  }
+}
