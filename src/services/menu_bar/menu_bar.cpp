@@ -20,7 +20,6 @@ namespace rrr
 
     height = max_y / 12;
     width = max_x / 16;
-    start_x = 2;
     start_y = 1;
     win = newwin(height, width, start_y, start_x);
     box(win, 0, 0);
@@ -56,8 +55,9 @@ namespace rrr
       set_menu_title(0, x, key.title, 1);
       if (cmd == key.cmd)
       {
+        rebuild();
+        start_x = x - 1;
         set_menu_title(0, x, key.title, 2);
-        //refresh();
         create_win();
         draw_submenu(val, x);
       }
@@ -84,7 +84,9 @@ namespace rrr
 
   void menu_bar::rebuild()
   {
+    wborder(win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
     wrefresh(win);
+    delwin(win);
   }
 
   void menu_bar::draw_submenu(m_items items, int x)
