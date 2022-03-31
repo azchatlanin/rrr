@@ -9,7 +9,7 @@ void init_style()
   start_color();
 
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
-  init_pair(2, COLOR_YELLOW, COLOR_GREEN);
+  init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 }
 
 void init_nc()

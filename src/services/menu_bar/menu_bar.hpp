@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <ncurses.h>
 #include "services/manager/manager.hpp"
+#include "system/config.hpp"
 
 namespace rrr
 {
@@ -23,6 +24,9 @@ namespace rrr
       menu_bar();
 
     public:
+      WINDOW* win;
+
+    public:
       static std::shared_ptr<menu_bar> create();
       void draw() override;
       void rebuild() override;
@@ -30,7 +34,6 @@ namespace rrr
       void commit(event) override;
 
     private:
-      int start_x = 0, start_y = 0, width, height;
       m_menu main_menu;
       int cmd;
 
@@ -38,5 +41,6 @@ namespace rrr
       void create_win() override;
       void fill_menu();
       void draw_submenu(m_items, int);
+      void set_menu_title(int, int, std::string, int);
   };
 }

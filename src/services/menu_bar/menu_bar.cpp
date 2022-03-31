@@ -11,27 +11,21 @@ namespace rrr
   menu_bar::menu_bar()
   {
     fill_menu();
-    create_win();
   }
 
   void menu_bar::create_win()
   {
-    //auto lr = layer::instance().get();
+    auto max_x = state::instance().get()->max_x;
+    auto max_y = state::instance().get()->max_y;
 
-    // [[maybe_unused]] int max_y, max_x;
-    // getmaxyx(lr->win, max_y, max_x);
-    // getbegyx(lr->win, start_y, start_x);
-    //
-    // height = 3;
-    // width = max_x;
-
-    // win = newwin(height, width, start_y, start_x);
-    // box(win, 0, 0);
-
-    // mvaddstr(0, 3, "test");
-
-    // keypad(win, true);
-    // wrefresh(win);
+    height = max_y / 12;
+    width = max_x / 16;
+    start_x = 2;
+    start_y = 1;
+    win = newwin(height, width, start_y, start_x);
+    box(win, 0, 0);
+    keypad(win, true);
+    wrefresh(win);
   }
 
   void menu_bar::fill_menu()
@@ -49,19 +43,35 @@ namespace rrr
     m_items vm {
       { " Info ", 1 }
     }; 
-    main_menu.emplace_back(std::make_pair( menu_item{" File ", 1 }, fm ));
-    main_menu.emplace_back(std::make_pair( menu_item{" View ", 1 }, vm ));
+    main_menu.emplace_back(std::make_pair( menu_item{" File ", 70 }, fm ));
+    main_menu.emplace_back(std::make_pair( menu_item{" View ", 86 }, vm ));
   }
 
   void menu_bar::draw()
   {
-    int pos = 3;
-    for(auto& [key, val] : main_menu)
+    wrefresh(win);
+    int x = 3;
+    for (auto& [key, val] : main_menu)
     {
-      mvaddstr(0, pos, key.title.c_str());
-      draw_submenu(val, pos);
-      pos += key.title.length();
+      set_menu_title(0, x, key.title, 1);
+      if (cmd == key.cmd)
+      {
+        set_menu_title(0, x, key.title, 2);
+        //refresh();
+        create_win();
+        draw_submenu(val, x);
+      }
+      x += key.title.length();
     }
+    wrefresh(win);
+  }
+
+  void menu_bar::set_menu_title(int y, int x, std::string title, int color)
+  {
+    attron(COLOR_PAIR(color) | A_BOLD);
+    mvaddstr(y, x, title.substr(0,2).c_str());
+    attroff(COLOR_PAIR(color) | A_BOLD);
+    mvaddstr(y, x + 2, title.substr(2, title.at(title.length()-1)).c_str());
   }
 
   void menu_bar::trigger(int key)
@@ -74,16 +84,16 @@ namespace rrr
 
   void menu_bar::rebuild()
   {
-    refresh();
+    wrefresh(win);
   }
 
-  void menu_bar::draw_submenu(m_items items, int start_position)
+  void menu_bar::draw_submenu(m_items items, int x)
   {
-    int pos = 1;
-    for(auto& item : items)
+    int y = 2;
+    for (auto& item : items)
     {
-      mvaddstr(pos, start_position, item.title.c_str());
-      ++pos;
+      set_menu_title(y, x, item.title, 1);
+      ++y;
     }
   }
 }

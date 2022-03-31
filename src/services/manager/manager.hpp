@@ -43,6 +43,7 @@ namespace rrr
 
     protected: 
       Iboard* b;
+      int start_x = 0, start_y = 0, width = 0, height = 0;
   };
 
   template<typename T, typename... Args>

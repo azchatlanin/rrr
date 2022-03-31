@@ -23,9 +23,6 @@ namespace rrr
       void trigger(int) override;
       void commit(event) override;
 
-    private:
-      int start_x = 0, start_y = 0, width, height;
-
     private: 
       void create_win() override;
   };

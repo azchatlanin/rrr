@@ -21,7 +21,6 @@ namespace rrr
       void commit(event) override;
 
     private:
-      int start_x = 0, start_y = 0, width, height;
       std::string title = " Info ";
 
     private:
