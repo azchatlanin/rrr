@@ -8,12 +8,6 @@ namespace rrr
   {
     create_win();
   };
-
-  std::shared_ptr<browser> browser::create()
-  {
-    static std::shared_ptr<browser> br = std::make_shared<browser>();
-    return br;
-  }
   
   void browser::create_win()
   {
@@ -44,4 +38,5 @@ namespace rrr
   void browser::commit(event e)
   {
   }
+
 }

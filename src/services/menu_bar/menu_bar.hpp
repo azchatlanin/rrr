@@ -24,10 +24,6 @@ namespace rrr
       menu_bar();
 
     public:
-      WINDOW* win;
-
-    public:
-      static std::shared_ptr<menu_bar> create();
       void draw() override;
       void rebuild() override;
       void trigger(int) override;

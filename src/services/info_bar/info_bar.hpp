@@ -11,10 +11,6 @@ namespace rrr
       info_bar();
 
     public:
-      WINDOW* win;
-
-    public:
-      static std::shared_ptr<info_bar> create();
       void draw() override;
       void rebuild() override;
       void trigger(int) override;

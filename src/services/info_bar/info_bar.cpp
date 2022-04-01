@@ -2,11 +2,6 @@
 
 namespace rrr
 {
-  std::shared_ptr<info_bar> info_bar::create()
-  {
-    static std::shared_ptr<info_bar> ib = std::make_shared<info_bar>();
-    return ib;
-  }
 
   info_bar::info_bar()
   {

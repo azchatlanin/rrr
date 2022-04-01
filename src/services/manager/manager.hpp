@@ -1,11 +1,12 @@
 #pragma once
 
+#include <curses.h>
 #include <vector>
 #include <memory>
 
 namespace rrr
 {
-  enum event { };
+  enum event { rebuild_all };
 
   struct state 
   {
@@ -32,14 +33,30 @@ namespace rrr
       virtual ~board() {}
 
     public: 
+      template<typename T>
+      static std::shared_ptr<T> create()
+      {
+        static std::shared_ptr<T> instance = std::make_shared<T>();
+        return instance;
+      }
+
       void set(Iboard* b_) { b = b_; }
       virtual void commit(event) = 0;
       virtual void draw() = 0;
       virtual void rebuild() = 0;
       virtual void trigger(int) = 0;
 
+    public: 
+      WINDOW* win;
+
     private:
       virtual void create_win() = 0;
+      void destroy()
+      {
+        wborder(win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+        wrefresh(win);
+        delwin(win);
+      }
 
     protected: 
       Iboard* b;
@@ -59,7 +76,13 @@ namespace rrr
 
       void execute(board* md, event e) const override
       {
-        for (auto v : vt) v->commit(e);
+        switch (e) {
+          case event::rebuild_all:
+            for (auto v : vt) v->rebuild();
+            break;
+          default:
+            for (auto v : vt) v->commit(e);
+        };
       }
 
       void draw() 
@@ -71,6 +94,8 @@ namespace rrr
       {
         for (auto v : vt) v->trigger(key);
       };
+
+
 
     private: 
       std::vector<std::shared_ptr<T>> vt;

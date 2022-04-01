@@ -2,12 +2,6 @@
 
 namespace rrr
 {
-  std::shared_ptr<menu_bar> menu_bar::create()
-  {
-    static std::shared_ptr<menu_bar> ib = std::make_shared<menu_bar>();
-    return ib;
-  }
-
   menu_bar::menu_bar()
   {
     fill_menu();
@@ -19,7 +13,7 @@ namespace rrr
     auto max_y = state::instance().get()->max_y;
 
     height = max_y / 12;
-    width = max_x / 16;
+    width = max_x / 22;
     start_y = 1;
     win = newwin(height, width, start_y, start_x);
     box(win, 0, 0);
@@ -42,6 +36,7 @@ namespace rrr
     m_items vm {
       { " Info ", 1 }
     }; 
+
     main_menu.emplace_back(std::make_pair( menu_item{" File ", 70 }, fm ));
     main_menu.emplace_back(std::make_pair( menu_item{" View ", 86 }, vm ));
   }
@@ -84,7 +79,7 @@ namespace rrr
 
   void menu_bar::rebuild()
   {
-    wborder(win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+    wborder(win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
     wrefresh(win);
     delwin(win);
   }

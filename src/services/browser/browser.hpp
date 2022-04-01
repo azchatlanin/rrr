@@ -14,10 +14,6 @@ namespace rrr
       browser();
 
     public:
-      WINDOW* win;
-
-    public:
-      static std::shared_ptr<browser> create();
       void draw() override;
       void rebuild() override;
       void trigger(int) override;
