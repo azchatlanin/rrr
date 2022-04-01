@@ -40,7 +40,8 @@ namespace rrr
 
   void info_bar::rebuild()
   {
-    wrefresh(win);
+    destroy();
+    create_win();
   }
 
   void info_bar::trigger(int key)

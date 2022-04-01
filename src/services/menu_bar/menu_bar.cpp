@@ -50,7 +50,6 @@ namespace rrr
       set_menu_title(0, x, key.title, 1);
       if (cmd == key.cmd)
       {
-        rebuild();
         start_x = x - 1;
         set_menu_title(0, x, key.title, 2);
         create_win();
@@ -79,9 +78,8 @@ namespace rrr
 
   void menu_bar::rebuild()
   {
-    wborder(win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-    wrefresh(win);
-    delwin(win);
+    destroy();
+    create_win();
   }
 
   void menu_bar::draw_submenu(m_items items, int x)
@@ -92,5 +90,6 @@ namespace rrr
       set_menu_title(y, x, item.title, 1);
       ++y;
     }
+    BOARD->execute(this, event::rebuild_all);
   }
 }

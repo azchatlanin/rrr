@@ -29,7 +29,7 @@ namespace rrr
   class board 
   {
     public: 
-      explicit board(Iboard* b_ = nullptr) : b { b_ } {}
+      explicit board(Iboard* b_ = nullptr) : BOARD { b_ } {}
       virtual ~board() {}
 
     public: 
@@ -40,7 +40,7 @@ namespace rrr
         return instance;
       }
 
-      void set(Iboard* b_) { b = b_; }
+      void set(Iboard* b_) { BOARD = b_; }
       virtual void commit(event) = 0;
       virtual void draw() = 0;
       virtual void rebuild() = 0;
@@ -51,7 +51,9 @@ namespace rrr
 
     private:
       virtual void create_win() = 0;
-      void destroy()
+
+    protected: 
+      virtual void destroy()
       {
         wborder(win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
         wrefresh(win);
@@ -59,8 +61,9 @@ namespace rrr
       }
 
     protected: 
-      Iboard* b;
+      Iboard* BOARD;
       int start_x = 0, start_y = 0, width = 0, height = 0;
+
   };
 
   template<typename T, typename... Args>

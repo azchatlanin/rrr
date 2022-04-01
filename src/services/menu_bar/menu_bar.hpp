@@ -30,13 +30,16 @@ namespace rrr
       void commit(event) override;
 
     private:
-      m_menu main_menu;
-      int cmd;
+      void create_win() override;
 
     private:
-      void create_win() override;
       void fill_menu();
       void draw_submenu(m_items, int);
       void set_menu_title(int, int, std::string, int);
+
+    private:
+      m_menu main_menu;
+      int cmd;
+
   };
 }

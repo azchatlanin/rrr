@@ -28,7 +28,8 @@ namespace rrr
 
   void browser::rebuild()
   {
-    wrefresh(win);
+    destroy();
+    create_win();
   }
 
   void browser::trigger(int key)
