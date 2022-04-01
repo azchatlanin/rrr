@@ -1,7 +1,7 @@
 #include "services/manager/manager.hpp"
-#include "services/browser/browser.hpp"
-#include "services/info_bar/info_bar.hpp"
-#include "services/menu_bar/menu_bar.hpp"
+#include "services/ui/browser/browser.hpp"
+#include "services/ui/info_bar/info_bar.hpp"
+#include "services/ui/menu_bar/menu_bar.hpp"
 
 void init_style()
 {
