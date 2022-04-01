@@ -49,7 +49,7 @@ namespace rrr
     std::string str = std::to_string(key);
     mvwaddstr(win, 10, 10, "   ");
     mvwaddstr(win, 10, 10, str.c_str());
-    rebuild();
+    wrefresh(win);
   }
 
   void info_bar::commit(event e)

@@ -6,7 +6,7 @@
 
 namespace rrr
 {
-  enum event { rebuild_all };
+  enum event { rebuild_all, rebuild_browser };
 
   struct state 
   {

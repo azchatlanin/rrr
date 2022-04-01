@@ -34,7 +34,10 @@ namespace rrr
     }; 
 
     m_items vm {
-      { " Info ", 1 }
+      { " Info ", 1 },
+      { " Logs ", 1 },
+      { " Stats ", 1 },
+      { " Script ", 1 }
     }; 
 
     main_menu.emplace_back(std::make_pair( menu_item{" File ", 70 }, fm ));
@@ -90,6 +93,7 @@ namespace rrr
       set_menu_title(y, x, item.title, 1);
       ++y;
     }
-    BOARD->execute(this, event::rebuild_all);
+    BOARD->execute(this, event::rebuild_browser);
+    rebuild();
   }
 }

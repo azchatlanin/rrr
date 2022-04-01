@@ -38,6 +38,11 @@ namespace rrr
 
   void browser::commit(event e)
   {
+    switch (e) {
+      case event::rebuild_browser:
+        rebuild();
+      default: 
+        wrefresh(win);
+    }
   }
-
 }
