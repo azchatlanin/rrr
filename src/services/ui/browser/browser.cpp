@@ -1,7 +1,5 @@
 #include "browser.hpp"
 
-#include "logger/logger.hpp"
-
 namespace rrr
 {
   browser::browser()
@@ -12,8 +10,8 @@ namespace rrr
   void browser::create_win()
   {
     getmaxyx(stdscr, height, width);
-    state::instance().get()->max_y = height;
-    state::instance().get()->max_x = width;
+    state_manager::instance().get()->max_y = height;
+    state_manager::instance().get()->max_x = width;
 
     width -= width / 7;
 
@@ -26,7 +24,7 @@ namespace rrr
   {
   }
 
-  void browser::trigger(int key)
+  void browser::trigger()
   {
   }
 

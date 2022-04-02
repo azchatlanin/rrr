@@ -1,17 +1,15 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <ncurses.h>
-#include "services/manager/manager.hpp"
-#include "system/config.hpp"
+#include "services/managers/manager.hpp"
 
 namespace rrr
 {
-
   struct menu_item
   {
     std::string title;
-    int cmd;
+    std::string cmd;
     bool is_selected = false;
   };
 
@@ -25,7 +23,7 @@ namespace rrr
 
     public:
       void draw() override;
-      void trigger(int) override;
+      void trigger() override;
       void commit(event) override;
 
     private:
@@ -38,7 +36,8 @@ namespace rrr
 
     private:
       m_menu main_menu;
-      int cmd;
-
+      bool on_this = false;
+      int current_select_pos = 0;
+      const std::map<std::string, std::string> possible_state { { "File", "F" }, { "View", "V" } };
   };
 }

@@ -29,7 +29,8 @@ deps = [
 
 args = [
   '-lpanel',
-  '-lncurses',
+  '-lncursesw',
+  '-lncursesutf8',
   '-lmenu'
 ]
 

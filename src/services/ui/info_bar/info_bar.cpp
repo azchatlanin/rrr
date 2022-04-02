@@ -10,8 +10,8 @@ namespace rrr
 
   void info_bar::create_win()
   {
-    auto max_x = state::instance().get()->max_x;
-    auto max_y = state::instance().get()->max_y;
+    auto max_x = state_manager::instance().get()->max_x;
+    auto max_y = state_manager::instance().get()->max_y;
 
     height = max_y / 7;
     width = max_x / 7;
@@ -38,11 +38,10 @@ namespace rrr
     wrefresh(win);
   }
 
-  void info_bar::trigger(int key)
+  void info_bar::trigger()
   {
-    std::string str = std::to_string(key);
-    mvwaddstr(win, 10, 10, "   ");
-    mvwaddstr(win, 10, 10, str.c_str());
+    auto cmd = state_manager::instance().get()->cmd;
+    mvwaddstr(win, 10, 10, "   "); mvwaddstr(win, 10, 10, cmd.c_str());
     wrefresh(win);
   }
 

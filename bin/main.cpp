@@ -1,4 +1,4 @@
-#include "services/manager/manager.hpp"
+#include "services/managers/manager.hpp"
 #include "services/ui/browser/browser.hpp"
 #include "services/ui/info_bar/info_bar.hpp"
 #include "services/ui/menu_bar/menu_bar.hpp"

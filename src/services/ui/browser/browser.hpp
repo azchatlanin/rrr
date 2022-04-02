@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "services/manager/manager.hpp"
+#include "services/managers/manager.hpp"
 
 namespace rrr
 {
@@ -15,7 +15,7 @@ namespace rrr
 
     public:
       void draw() override;
-      void trigger(int) override;
+      void trigger() override;
       void commit(event) override;
 
     private: 

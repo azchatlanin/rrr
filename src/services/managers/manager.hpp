@@ -4,22 +4,11 @@
 #include <vector>
 #include <memory>
 
+#include "event_manager.hpp"
+#include "state_manager.hpp"
+
 namespace rrr
 {
-  enum event { rebuild_all, rebuild_browser };
-
-  struct state 
-  {
-    int max_y;
-    int max_x;
-
-    static std::shared_ptr<state> instance()
-    {
-      static std::shared_ptr<state> st = std::make_shared<state>();
-      return st;
-    }
-  };
-
   struct Iboard
   {
     virtual ~Iboard() {}
@@ -49,7 +38,7 @@ namespace rrr
         box(win, 0 , 0);	
         wrefresh(win); 
       };
-      virtual void trigger(int) = 0;
+      virtual void trigger() = 0;
 
     public: 
       WINDOW* win;
@@ -96,14 +85,15 @@ namespace rrr
       void draw() 
       {
         for (auto v : vt) v->draw();
-      };
+      }
 
       void trigger(int key) 
       {
-        for (auto v : vt) v->trigger(key);
-      };
-
-
+        auto em = rrr::state_manager::instance().get();
+        em->set(key);
+        for (auto v : vt) 
+          v->trigger();
+      }
 
     private: 
       std::vector<std::shared_ptr<T>> vt;

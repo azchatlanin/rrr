@@ -1,5 +1,7 @@
 #include "menu_bar.hpp"
 
+#include "utils/config.hpp"
+
 namespace rrr
 {
   menu_bar::menu_bar()
@@ -9,8 +11,8 @@ namespace rrr
 
   void menu_bar::create_win()
   {
-    auto max_x = state::instance().get()->max_x;
-    auto max_y = state::instance().get()->max_y;
+    auto max_x = state_manager::instance().get()->max_x;
+    auto max_y = state_manager::instance().get()->max_y;
 
     height = max_y / 12;
     width = max_x / 22;
@@ -24,35 +26,37 @@ namespace rrr
   void menu_bar::fill_menu()
   {
     m_items fm {
-      { " New ", 1 }, 
-      { " Edit ", 1 }, 
-      { " Delete ", 1 }, 
-      { " Select ", 1 }, 
-      { " Copy ", 1 }, 
-      { " Paste ", 1 }, 
-      { " Quit ", 1 } 
+      { " New ", config::key::TOP_MENU::FILE::NEW }, 
+      { " Edit ", config::key::TOP_MENU::FILE::EDIT }, 
+      { " Delete ", config::key::TOP_MENU::FILE::DELETE }, 
+      { " Select ", config::key::TOP_MENU::FILE::SELECT }, 
+      { " Copy ", config::key::TOP_MENU::FILE::COPY }, 
+      { " Paste ", config::key::TOP_MENU::FILE::PASTE }, 
+      { " Quit ", config::key::TOP_MENU::FILE::QUITE } 
     }; 
 
     m_items vm {
-      { " Info ", 1 },
-      { " Logs ", 1 },
-      { " Stats ", 1 },
-      { " Script ", 1 }
+      { " Info ", config::key::TOP_MENU::VIEW::INFO },
+      { " Logs ", config::key::TOP_MENU::VIEW::LOGS },
+      { " Monitor ", config::key::TOP_MENU::VIEW::MONITOR },
+      { " Script ", config::key::TOP_MENU::VIEW::SCRIPT }
     }; 
 
-    main_menu.emplace_back(std::make_pair( menu_item{" File ", 70 }, fm ));
-    main_menu.emplace_back(std::make_pair( menu_item{" View ", 86 }, vm ));
+    main_menu.emplace_back(std::make_pair( menu_item{" File ", config::key::TOP_MENU::FILE::FILE }, fm ));
+    main_menu.emplace_back(std::make_pair( menu_item{" View ", config::key::TOP_MENU::VIEW::VIEW }, vm ));
   }
 
   void menu_bar::draw()
   {
     wrefresh(win);
+    on_this = false;
     int x = 3;
     for (auto& [key, val] : main_menu)
     {
       set_menu_title(0, x, key.title, 1);
-      if (cmd == key.cmd)
+      if (state_manager::instance().get()->main_state.compare(key.cmd) == 0)
       {
+        on_this = true;
         start_x = x - 1;
         set_menu_title(0, x, key.title, 2);
         create_win();
@@ -76,16 +80,28 @@ namespace rrr
     int y = 2;
     for (auto& item : items)
     {
-      set_menu_title(y, x, item.title, 1);
+      if (current_select_pos < 0) current_select_pos = 0;
+      if (current_select_pos >= (int)items.size()) current_select_pos = items.size() - 1;
+
+      if((current_select_pos + 2) == y)
+        mvaddstr(y, x, config::ICON::MENU_SELECT.c_str());
+      set_menu_title(y, x + 1, item.title, 1);
       ++y;
     }
     BOARD->execute(this, event::rebuild_browser);
     rebuild();
   }
 
-  void menu_bar::trigger(int key)
+  void menu_bar::trigger()
   {
-    cmd = key;
+    if (state_manager::instance().get()->cmd.compare(config::key::TOP_MENU::FILE::FILE) == 0 || 
+        state_manager::instance().get()->cmd.compare(config::key::TOP_MENU::VIEW::VIEW) == 0)
+      current_select_pos = 0;
+
+    if (on_this && state_manager::instance().get()->cmd.compare(config::key::MOVE::MOVE_DOWN) == 0) 
+      ++current_select_pos;
+    if (on_this && state_manager::instance().get()->cmd.compare(config::key::MOVE::MOVE_UP) == 0) 
+      --current_select_pos;
   }
 
   void menu_bar::commit(event e)
