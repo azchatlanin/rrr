@@ -26,12 +26,6 @@ namespace rrr
   {
   }
 
-  void browser::rebuild()
-  {
-    destroy();
-    create_win();
-  }
-
   void browser::trigger(int key)
   {
   }

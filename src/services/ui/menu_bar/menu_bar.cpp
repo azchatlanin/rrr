@@ -71,20 +71,6 @@ namespace rrr
     mvaddstr(y, x + 2, title.substr(2, title.at(title.length()-1)).c_str());
   }
 
-  void menu_bar::trigger(int key)
-  {
-    cmd = key;
-  }
-
-  void menu_bar::commit(event e)
-  {}
-
-  void menu_bar::rebuild()
-  {
-    destroy();
-    create_win();
-  }
-
   void menu_bar::draw_submenu(m_items items, int x)
   {
     int y = 2;
@@ -96,4 +82,12 @@ namespace rrr
     BOARD->execute(this, event::rebuild_browser);
     rebuild();
   }
+
+  void menu_bar::trigger(int key)
+  {
+    cmd = key;
+  }
+
+  void menu_bar::commit(event e)
+  {}
 }

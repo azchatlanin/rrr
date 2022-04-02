@@ -43,7 +43,12 @@ namespace rrr
       void set(Iboard* b_) { BOARD = b_; }
       virtual void commit(event) = 0;
       virtual void draw() = 0;
-      virtual void rebuild() = 0;
+      virtual void rebuild()
+      {
+        werase(win);
+        box(win, 0 , 0);	
+        wrefresh(win); 
+      };
       virtual void trigger(int) = 0;
 
     public: 

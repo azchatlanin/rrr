@@ -38,12 +38,6 @@ namespace rrr
     wrefresh(win);
   }
 
-  void info_bar::rebuild()
-  {
-    destroy();
-    create_win();
-  }
-
   void info_bar::trigger(int key)
   {
     std::string str = std::to_string(key);

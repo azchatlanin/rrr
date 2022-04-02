@@ -12,7 +12,6 @@ namespace rrr
 
     public:
       void draw() override;
-      void rebuild() override;
       void trigger(int) override;
       void commit(event) override;
 
