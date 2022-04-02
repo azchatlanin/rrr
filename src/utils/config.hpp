@@ -44,11 +44,14 @@ namespace rrr::config::key
   }
 }
 
-
-
 namespace rrr::config::ICON
 {
   using key = const std::string;
 
   inline key MENU_SELECT = ">";
+}
+
+namespace rrr::config::type
+{
+  enum class FILE_TYPE { FILE, DIR };
 }

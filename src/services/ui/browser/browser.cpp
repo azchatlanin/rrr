@@ -1,8 +1,11 @@
 #include "browser.hpp"
 
+#include <iterator>
+
 namespace rrr
 {
-  browser::browser()
+
+   browser::browser()
   {
     create_win();
   };
@@ -22,6 +25,12 @@ namespace rrr
 
   void browser::draw()
   {
+    auto files = get_files_struct(".");
+    for(auto& f : files)
+      mvwaddstr(win, &f - files.data(), 10, f.name.c_str());
+    wrefresh(win);
+
+    // HERE: sort vector
   }
 
   void browser::trigger()
@@ -36,5 +45,15 @@ namespace rrr
       default: 
         wrefresh(win);
     }
+  }
+
+  Files browser::get_files_struct(const std::string path)
+  {
+    Files f;
+    std::filesystem::path p(path);
+    std::filesystem::directory_iterator start(p);
+    std::filesystem::directory_iterator end;
+    std::transform(start, end, std::back_inserter(f), filesystem_convert());
+    return f;
   }
 }
