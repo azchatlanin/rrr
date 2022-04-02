@@ -13,7 +13,7 @@ namespace rrr
   struct File 
   {
     config::type::FILE_TYPE type;
-    std::string name;
+    std::filesystem::path name;
 
     File& operator=(const File& other)
     {
@@ -22,6 +22,11 @@ namespace rrr
       type = other.type;
       name = other.name;
       return *this;
+    }
+
+    bool operator<(const File& other)
+    {
+      return (name.compare(other.name) < 0 && type == config::type::FILE_TYPE::DIR);
     }
   };
 

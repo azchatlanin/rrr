@@ -25,7 +25,15 @@ namespace rrr
 
   void browser::draw()
   {
-    auto files = get_files_struct(".");
+    auto tmp = get_files_struct(".");
+    Files files(tmp.size());
+
+    // 1. only dir with .
+    // 2. only dir
+    // 3. only files with .
+    // 4. only files
+
+    //std::sort(files.begin(), files.end());
     for(auto& f : files)
       mvwaddstr(win, &f - files.data(), 10, f.name.c_str());
     wrefresh(win);
