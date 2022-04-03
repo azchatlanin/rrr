@@ -26,19 +26,26 @@ namespace rrr
   void browser::draw()
   {
     auto tmp = get_files_struct(".");
-    Files files(tmp.size());
+    Files result;
+    Files result_files;
 
-    // 1. only dir with .
-    // 2. only dir
-    // 3. only files with .
-    // 4. only files
+    std::copy_if(tmp.begin(), tmp.end(), std::back_inserter(result), [&result_files](const File& entry) -> bool { 
+      if (entry.type == config::type::FILE_TYPE::DIR)
+        return true;
+      else
+      {
+        result_files.push_back(entry);
+        return false;
+      }
+    });
 
-    //std::sort(files.begin(), files.end());
-    for(auto& f : files)
-      mvwaddstr(win, &f - files.data(), 10, f.name.c_str());
+    std::sort(result_files.begin(), result_files.end());
+    std::sort(result.begin(), result.end());
+    result.insert(result.end(), result_files.begin(), result_files.end());
+
+    for(auto& f : result)
+      mvwaddstr(win, &f - result.data() + 2, 10, f.name.c_str());
     wrefresh(win);
-
-    // HERE: sort vector
   }
 
   void browser::trigger()

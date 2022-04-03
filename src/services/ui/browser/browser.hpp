@@ -26,7 +26,7 @@ namespace rrr
 
     bool operator<(const File& other)
     {
-      return (name.compare(other.name) < 0 && type == config::type::FILE_TYPE::DIR);
+      return name.compare(other.name) < 0;
     }
   };
 
