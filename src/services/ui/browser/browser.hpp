@@ -51,10 +51,17 @@ namespace rrr
     public:
       void draw() override;
       void trigger() override;
-      void commit(event) override;
+
+    public: 
+      WINDOW* win;
+      WINDOW* win_preview;
+      WINDOW* win_navigation;
+      WINDOW* win_history;
 
     private: 
-      void create_win() override;
+      void create() override;
+      void set_title();
+      void rebuild();
       Files get_files_struct(const std::string path);
   };
 }

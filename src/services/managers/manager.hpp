@@ -4,11 +4,12 @@
 #include <vector>
 #include <memory>
 
-#include "event_manager.hpp"
 #include "state_manager.hpp"
 
 namespace rrr
 {
+  enum event {};
+
   struct Iboard
   {
     virtual ~Iboard() {}
@@ -23,38 +24,21 @@ namespace rrr
 
     public: 
       template<typename T>
-      static std::shared_ptr<T> create()
+      static std::shared_ptr<T> instance()
       {
         static std::shared_ptr<T> instance = std::make_shared<T>();
         return instance;
       }
-
       void set(Iboard* b_) { BOARD = b_; }
-      virtual void commit(event) = 0;
+
       virtual void draw() = 0;
-      virtual void rebuild()
-      {
-        werase(win);
-        box(win, 0 , 0);	
-        wrefresh(win); 
-      };
       virtual void trigger() = 0;
 
-    public: 
-      WINDOW* win;
-
     private:
-      virtual void create_win() = 0;
+      virtual void create() = 0;
 
     protected: 
-      virtual void destroy()
-      {
-        wborder(win, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-        wrefresh(win);
-        delwin(win);
-      }
-
-    protected: 
+      std::string title;
       Iboard* BOARD;
       int start_x = 0, start_y = 0, width = 0, height = 0;
 
@@ -73,13 +57,6 @@ namespace rrr
 
       void execute(board* md, event e) const override
       {
-        switch (e) {
-          case event::rebuild_all:
-            for (auto v : vt) v->rebuild();
-            break;
-          default:
-            for (auto v : vt) v->commit(e);
-        };
       }
 
       void draw() 

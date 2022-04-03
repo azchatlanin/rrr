@@ -13,12 +13,12 @@ namespace rrr
     public:
       void draw() override;
       void trigger() override;
-      void commit(event) override;
+
+    public: 
+      WINDOW* win;
 
     private:
-      std::string title = " Info ";
-
-    private:
-      void create_win() override;
+      void create() override;
+      void rebuild();
   };
 }

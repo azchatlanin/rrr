@@ -1,7 +1,6 @@
 #include "services/managers/manager.hpp"
 #include "services/ui/browser/browser.hpp"
 #include "services/ui/info_bar/info_bar.hpp"
-#include "services/ui/menu_bar/menu_bar.hpp"
 
 void init_style()
 {
@@ -19,6 +18,7 @@ void init_nc()
   curs_set(0);
   cbreak();			
   keypad(stdscr, TRUE);
+  ESCDELAY=0;
   refresh();
 }
 
@@ -30,16 +30,12 @@ int main(int argc, char **argv)
   init_nc();
   init_style();
 
-  board<rrr::browser> browser = rrr::browser::create<rrr::browser>();
-  board<rrr::menu_bar> menu_bar = rrr::menu_bar::create<rrr::menu_bar>();
-  board<rrr::info_bar> info_bar = rrr::board::create<rrr::info_bar>();
+  board<rrr::browser> browser = rrr::browser::instance<rrr::browser>();
+  board<rrr::info_bar> info_bar = rrr::board::instance<rrr::info_bar>();
   
-  rrr::manager<rrr::board,
-               rrr::board,
-               rrr::board> manager { std::move(browser), std::move(menu_bar), std::move(info_bar) };
+  rrr::manager<rrr::board, rrr::board> manager { std::move(browser), std::move(info_bar) };
 
   manager.draw();
-  
   while(int key = getch())
   {
     manager.trigger(key);

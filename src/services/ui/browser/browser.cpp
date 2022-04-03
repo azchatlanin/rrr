@@ -5,13 +5,15 @@
 namespace rrr
 {
 
-   browser::browser()
+  browser::browser()
   {
-    create_win();
+    create();
   };
   
-  void browser::create_win()
+  void browser::create()
   {
+    title = " File browser ";    
+
     getmaxyx(stdscr, height, width);
     state_manager::instance().get()->max_y = height;
     state_manager::instance().get()->max_x = width;
@@ -20,7 +22,28 @@ namespace rrr
 
     win = newwin(height, width, start_y, start_x);
     box(win, 0 , 0);	
+    set_title();
+
+    win_history = derwin(win, height - 2, width / 3, 1, 1);
+
+    win_navigation = derwin(win, height - 2, width / 3 + 1, 1, width / 3);
+    wborder(win_navigation, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
+    keypad(win_navigation, true);
+
+    win_preview = derwin(win, height - 2, width / 3 - 1, 1, width * 2 / 3);
+
     wrefresh(win);
+    wrefresh(win_history);
+    wrefresh(win_navigation);
+    wrefresh(win_preview);
+  }
+
+  void browser::set_title()
+  {
+    wattron(win, COLOR_PAIR(1) | A_BOLD);
+    mvwaddstr(win, 0, 3, title.substr(0,2).c_str());
+    wattroff(win, COLOR_PAIR(1) | A_BOLD);
+    mvwaddstr(win, 0, 5, title.substr(2, title.at(title.length()-1)).c_str());
   }
 
   void browser::draw()
@@ -44,22 +67,12 @@ namespace rrr
     result.insert(result.end(), result_files.begin(), result_files.end());
 
     for(auto& f : result)
-      mvwaddstr(win, &f - result.data() + 2, 10, f.name.c_str());
-    wrefresh(win);
+      mvwaddstr(win_navigation, &f - result.data() + 1, 2, f.name.c_str());
+    wrefresh(win_navigation);
   }
 
   void browser::trigger()
   {
-  }
-
-  void browser::commit(event e)
-  {
-    switch (e) {
-      case event::rebuild_browser:
-        rebuild();
-      default: 
-        wrefresh(win);
-    }
   }
 
   Files browser::get_files_struct(const std::string path)
@@ -71,4 +84,11 @@ namespace rrr
     std::transform(start, end, std::back_inserter(f), filesystem_convert());
     return f;
   }
+
+  void browser::rebuild()
+  {
+    werase(win);
+    box(win, 0 , 0);	// ??? it's don't be here
+    wrefresh(win); 
+  };
 }

@@ -11,6 +11,8 @@ namespace rrr::config::key
 {
   using key = const std::string;
 
+  inline key ESC = "ESC";
+
   namespace TOP_MENU
   {
     namespace FILE 

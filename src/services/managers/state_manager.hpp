@@ -2,7 +2,9 @@
 
 #include <memory>
 
+#include <ncurses.h>
 #include "utils/convert.hpp"
+#include "utils/config.hpp"
 
 namespace rrr
 {
@@ -15,12 +17,12 @@ namespace rrr
         switch (key) {
           case 'F':
             cmd = utils::char_to_str(key);
-            main_state = key;
             break;
           case 'V':
             cmd = utils::char_to_str(key);
-            main_state = key;
             break;
+          case 27: // ESC
+            cmd = config::key::ESC;
           default: 
             cmd = key;
         }
@@ -36,7 +38,5 @@ namespace rrr
       int max_y;
       int max_x;
       std::string cmd = "";
-      std::string main_state = "";
-
   };
 }
