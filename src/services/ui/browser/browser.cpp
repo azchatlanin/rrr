@@ -48,7 +48,13 @@ namespace rrr
 
   void browser::draw()
   {
-    auto tmp = get_files_struct(".");
+    fill(win_history, "..");
+    fill(win_navigation, ".");
+  }
+
+  void browser::fill(WINDOW* w, std::string p)
+  {
+    auto tmp = get_files_struct(p);
     Files result;
     Files result_files;
 
@@ -67,8 +73,8 @@ namespace rrr
     result.insert(result.end(), result_files.begin(), result_files.end());
 
     for(auto& f : result)
-      mvwaddstr(win_navigation, &f - result.data() + 1, 2, f.name.c_str());
-    wrefresh(win_navigation);
+      mvwaddstr(w, &f - result.data() + 1, 2, f.name.c_str());
+    wrefresh(w);
   }
 
   void browser::trigger()

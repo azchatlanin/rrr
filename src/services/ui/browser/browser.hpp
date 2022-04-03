@@ -62,6 +62,7 @@ namespace rrr
       void create() override;
       void set_title();
       void rebuild();
+      void fill(WINDOW*, std::string);
       Files get_files_struct(const std::string path);
   };
 }
