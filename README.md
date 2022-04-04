@@ -14,4 +14,9 @@ At this stage, the project is launched by cloning this repository and building l
 3. run: meson setup build
 4. run the script: . run
 
+*how to use:*
+- moving is similar to vim (h, j, k, [l])
+
+[] - is no implementation.
+
 Tests are written out of necessity and in the presence of the right mood! But you can always fix it. :)
