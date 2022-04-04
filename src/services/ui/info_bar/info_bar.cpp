@@ -36,10 +36,10 @@ namespace rrr
     wrefresh(win);
   }
 
-  void info_bar::trigger()
+  void info_bar::trigger(std::string key)
   {
-    auto cmd = state_manager::instance().get()->cmd;
-    mvwaddstr(win, 10, 10, "   "); mvwaddstr(win, 10, 10, cmd.c_str());
+    mvwaddstr(win, 1, 1, " press:      "); 
+    mvwaddstr(win, 1, 1, std::string(" press: " + key).c_str());
     wrefresh(win);
   }
 

@@ -50,7 +50,7 @@ namespace rrr
 
     public:
       void draw() override;
-      void trigger() override;
+      void trigger(std::string) override;
 
     public: 
       WINDOW* win;
@@ -61,8 +61,15 @@ namespace rrr
     private: 
       void create() override;
       void set_title();
+      void set_cursor_position(const Files&);
       void rebuild();
-      void fill(WINDOW*, std::string);
+      void fill(bool, WINDOW*, std::string);
       Files get_files_struct(const std::string path);
+
+    private:
+      const std::string MAIN_KEY = "F";
+      std::string key;
+      int select_pos = 0;
+      bool on_this = false;
   };
 }

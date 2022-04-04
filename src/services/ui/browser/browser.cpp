@@ -1,5 +1,6 @@
 #include "browser.hpp"
 
+#include <curses.h>
 #include <iterator>
 
 namespace rrr
@@ -48,15 +49,17 @@ namespace rrr
 
   void browser::draw()
   {
-    fill(win_history, "..");
-    fill(win_navigation, ".");
+    fill(false, win_history, "..");
+    fill(true, win_navigation, ".");
   }
 
-  void browser::fill(WINDOW* w, std::string p)
+  void browser::fill(bool show_cursor, WINDOW* w, std::string p)
   {
     auto tmp = get_files_struct(p);
     Files result;
+    result.reserve(tmp.size());
     Files result_files;
+    result_files.reserve(tmp.size() / 2);
 
     std::copy_if(tmp.begin(), tmp.end(), std::back_inserter(result), [&result_files](const File& entry) -> bool { 
       if (entry.type == config::type::FILE_TYPE::DIR)
@@ -72,13 +75,32 @@ namespace rrr
     std::sort(result.begin(), result.end());
     result.insert(result.end(), result_files.begin(), result_files.end());
 
+    if (show_cursor)
+      set_cursor_position(result);
+
     for(auto& f : result)
-      mvwaddstr(w, &f - result.data() + 1, 2, f.name.c_str());
+    {
+      auto i = &f - result.data();
+      if (select_pos == i)
+        mvwaddch(w, i + 1, 2, ACS_RARROW);
+      mvwaddstr(w, i + 1, show_cursor ? 5 : 2, f.name.c_str());
+    }
     wrefresh(w);
   }
 
-  void browser::trigger()
+  void browser::set_cursor_position(const Files& result)
   {
+    if (key.compare("j") == 0) ++select_pos;
+    if (key.compare("k") == 0) --select_pos;
+    if (select_pos <= 0) select_pos = 0;
+    if (select_pos >= (int)result.size()) select_pos = result.size() - 1;
+  }
+
+  void browser::trigger(std::string k)
+  {
+    on_this = state_manager::instance().get()->cmd.compare(MAIN_KEY) == 0 ? true : false;
+    key = k; 
+    werase(win_navigation);
   }
 
   Files browser::get_files_struct(const std::string path)
