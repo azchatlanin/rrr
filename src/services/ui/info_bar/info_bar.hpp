@@ -12,7 +12,7 @@ namespace rrr
 
     public:
       void draw() override;
-      void trigger(std::string) override;
+      void trigger(int) override;
 
     public: 
       WINDOW* win;

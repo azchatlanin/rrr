@@ -17,6 +17,7 @@ void init_nc()
   noecho();
   curs_set(0);
   cbreak();			
+  keypad(stdscr, TRUE);
   ESCDELAY=0;
   refresh();
 }

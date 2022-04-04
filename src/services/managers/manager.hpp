@@ -32,7 +32,7 @@ namespace rrr
       void set(Iboard* b_) { BOARD = b_; }
 
       virtual void draw() = 0;
-      virtual void trigger(std::string) = 0;
+      virtual void trigger(int) = 0;
 
     private:
       virtual void create() = 0;
@@ -69,7 +69,7 @@ namespace rrr
         auto em = rrr::state_manager::instance().get();
         em->set(key);
         for (auto v : vt) 
-          v->trigger(utils::char_to_str(key));
+          v->trigger(key);
       }
 
     private: 

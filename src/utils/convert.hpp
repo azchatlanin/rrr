@@ -5,7 +5,7 @@
 
 namespace rrr::utils
 {
-  inline std::string char_to_str(char c)
+  inline std::string key_to_str(int c)
   {
     std::stringstream ss;
     std::string str;

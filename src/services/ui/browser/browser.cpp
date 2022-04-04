@@ -29,7 +29,6 @@ namespace rrr
 
     win_navigation = derwin(win, height - 2, width / 3 + 1, 1, width / 3);
     wborder(win_navigation, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
-    keypad(win_navigation, true);
 
     win_preview = derwin(win, height - 2, width / 3 - 1, 1, width * 2 / 3);
 
@@ -90,15 +89,32 @@ namespace rrr
 
   void browser::set_cursor_position(const Files& result)
   {
-    if (key.compare("j") == 0) ++select_pos;
-    if (key.compare("k") == 0) --select_pos;
+    if (!on_this) return;
+
+    switch (key) 
+    {
+      case 'j':
+        ++select_pos;
+        break;
+      case KEY_DOWN:
+        ++select_pos;
+        break;
+      case 'k':
+        --select_pos;
+        break;
+      case KEY_UP:
+        --select_pos;
+        break;
+      default: 
+        select_pos = 0;
+    }
     if (select_pos <= 0) select_pos = 0;
-    if (select_pos >= (int)result.size()) select_pos = result.size() - 1;
+    if (select_pos >= static_cast<int>(result.size())) select_pos = result.size() - 1;
   }
 
-  void browser::trigger(std::string k)
+  void browser::trigger(int k)
   {
-    on_this = state_manager::instance().get()->cmd.compare(MAIN_KEY) == 0 ? true : false;
+    on_this = state_manager::instance().get()->cmd == MAIN_KEY ? true : false;
     key = k; 
     werase(win_navigation);
   }

@@ -16,15 +16,14 @@ namespace rrr
       {
         switch (key) {
           case 'F':
-            cmd = utils::char_to_str(key);
+            cmd = key;
             break;
           case 'V':
-            cmd = utils::char_to_str(key);
+            cmd = key;
             break;
           case 27: // ESC
-            cmd = config::key::ESC;
-          default: 
             cmd = key;
+            break;
         }
       }
 
@@ -37,6 +36,6 @@ namespace rrr
     public:
       int max_y;
       int max_x;
-      std::string cmd = "";
+      int cmd = 'F';
   };
 }

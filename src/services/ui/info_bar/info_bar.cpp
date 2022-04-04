@@ -36,10 +36,10 @@ namespace rrr
     wrefresh(win);
   }
 
-  void info_bar::trigger(std::string key)
+  void info_bar::trigger(int key)
   {
     mvwaddstr(win, 1, 1, " press:      "); 
-    mvwaddstr(win, 1, 1, std::string(" press: " + key).c_str());
+    mvwaddstr(win, 1, 1, std::string(" press: " + utils::key_to_str(key)).c_str());
     wrefresh(win);
   }
 
