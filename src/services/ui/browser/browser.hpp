@@ -26,7 +26,16 @@ namespace rrr
 
     bool operator<(const File& other)
     {
-      return name.compare(other.name) < 0;
+      std::string name_tmp = name;
+      std::string other_name_tmp = other.name;
+
+      for(char &ch : name_tmp)
+        ch = std::tolower(ch);
+
+      for(char &ch : other_name_tmp)
+        ch = std::tolower(ch);
+
+      return name_tmp.compare(other_name_tmp) < 0;
     }
   };
 
@@ -64,10 +73,13 @@ namespace rrr
       void set_cursor_position(const Files&);
       void rebuild();
       void fill(bool, WINDOW*, std::string);
+      void next_pwd(std::string);
+      void prew_pwd();
       Files get_files_struct(const std::string path);
 
     private:
       const int MAIN_KEY = 'F';
+      std::string PWD;
       int key;
       int select_pos = 0;
       bool on_this = false;

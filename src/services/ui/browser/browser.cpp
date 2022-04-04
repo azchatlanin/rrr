@@ -3,6 +3,8 @@
 #include <curses.h>
 #include <iterator>
 
+#include "utils/utils.hpp"
+
 namespace rrr
 {
 
@@ -15,6 +17,9 @@ namespace rrr
   {
     title = " File browser ";    
 
+    PWD = hack::utils::exec("pwd");
+    PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
+
     getmaxyx(stdscr, height, width);
     state_manager::instance().get()->max_y = height;
     state_manager::instance().get()->max_x = width;
@@ -26,11 +31,13 @@ namespace rrr
     set_title();
 
     win_history = derwin(win, height - 2, width / 3, 1, 1);
+    //wborder(win_history, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
 
     win_navigation = derwin(win, height - 2, width / 3 + 1, 1, width / 3);
-    wborder(win_navigation, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
+    //wborder(win_navigation, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
 
     win_preview = derwin(win, height - 2, width / 3 - 1, 1, width * 2 / 3);
+    //wborder(win_preview, '\t', '\t', '\t', '\t', '\t', '\t', '\t', '\t');	
 
     wrefresh(win);
     wrefresh(win_history);
@@ -46,10 +53,24 @@ namespace rrr
     mvwaddstr(win, 0, 5, title.substr(2, title.at(title.length()-1)).c_str());
   }
 
+  void browser::prew_pwd()
+  {
+    auto pos = PWD.find_last_of("/");
+    PWD = pos ? PWD.substr(0, pos) : "/";
+  }
+
+  void browser::next_pwd(std::string name)
+  {
+    PWD += "/" + name;
+  }
+
   void browser::draw()
   {
-    fill(false, win_history, "..");
-    fill(true, win_navigation, ".");
+    auto pos = PWD.find_last_of("/");
+    auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
+    
+    fill(false, win_history, PWD_PREW);
+    fill(true, win_navigation, PWD);
   }
 
   void browser::fill(bool show_cursor, WINDOW* w, std::string p)
@@ -84,13 +105,12 @@ namespace rrr
         mvwaddch(w, i + 1, 2, ACS_RARROW);
       mvwaddstr(w, i + 1, show_cursor ? 5 : 2, f.name.c_str());
     }
+    
     wrefresh(w);
   }
 
   void browser::set_cursor_position(const Files& result)
   {
-    if (!on_this) return;
-
     switch (key) 
     {
       case 'j':
@@ -115,8 +135,18 @@ namespace rrr
   void browser::trigger(int k)
   {
     on_this = state_manager::instance().get()->cmd == MAIN_KEY ? true : false;
+    if (!on_this) return;
+
     key = k; 
+
+    switch (key) 
+    {
+      case 'h':
+        prew_pwd();
+        break;
+    }
     werase(win_navigation);
+    werase(win_history);
   }
 
   Files browser::get_files_struct(const std::string path)
