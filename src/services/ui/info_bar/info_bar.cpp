@@ -11,8 +11,8 @@ namespace rrr
   void info_bar::create()
   {
     title = " Info ";    
-    auto max_x = state_manager::instance().get()->max_x;
-    auto max_y = state_manager::instance().get()->max_y;
+    auto max_x = state_manager::instance().max_x;
+    auto max_y = state_manager::instance().max_y;
 
     height = max_y / 7;
     width = max_x / 7;

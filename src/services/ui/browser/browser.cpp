@@ -21,8 +21,8 @@ namespace rrr
     PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
 
     getmaxyx(stdscr, height, width);
-    state_manager::instance().get()->max_y = height;
-    state_manager::instance().get()->max_x = width;
+    state_manager::instance().max_y = height;
+    state_manager::instance().max_x = width;
 
     width -= width / 7;
 
@@ -134,7 +134,7 @@ namespace rrr
 
   void browser::trigger(int k)
   {
-    on_this = state_manager::instance().get()->cmd == MAIN_KEY ? true : false;
+    on_this = state_manager::instance().cmd == MAIN_KEY ? true : false;
     if (!on_this) return;
 
     key = k; 

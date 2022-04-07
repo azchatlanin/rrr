@@ -66,8 +66,8 @@ namespace rrr
 
       void trigger(int key) 
       {
-        auto em = rrr::state_manager::instance().get();
-        em->set(key);
+        auto em = rrr::state_manager::instance();
+        em.set(key);
         for (auto v : vt) 
           v->trigger(key);
       }

@@ -27,9 +27,9 @@ namespace rrr
         }
       }
 
-      static std::shared_ptr<state_manager> instance()
+      static state_manager& instance()
       {
-        static std::shared_ptr<state_manager> st = std::make_shared<state_manager>();
+        static state_manager st;
         return st;
       }
 
