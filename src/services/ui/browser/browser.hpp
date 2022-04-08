@@ -29,10 +29,10 @@ namespace rrr
       std::string name_tmp = name;
       std::string other_name_tmp = other.name;
 
-      for(char &ch : name_tmp)
+      for (char &ch : name_tmp)
         ch = std::tolower(ch);
 
-      for(char &ch : other_name_tmp)
+      for (char &ch : other_name_tmp)
         ch = std::tolower(ch);
 
       return name_tmp.compare(other_name_tmp) < 0;

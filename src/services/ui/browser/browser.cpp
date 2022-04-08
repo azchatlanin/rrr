@@ -98,7 +98,7 @@ namespace rrr
     if (show_cursor)
       set_cursor_position(result);
 
-    for(auto& f : result)
+    for(auto&& f : result)
     {
       auto i = &f - result.data();
       if (select_pos == i)

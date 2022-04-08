@@ -52,7 +52,7 @@ namespace rrr
       {
         vt.push_back(t);
         (vt.push_back(args), ...);
-        for (auto v : vt) v->set(this);
+        for (auto&& v : vt) v->set(this);
       }
 
       void execute(board* md, event e) const override
@@ -61,14 +61,14 @@ namespace rrr
 
       void draw() 
       {
-        for (auto v : vt) v->draw();
+        for (auto&& v : vt) v->draw();
       }
 
       void trigger(int key) 
       {
         auto em = rrr::state_manager::instance();
         em.set(key);
-        for (auto v : vt) 
+        for (auto&& v : vt) 
           v->trigger(key);
       }
 
