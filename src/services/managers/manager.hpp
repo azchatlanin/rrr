@@ -50,8 +50,9 @@ namespace rrr
     public: 
       explicit manager(std::shared_ptr<T>&& t, std::shared_ptr<Args>&&... args)
       {
-        vt.push_back(t);
-        (vt.push_back(args), ...);
+        auto bi = std::back_inserter(vt);
+        bi = t;
+        ((bi = args), ...);
         for (auto&& v : vt) v->set(this);
       }
 
