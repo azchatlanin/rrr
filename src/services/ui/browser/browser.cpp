@@ -148,6 +148,12 @@ namespace rrr
       case 'l':
         next_pwd();
         break;
+      case KEY_ENTER:
+        next_pwd();
+        break;
+      case 10: // key enter too
+        next_pwd();
+        break;
     }
     werase(win_navigation);
     werase(win_history);
