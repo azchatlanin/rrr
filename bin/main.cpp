@@ -34,8 +34,8 @@ int main(int argc, char **argv)
   board<rrr::info_bar> info_bar = rrr::board::instance<rrr::info_bar>();
   
   rrr::manager<rrr::board, rrr::board> manager { std::move(browser), std::move(info_bar) };
-
   manager.draw();
+
   while(int key = getch())
   {
     manager.trigger(key);

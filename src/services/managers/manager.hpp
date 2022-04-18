@@ -29,6 +29,7 @@ namespace rrr
         static std::shared_ptr<T> instance = std::make_shared<T>();
         return instance;
       }
+
       void set(Iboard* b_) { BOARD = b_; }
 
       virtual void draw() = 0;
