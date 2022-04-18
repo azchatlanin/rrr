@@ -9,6 +9,7 @@ void init_style()
 
   init_pair(1, COLOR_BLUE, COLOR_BLACK);
   init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+  use_default_colors();
 }
 
 void init_nc()
@@ -33,7 +34,7 @@ int main(int argc, char **argv)
   board<rrr::browser> browser = rrr::browser::instance<rrr::browser>();
   board<rrr::info_bar> info_bar = rrr::board::instance<rrr::info_bar>();
   
-  rrr::manager<rrr::board, rrr::board> manager { std::move(browser), std::move(info_bar) };
+  rrr::manager<rrr::board, rrr::board> manager { browser, info_bar };
   manager.draw();
 
   while(int key = getch())

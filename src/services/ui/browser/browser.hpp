@@ -73,9 +73,10 @@ namespace rrr
       void set_cursor_position(const Files&);
       void rebuild();
       void fill(bool, WINDOW*, std::string);
-      void next_pwd(std::string);
+      void sort(std::string&);
+      void next_pwd();
       void prew_pwd();
-      Files get_files_struct(const std::string path);
+      Files get_files_struct(const std::string);
 
     private:
       const int MAIN_KEY = 'F';
@@ -83,5 +84,6 @@ namespace rrr
       int key;
       int select_pos = 0;
       bool on_this = false;
+      Files current_files;
   };
 }

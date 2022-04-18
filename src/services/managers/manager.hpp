@@ -39,22 +39,22 @@ namespace rrr
       virtual void create() = 0;
 
     protected: 
-      std::string title;
       Iboard* BOARD;
+      std::string title;
       int start_x = 0, start_y = 0, width = 0, height = 0;
 
   };
 
   template<typename T, typename... Args>
-  class manager final : public Iboard
+  class manager : public Iboard
   {
     public: 
-      explicit manager(std::shared_ptr<T>&& t, std::shared_ptr<Args>&&... args)
+      explicit manager(std::shared_ptr<T> br, std::shared_ptr<Args>... args)
       {
-        auto bi = std::back_inserter(vt);
-        bi = t;
+        auto bi = std::back_inserter(boards);
+        bi = br;
         ((bi = args), ...);
-        for (auto&& v : vt) v->set(this);
+        for (auto&& b : boards) b->set(this);
       }
 
       void execute(board* md, event e) const override
@@ -63,18 +63,18 @@ namespace rrr
 
       void draw() 
       {
-        for (auto&& v : vt) v->draw();
+        for (auto&& b : boards) b->draw();
       }
 
       void trigger(int key) 
       {
-        auto em = rrr::state_manager::instance();
-        em.set(key);
-        for (auto&& v : vt) 
-          v->trigger(key);
+        auto sm = rrr::state_manager::instance();
+        sm.set(key);
+        for (auto&& b : boards) 
+          b->trigger(key);
       }
 
     private: 
-      std::vector<std::shared_ptr<T>> vt;
+      std::vector<std::shared_ptr<T>> boards;
   };
 }
