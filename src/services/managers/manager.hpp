@@ -65,7 +65,7 @@ namespace rrr
 
       void draw() 
       {
-        for (auto&& b : boards) b->draw();
+        for (auto& b : boards) b->draw();
       }
 
       void trigger(int key) 

@@ -1,4 +1,4 @@
-#include "history.hpp"
+#include "preview.hpp"
 
 #include <curses.h>
 #include <iterator>
@@ -8,27 +8,25 @@
 namespace rrr
 {
 
-  history::history(WINDOW* pw, int h, int w, int pos_y, int pos_x) : parent_win { pw }, height { h } , width { w }
+  preview::preview(WINDOW* pw, int h, int w, int pos_y, int pos_x) : parent_win { pw }, height { h } , width { w }
   {
     win = derwin(parent_win, height, width, pos_y, pos_x);
   };
   
-  void history::draw()
+  void preview::draw()
   {
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      if (select_pos == i)
-        mvwaddch(win, i + 1, 2, ACS_RARROW);
       mvwaddstr(win, i + 1, 4, f.name.c_str());
     }
     
     wrefresh(win);
   }
 
-  void history::sort()
+  void preview::sort()
   {
-    current_files = get_files_struct(PWD);
+    current_files = get_files_struct(PWD_PREV);
     Files tmp;
     tmp.reserve(current_files.size());
     Files tmp_files;
@@ -50,30 +48,22 @@ namespace rrr
     current_files= tmp;
   }
 
-  void history::set_pwd(std::string pwd)
+  void preview::set_pwd(std::string pwd)
   {
     PWD = pwd;
+  }
+
+  void preview::set_pos(std::string p)
+  {
+    PWD_PREV = PWD + "/" + p;
     sort();
   }
 
-  void history::set_pos(std::string p)
-  {
-    auto pos = p.find_last_of("/");
-    auto file = p.substr(pos + 1);
-
-    auto find_pred = [&](File f) -> bool { 
-      return f.name.compare(file) == 0 ? true : false;
-    };
-    auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
-    if (it != std::end(current_files))
-      select_pos = it - current_files.begin();
-  }
-
-  void history::trigger(int k)
+  void preview::trigger(int k)
   {
   }
 
-  Files history::get_files_struct(const std::string path)
+  Files preview::get_files_struct(const std::string path)
   {
     Files f;
     std::filesystem::path p(path);

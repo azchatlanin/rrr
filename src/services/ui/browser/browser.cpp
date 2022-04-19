@@ -26,17 +26,14 @@ namespace rrr
     box(win, 0 , 0);	
     set_title();
 
-    win_history = board::make<history>(win, ft.height - 2, ft.width / 3);
+    win_history = board::make<history>(win, ft.height - 2, ft.width / 3, 1, 1);
     win_navigation = derwin(win, ft.height - 2, ft.width / 3 + 1, 1, ft.width / 3);
-
-    // remake
-    win_preview = derwin(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
+    win_preview = board::make<preview>(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
 
     wrefresh(win);
     wrefresh(win_history->win);
     wrefresh(win_navigation);
-
-    wrefresh(win_preview);
+    wrefresh(win_preview->win);
   };
   
   void browser::set_title()
@@ -69,7 +66,24 @@ namespace rrr
     win_history->set_pos(PWD);
     win_history->draw();
     
-    fill();
+    set_cursor_position(current_files);
+
+    for(auto&& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      if (select_pos == i)
+        mvwaddch(win_navigation, i + 1, 2, ACS_RARROW);
+      mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
+    }
+
+    win_preview->set_pwd(PWD);
+    auto f = current_files.at(select_pos);
+    if (f.type == config::type::FILE_TYPE::DIR)
+      win_preview->set_pos(f.name);
+    win_preview->draw();
+
+    wrefresh(win_navigation);
+    wrefresh(win_preview->win);
   }
 
   void browser::sort()
@@ -94,21 +108,6 @@ namespace rrr
     std::sort(tmp.begin(), tmp.end());
     tmp.insert(tmp.end(), tmp_files.begin(), tmp_files.end());
     current_files= tmp;
-  }
-
-  void browser::fill()
-  {
-    set_cursor_position(current_files);
-
-    for(auto&& f : current_files)
-    {
-      auto i = &f - current_files.data();
-      if (select_pos == i)
-        mvwaddch(win_navigation, i + 1, 2, ACS_RARROW);
-      mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
-    }
-    
-    wrefresh(win_navigation);
   }
 
   void browser::set_cursor_position(const Files& result)
@@ -158,6 +157,7 @@ namespace rrr
     }
     werase(win_navigation);
     werase(win_history->win);
+    werase(win_preview->win);
   }
 
   Files browser::get_files_struct(const std::string path)
@@ -169,11 +169,4 @@ namespace rrr
     std::transform(start, end, std::back_inserter(f), filesystem_convert());
     return f;
   }
-
-  void browser::rebuild()
-  {
-    werase(win);
-    box(win, 0 , 0);	// ??? it's don't be here
-    wrefresh(win); 
-  };
 }

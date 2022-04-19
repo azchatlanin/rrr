@@ -5,42 +5,38 @@
 #include <vector>
 #include <filesystem>
 
+#include "../file/file.hpp"
 #include "services/managers/manager.hpp"
 #include "utils/config.hpp"
-#include "preview/preview.hpp"
-#include "history/history.hpp"
 
 namespace rrr
 {
-  class browser : public board
+  class preview : public board
   {
     public:
-      browser();
+      preview(WINDOW*, int, int, int, int);
 
     public:
       void draw() override;
       void trigger(int) override;
+      void set_pwd(std::string);
+      void set_pos(std::string);
 
     public: 
       WINDOW* win;
-      WINDOW* win_navigation;
-      std::shared_ptr<history> win_history;
-      std::shared_ptr<preview> win_preview;
 
     private: 
       void set_title();
-      void set_cursor_position(const Files&);
+      void fill(bool, WINDOW*, std::string);
       void sort();
-      void next_pwd();
-      void prew_pwd();
       Files get_files_struct(const std::string);
 
     private:
-      const int MAIN_KEY = 'F';
+      WINDOW* parent_win;
       std::string PWD;
-      int key;
-      int select_pos = 0;
-      bool on_this = false;
+      std::string PWD_PREV; 
+      int height, width;
+
       Files current_files;
   };
 }
