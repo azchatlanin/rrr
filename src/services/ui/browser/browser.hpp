@@ -33,7 +33,6 @@ namespace rrr
       void sort();
       void next_pwd();
       void prew_pwd();
-      Files get_files_struct(const std::string);
 
     private:
       const int MAIN_KEY = 'F';

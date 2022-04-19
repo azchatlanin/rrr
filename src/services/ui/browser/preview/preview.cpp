@@ -65,14 +65,4 @@ namespace rrr
   void preview::trigger(int k)
   {
   }
-
-  Files preview::get_files_struct(const std::string path)
-  {
-    Files f;
-    std::filesystem::path p(path);
-    std::filesystem::directory_iterator start(p);
-    std::filesystem::directory_iterator end;
-    std::transform(start, end, std::back_inserter(f), filesystem_convert());
-    return f;
-  }
 }

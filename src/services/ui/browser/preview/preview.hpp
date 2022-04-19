@@ -29,7 +29,6 @@ namespace rrr
       void set_title();
       void fill(bool, WINDOW*, std::string);
       void sort();
-      Files get_files_struct(const std::string);
 
     private:
       WINDOW* parent_win;

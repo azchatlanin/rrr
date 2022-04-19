@@ -51,4 +51,15 @@ namespace rrr
   };
 
   using Files = std::vector<File>;
+
+  inline Files get_files_struct(const std::string path)
+  {
+    Files f;
+    std::filesystem::path p(path);
+    std::filesystem::directory_iterator start(p);
+    std::filesystem::directory_iterator end;
+    std::transform(start, end, std::back_inserter(f), filesystem_convert());
+    return f;
+  }
+
 }

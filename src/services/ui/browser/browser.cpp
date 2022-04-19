@@ -71,13 +71,14 @@ namespace rrr
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      if (select_pos == i)
-        mvwaddch(win_navigation, i + 1, 2, ACS_RARROW);
 
       if (f.type == config::type::FILE_TYPE::DIR)
-        wattron(win_navigation, COLOR_PAIR(1));
+      {
+        wattron(win_navigation, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+        select_pos == i ? mvwaddch(win_navigation, i + 1, 2, ACS_RARROW) : 0;
+      }
       mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
-      wattroff(win_navigation, COLOR_PAIR(1));
+      wattroff(win_navigation, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
     }
 
     win_preview->set_pwd(PWD);
@@ -162,15 +163,5 @@ namespace rrr
     werase(win_navigation);
     werase(win_history->win);
     werase(win_preview->win);
-  }
-
-  Files browser::get_files_struct(const std::string path)
-  {
-    Files f;
-    std::filesystem::path p(path);
-    std::filesystem::directory_iterator start(p);
-    std::filesystem::directory_iterator end;
-    std::transform(start, end, std::back_inserter(f), filesystem_convert());
-    return f;
   }
 }

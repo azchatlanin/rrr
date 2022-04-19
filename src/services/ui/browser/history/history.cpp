@@ -18,13 +18,14 @@ namespace rrr
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      if (select_pos == i)
-        mvwaddch(win, i + 1, 2, ACS_RARROW);
 
       if (f.type == config::type::FILE_TYPE::DIR)
-        wattron(win, COLOR_PAIR(1));
+      {
+        wattron(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+        select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
+      }
       mvwaddstr(win, i + 1, 4, f.name.c_str());
-      wattroff(win, COLOR_PAIR(1));
+      wattroff(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
     }
     
     wrefresh(win);
@@ -75,15 +76,5 @@ namespace rrr
 
   void history::trigger(int k)
   {
-  }
-
-  Files history::get_files_struct(const std::string path)
-  {
-    Files f;
-    std::filesystem::path p(path);
-    std::filesystem::directory_iterator start(p);
-    std::filesystem::directory_iterator end;
-    std::transform(start, end, std::back_inserter(f), filesystem_convert());
-    return f;
   }
 }
