@@ -5,21 +5,16 @@ namespace rrr
 
   info_bar::info_bar()
   {
-    create();
-  }
-
-  void info_bar::create()
-  {
     title = " Info ";    
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    height = max_y / 7;
-    width = max_x / 7;
-    start_y = max_y - height;
-    start_x = max_x - width;
+    ft.height = max_y / 7;
+    ft.width = max_x / 7;
+    ft.start_y = max_y - ft.height;
+    ft.start_x = max_x - ft.width;
 
-    win = newwin(height, width, start_y, start_x);
+    win = newwin(ft.height, ft.width, ft.start_y, ft.start_x);
     box(win, 0, 0);
     keypad(win, true);
     wrefresh(win);

@@ -23,10 +23,10 @@ namespace rrr
       virtual ~board() {}
 
     public: 
-      template<typename T>
-      static std::shared_ptr<T> instance()
+      template<typename T, typename... Args>
+      static std::shared_ptr<T> make(Args... args)
       {
-        static std::shared_ptr<T> instance = std::make_shared<T>();
+        static std::shared_ptr<T> instance = std::make_shared<T>(args...);
         return instance;
       }
 
@@ -35,24 +35,26 @@ namespace rrr
       virtual void draw() = 0;
       virtual void trigger(int) = 0;
 
-    private:
-      virtual void create() = 0;
-
     protected: 
       Iboard* BOARD;
       std::string title;
-      int start_x = 0, start_y = 0, width = 0, height = 0;
+      struct features
+      {
+        int start_x = 0; 
+        int start_y = 0; 
+        int width = 0; 
+        int height = 0;
+      } ft;
 
   };
 
-  template<typename T, typename... Args>
   class manager : public Iboard
   {
     public: 
-      explicit manager(std::shared_ptr<T> br, std::shared_ptr<Args>... args)
+      template<typename... Args>
+      explicit manager(Args&... args)
       {
         auto bi = std::back_inserter(boards);
-        bi = br;
         ((bi = args), ...);
         for (auto&& b : boards) b->set(this);
       }
@@ -75,6 +77,6 @@ namespace rrr
       }
 
     private: 
-      std::vector<std::shared_ptr<T>> boards;
+      std::vector<std::shared_ptr<board>> boards;
   };
 }

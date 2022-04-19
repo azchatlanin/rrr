@@ -23,18 +23,17 @@ void init_nc()
   refresh();
 }
 
-template<typename T>
-using board = std::shared_ptr<T>;
-
 int main(int argc, char **argv)
 {
   init_nc();
   init_style();
-
-  board<rrr::browser> browser = rrr::browser::instance<rrr::browser>();
-  board<rrr::info_bar> info_bar = rrr::board::instance<rrr::info_bar>();
   
-  rrr::manager<rrr::board, rrr::board> manager { browser, info_bar };
+  auto browser = rrr::board::make<rrr::browser>();
+  auto info_bar = rrr::board::make<rrr::info_bar>();
+
+  // начать новых досок и методов board
+
+  rrr::manager manager { browser, info_bar };
   manager.draw();
 
   while(int key = getch())

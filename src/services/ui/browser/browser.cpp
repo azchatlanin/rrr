@@ -10,36 +10,35 @@ namespace rrr
 
   browser::browser()
   {
-    create();
-  };
-  
-  void browser::create()
-  {
     title = " File browser ";    
 
     PWD = hack::utils::exec("pwd");
     PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
+    sort();
 
-    getmaxyx(stdscr, height, width);
-    state_manager::instance().max_y = height;
-    state_manager::instance().max_x = width;
+    getmaxyx(stdscr, ft.height, ft.width);
+    state_manager::instance().max_y = ft.height;
+    state_manager::instance().max_x = ft.width;
 
-    width -= width / 7;
+    ft.width -= ft.width / 7;
 
-    win = newwin(height, width, start_y, start_x);
+    win = newwin(ft.height, ft.width, ft.start_y, ft.start_x);
     box(win, 0 , 0);	
     set_title();
 
-    win_history = derwin(win, height - 2, width / 3, 1, 1);
-    win_navigation = derwin(win, height - 2, width / 3 + 1, 1, width / 3);
-    win_preview = derwin(win, height - 2, width / 3 - 1, 1, width * 2 / 3);
+    win_history = board::make<history>(win, ft.height - 2, ft.width / 3);
+    win_navigation = derwin(win, ft.height - 2, ft.width / 3 + 1, 1, ft.width / 3);
+
+    // remake
+    win_preview = derwin(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
 
     wrefresh(win);
-    wrefresh(win_history);
+    wrefresh(win_history->win);
     wrefresh(win_navigation);
-    wrefresh(win_preview);
-  }
 
+    wrefresh(win_preview);
+  };
+  
   void browser::set_title()
   {
     wattron(win, COLOR_PAIR(1) | A_BOLD);
@@ -52,25 +51,30 @@ namespace rrr
   {
     auto pos = PWD.find_last_of("/");
     PWD = pos ? PWD.substr(0, pos) : "/";
+    sort();
   }
 
   void browser::next_pwd()
   {
     PWD += "/" + std::string(current_files.at(select_pos).name);
+    sort();
   }
 
   void browser::draw()
   {
     auto pos = PWD.find_last_of("/");
     auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
+
+    win_history->set_pwd(PWD_PREW);
+    win_history->set_pos(PWD);
+    win_history->draw();
     
-    fill(false, win_history, PWD_PREW);
-    fill(true, win_navigation, PWD);
+    fill();
   }
 
-  void browser::sort(std::string& p)
+  void browser::sort()
   {
-    current_files = get_files_struct(p);
+    current_files = get_files_struct(PWD);
     Files tmp;
     tmp.reserve(current_files.size());
     Files tmp_files;
@@ -92,22 +96,19 @@ namespace rrr
     current_files= tmp;
   }
 
-  void browser::fill(bool show_cursor, WINDOW* w, std::string p)
+  void browser::fill()
   {
-    sort(p);
-
-    if (show_cursor)
-      set_cursor_position(current_files);
+    set_cursor_position(current_files);
 
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
       if (select_pos == i)
-        mvwaddch(w, i + 1, 2, ACS_RARROW);
-      mvwaddstr(w, i + 1, show_cursor ? 5 : 2, f.name.c_str());
+        mvwaddch(win_navigation, i + 1, 2, ACS_RARROW);
+      mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
     }
     
-    wrefresh(w);
+    wrefresh(win_navigation);
   }
 
   void browser::set_cursor_position(const Files& result)
@@ -156,7 +157,7 @@ namespace rrr
         break;
     }
     werase(win_navigation);
-    werase(win_history);
+    werase(win_history->win);
   }
 
   Files browser::get_files_struct(const std::string path)

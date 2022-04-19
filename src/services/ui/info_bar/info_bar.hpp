@@ -18,7 +18,6 @@ namespace rrr
       WINDOW* win;
 
     private:
-      void create() override;
       void rebuild();
   };
 }
