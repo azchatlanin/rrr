@@ -5,11 +5,12 @@
 void init_style()
 {
   if (!has_colors()) throw "Don't set color";
+
+  use_default_colors();
   start_color();
 
-  init_pair(1, COLOR_BLUE, COLOR_BLACK);
-  init_pair(2, COLOR_YELLOW, COLOR_BLACK);
-  use_default_colors();
+  init_pair(1, COLOR_BLUE, -1);
+  init_pair(2, COLOR_YELLOW, -1);
 }
 
 void init_nc()
@@ -30,8 +31,6 @@ int main(int argc, char **argv)
   
   auto browser = rrr::board::make<rrr::browser>();
   auto info_bar = rrr::board::make<rrr::info_bar>();
-
-  // начать новых досок и методов board
 
   rrr::manager manager { browser, info_bar };
   manager.draw();

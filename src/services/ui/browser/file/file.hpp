@@ -34,6 +34,9 @@ namespace rrr
 
       return name_tmp.compare(other_name_tmp) < 0;
     }
+
+    void draw()
+    {}
   };
 
   struct filesystem_convert

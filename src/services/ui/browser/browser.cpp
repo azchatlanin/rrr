@@ -73,7 +73,11 @@ namespace rrr
       auto i = &f - current_files.data();
       if (select_pos == i)
         mvwaddch(win_navigation, i + 1, 2, ACS_RARROW);
+
+      if (f.type == config::type::FILE_TYPE::DIR)
+        wattron(win_navigation, COLOR_PAIR(1));
       mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
+      wattroff(win_navigation, COLOR_PAIR(1));
     }
 
     win_preview->set_pwd(PWD);
