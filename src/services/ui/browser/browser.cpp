@@ -47,9 +47,19 @@ namespace rrr
   void browser::prew_pwd()
   {
     auto pos = PWD.find_last_of("/");
+    auto file_name = PWD.substr(pos + 1);
+
     PWD = pos ? PWD.substr(0, pos) : "/";
     fill(current_files, PWD);
+
     select_pos = 0;
+
+    for (auto& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      if (file_name.compare(f.name) == 0)
+        select_pos = i;
+    }
 
     for (auto& f : current_files)
     {
