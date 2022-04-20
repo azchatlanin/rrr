@@ -77,8 +77,14 @@ namespace rrr
         wattron(win_navigation, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
         select_pos == i ? mvwaddch(win_navigation, i + 1, 2, ACS_RARROW) : 0;
       }
+      else
+      {
+        wattron(win_navigation, (select_pos == i ? A_BOLD : 0));
+        select_pos == i ? mvwaddch(win_navigation, i + 1, 2, ACS_RARROW) : 0;
+      }
       mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
       wattroff(win_navigation, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+      wattroff(win_navigation, (select_pos == i ? A_BOLD : 0));
     }
 
     win_preview->set_pwd(PWD);
