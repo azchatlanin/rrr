@@ -14,7 +14,7 @@ namespace rrr
 
     PWD = hack::utils::exec("pwd");
     PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
-    sort(current_files, PWD);
+    fill(current_files, PWD);
 
     getmaxyx(stdscr, ft.height, ft.width);
     state_manager::instance().max_y = ft.height;
@@ -48,13 +48,13 @@ namespace rrr
   {
     auto pos = PWD.find_last_of("/");
     PWD = pos ? PWD.substr(0, pos) : "/";
-    sort(current_files, PWD);
+    fill(current_files, PWD);
   }
 
   void browser::next_pwd()
   {
     PWD += "/" + std::string(current_files.at(select_pos).name);
-    sort(current_files, PWD);
+    fill(current_files, PWD);
   }
 
   void browser::draw()
@@ -85,10 +85,13 @@ namespace rrr
       mvwaddstr(win_navigation, i + 1, 4, f.name.c_str());
       wattroff(win_navigation, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
       wattroff(win_navigation, (select_pos == i ? A_BOLD : 0));
+
+      if (select_pos == i)
+        state[PWD] = f.name;
     }
 
-    win_preview->set_pwd(PWD_PREW);
-    win_preview->set_pos(PWD);
+    win_preview->set_pwd(PWD + "/" + state[PWD]);
+    win_preview->set_pos(state[PWD + "/" + state[PWD]]);
     win_preview->draw();
 
     wrefresh(win_navigation);

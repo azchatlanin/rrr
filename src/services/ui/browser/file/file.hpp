@@ -65,7 +65,7 @@ namespace rrr
     return f;
   }
 
-  inline void sort(Files& current_files, std::string& PWD)
+  inline void fill(Files& current_files, std::string& PWD)
   {
     current_files = get_files_struct(PWD);
     Files tmp;

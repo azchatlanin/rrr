@@ -34,7 +34,7 @@ namespace rrr
   void decorator::set_pwd(std::string pwd)
   {
     PWD = pwd;
-    sort(current_files, PWD);
+    fill(current_files, PWD);
   }
 
   void decorator::set_pos(std::string p)
