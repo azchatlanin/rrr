@@ -28,7 +28,6 @@ namespace rrr
 
     private: 
       void set_title();
-      void set_cursor_position();
       void next_pwd();
       void prew_pwd();
 

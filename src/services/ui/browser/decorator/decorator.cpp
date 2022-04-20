@@ -48,5 +48,7 @@ namespace rrr
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
     if (it != std::end(current_files))
       select_pos = it - current_files.begin();
+    else 
+      select_pos = 0;
   }
 }

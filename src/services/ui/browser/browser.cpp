@@ -49,26 +49,33 @@ namespace rrr
     auto pos = PWD.find_last_of("/");
     PWD = pos ? PWD.substr(0, pos) : "/";
     fill(current_files, PWD);
+    select_pos = 0;
+
+    for (auto& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      if (state[PWD].compare(f.name) == 0)
+        select_pos = i;
+    }
   }
 
   void browser::next_pwd()
   {
     PWD += "/" + std::string(current_files.at(select_pos).name);
     fill(current_files, PWD);
+    select_pos = 0;
+
+    for (auto& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      if (state[PWD].compare(f.name) == 0)
+        select_pos = i;
+    }
   }
 
   void browser::draw()
   {
-    auto pos = PWD.find_last_of("/");
-    auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
-
-    win_history->set_pwd(PWD_PREW);
-    win_history->set_pos(PWD);
-    win_history->draw();
-    
-    set_cursor_position();
-
-    for(auto&& f : current_files)
+    for(auto& f : current_files)
     {
       auto i = &f - current_files.data();
 
@@ -90,35 +97,19 @@ namespace rrr
         state[PWD] = f.name;
     }
 
+    auto pos = PWD.find_last_of("/");
+    auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
+
+    win_history->set_pwd(PWD_PREW);
+    win_history->set_pos(PWD);
+    win_history->draw();
+    
     win_preview->set_pwd(PWD + "/" + state[PWD]);
     win_preview->set_pos(state[PWD + "/" + state[PWD]]);
     win_preview->draw();
 
     wrefresh(win_navigation);
     wrefresh(win_preview->win);
-  }
-
-  void browser::set_cursor_position()
-  {
-    switch (key) 
-    {
-      case 'j':
-        ++select_pos;
-        break;
-      case KEY_DOWN:
-        ++select_pos;
-        break;
-      case 'k':
-        --select_pos;
-        break;
-      case KEY_UP:
-        --select_pos;
-        break;
-      default: 
-        select_pos = 0;
-    }
-    if (select_pos <= 0) select_pos = 0;
-    if (select_pos >= static_cast<int>(current_files.size())) select_pos = current_files.size() - 1;
   }
 
   void browser::trigger(int k)
@@ -139,10 +130,26 @@ namespace rrr
       case KEY_ENTER:
         next_pwd();
         break;
-      case 10: // key enter too
+      case 10: // this is a key enter too
         next_pwd();
         break;
+      case 'j':
+        ++select_pos;
+        break;
+      case KEY_DOWN:
+        ++select_pos;
+        break;
+      case 'k':
+        --select_pos;
+        break;
+      case KEY_UP:
+        --select_pos;
+        break;
     }
+
+    if (select_pos <= 0) select_pos = 0;
+    if (select_pos >= static_cast<int>(current_files.size())) select_pos = current_files.size() - 1;
+
     werase(win_navigation);
     werase(win_history->win);
     werase(win_preview->win);
