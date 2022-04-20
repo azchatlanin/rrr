@@ -24,8 +24,14 @@ namespace rrr
         wattron(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
         select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
       }
+      else
+      {
+        wattron(win, (select_pos == i ? A_BOLD : 0));
+        select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
+      }
       mvwaddstr(win, i + 1, 4, f.name.c_str());
       wattroff(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+      wattroff(win, (select_pos == i ? A_BOLD : 0));
     }
     
     wrefresh(win);
@@ -39,12 +45,21 @@ namespace rrr
 
   void decorator::set_pos(std::string p)
   {
-    auto pos = p.find_last_of("/");
-    auto file = p.substr(pos + 1);
+    int pos;
+    std::string file;
 
     auto find_pred = [&](File f) -> bool { 
       return f.name.compare(file) == 0 ? true : false;
     };
+
+    if (std::filesystem::is_directory(p))
+    {
+      pos = p.find_last_of("/");
+      file = p.substr(pos + 1);
+    }
+    else 
+      file = p;
+
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
     if (it != std::end(current_files))
       select_pos = it - current_files.begin();

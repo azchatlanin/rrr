@@ -54,6 +54,7 @@ namespace rrr
 
     select_pos = 0;
 
+    // fill pos in no state
     for (auto& f : current_files)
     {
       auto i = &f - current_files.data();
@@ -61,6 +62,7 @@ namespace rrr
         select_pos = i;
     }
 
+    // fill pos if exist state
     for (auto& f : current_files)
     {
       auto i = &f - current_files.data();
@@ -114,8 +116,17 @@ namespace rrr
     win_history->set_pos(PWD);
     win_history->draw();
     
-    win_preview->set_pwd(PWD + "/" + state[PWD]);
-    win_preview->set_pos(state[PWD + "/" + state[PWD]]);
+    if (std::filesystem::is_directory(PWD + "/" + state[PWD]))
+    {
+      win_preview->set_pwd(PWD + "/" + state[PWD]);
+      win_preview->set_pos(state[PWD + "/" + state[PWD]]);
+    }
+    else
+    {
+      win_preview->set_pwd(PWD);
+      win_preview->set_pos(state[PWD]);
+    }
+
     win_preview->draw();
 
     wrefresh(win_navigation);

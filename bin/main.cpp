@@ -11,6 +11,7 @@ void init_style()
 
   init_pair(1, COLOR_BLUE, -1);
   init_pair(2, COLOR_YELLOW, -1);
+  init_pair(3, COLOR_CYAN, -1);
 }
 
 void init_nc()
