@@ -43,5 +43,6 @@ namespace rrr
       int max_y;
       int max_x;
       int cmd = 'F';
+      std::string PWD;
   };
 }

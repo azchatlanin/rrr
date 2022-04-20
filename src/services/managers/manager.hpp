@@ -3,17 +3,21 @@
 #include <curses.h>
 #include <vector>
 #include <memory>
+#include <any>
 
 #include "state_manager.hpp"
 
 namespace rrr
 {
-  enum event {};
+  enum event 
+  {
+    CHANGE_PWD
+  };
 
   struct Iboard
   {
     virtual ~Iboard() {}
-    virtual void execute(class board*, event) const = 0;
+    virtual void execute(event, std::any) const = 0;
   };
 
   class board 
@@ -34,6 +38,7 @@ namespace rrr
 
       virtual void draw() = 0;
       virtual void trigger(int) = 0;
+      virtual void execute(event, std::any) = 0;
 
     protected: 
       Iboard* BOARD;
@@ -59,8 +64,9 @@ namespace rrr
         for (auto&& b : boards) b->set(this);
       }
 
-      void execute(board* md, event e) const override
+      void execute(event e, std::any data) const override
       {
+        for (auto&& b : boards) b->execute(e, data);
       }
 
       void draw() 

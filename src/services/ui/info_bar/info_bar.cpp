@@ -1,5 +1,7 @@
 #include "info_bar.hpp"
 
+#include "utils/utils.hpp"
+
 namespace rrr
 {
 
@@ -9,39 +11,43 @@ namespace rrr
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    ft.height = max_y / 7;
-    ft.width = max_x / 7;
-    ft.start_y = max_y - ft.height;
-    ft.start_x = max_x - ft.width;
+    PWD = hack::utils::exec("pwd");
+    PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
 
-    win = newwin(ft.height, ft.width, ft.start_y, ft.start_x);
+    win = newwin(max_y / 7, max_x / 2, max_y - max_y / 7, ft.start_x);
     box(win, 0, 0);
-    keypad(win, true);
+
+    set_title();
     wrefresh(win);
   }
 
   void info_bar::draw()
   {
+    wmove(win, 1, 1);
+    wclrtoeol(win);
+    mvwaddstr(win, 1, 1, std::string(" path: " + PWD).c_str());
+    wrefresh(win);
+  }
+
+  void info_bar::set_title()
+  {
     wattron(win, COLOR_PAIR(1) | A_BOLD);
     mvwaddstr(win, 0, 3, title.substr(0,2).c_str());
     wattroff(win, COLOR_PAIR(1) | A_BOLD);
-
     mvwaddstr(win, 0, 5, title.substr(2, title.at(title.length()-1)).c_str());
-
-    wrefresh(win);
   }
 
   void info_bar::trigger(int key)
   {
-    mvwaddstr(win, 1, 1, " press:      "); 
-    mvwaddstr(win, 1, 1, std::string(" press: " + utils::key_to_str(key)).c_str());
-    wrefresh(win);
   }
 
-  void info_bar::rebuild()
+  void info_bar::execute(event e, std::any data)
   {
-    werase(win);
-    box(win, 0 , 0);	// ??? it's don't be here
-    wrefresh(win); 
-  };
+    switch (e)
+    {
+      case CHANGE_PWD:
+        PWD = std::any_cast<std::string>(data);
+        break;
+    }
+  }
 }

@@ -41,6 +41,11 @@ namespace rrr
   {
     PWD = pwd;
     fill(current_files, PWD);
+    // HERE !!!!!!!!!!!!!!!!!!!!!!!!
+    // if (PWD.compare("/") != 0)
+    //   fill(current_files, PWD);
+    // else 
+    //   current_files.emplace_back(config::type::FILE_TYPE::DIR, "/");
   }
 
   void decorator::set_pos(std::string p)

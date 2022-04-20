@@ -19,6 +19,7 @@ namespace rrr
     public:
       void draw() override;
       void trigger(int) override;
+      void execute(event, std::any) override;
 
     public: 
       WINDOW* win;

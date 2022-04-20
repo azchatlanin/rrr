@@ -20,7 +20,7 @@ namespace rrr
     state_manager::instance().max_y = ft.height;
     state_manager::instance().max_x = ft.width;
 
-    ft.width -= ft.width / 7;
+    ft.height -= ft.height / 7;
 
     win = newwin(ft.height, ft.width, ft.start_y, ft.start_x);
     box(win, 0 , 0);	
@@ -51,6 +51,7 @@ namespace rrr
 
     PWD = pos ? PWD.substr(0, pos) : "/";
     fill(current_files, PWD);
+    BOARD->execute(event::CHANGE_PWD, PWD); 
 
     select_pos = 0;
 
@@ -75,6 +76,7 @@ namespace rrr
   {
     PWD += "/" + std::string(current_files.at(select_pos).name);
     fill(current_files, PWD);
+    BOARD->execute(event::CHANGE_PWD, PWD); 
     select_pos = 0;
 
     for (auto& f : current_files)
@@ -175,4 +177,6 @@ namespace rrr
     werase(win_history->win);
     werase(win_preview->win);
   }
+
+  void browser::execute(event e, std::any) {}
 }
