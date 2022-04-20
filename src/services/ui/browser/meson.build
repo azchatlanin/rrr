@@ -1,5 +1,5 @@
-headers = ['file/file.hpp', 'browser.hpp', 'history/history.hpp', 'preview/preview.hpp']
-sources = ['browser.cpp', 'history/history.cpp', 'preview/preview.cpp']
+headers = ['file/file.hpp', 'browser.hpp', 'decorator/decorator.hpp']
+sources = ['browser.cpp', 'decorator/decorator.cpp']
 
 lib = library(
   'browser',

@@ -1,4 +1,4 @@
-#include "history.hpp"
+#include "decorator.hpp"
 
 #include <curses.h>
 #include <iterator>
@@ -8,12 +8,12 @@
 namespace rrr
 {
 
-  history::history(WINDOW* pw, int h, int w, int pos_y, int pos_x) : parent_win { pw }, height { h } , width { w }
+  decorator::decorator(WINDOW* pw, int h, int w, int pos_y, int pos_x) : parent_win { pw }, height { h } , width { w }
   {
     win = derwin(parent_win, height, width, pos_y, pos_x);
   };
   
-  void history::draw()
+  void decorator::draw()
   {
     for(auto&& f : current_files)
     {
@@ -31,37 +31,13 @@ namespace rrr
     wrefresh(win);
   }
 
-  void history::sort()
-  {
-    current_files = get_files_struct(PWD);
-    Files tmp;
-    tmp.reserve(current_files.size());
-    Files tmp_files;
-    tmp_files.reserve(current_files.size() / 2);
-
-    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp), [&tmp_files](const File& entry) -> bool {
-      if (entry.type == config::type::FILE_TYPE::DIR)
-        return true;
-      else
-      {
-        tmp_files.push_back(entry);
-        return false;
-      }
-    });
-
-    std::sort(tmp_files.begin(), tmp_files.end());
-    std::sort(tmp.begin(), tmp.end());
-    tmp.insert(tmp.end(), tmp_files.begin(), tmp_files.end());
-    current_files= tmp;
-  }
-
-  void history::set_pwd(std::string pwd)
+  void decorator::set_pwd(std::string pwd)
   {
     PWD = pwd;
-    sort();
+    sort(current_files, PWD);
   }
 
-  void history::set_pos(std::string p)
+  void decorator::set_pos(std::string p)
   {
     auto pos = p.find_last_of("/");
     auto file = p.substr(pos + 1);
@@ -72,9 +48,5 @@ namespace rrr
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
     if (it != std::end(current_files))
       select_pos = it - current_files.begin();
-  }
-
-  void history::trigger(int k)
-  {
   }
 }

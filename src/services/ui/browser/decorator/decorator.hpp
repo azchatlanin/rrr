@@ -11,31 +11,24 @@
 
 namespace rrr
 {
-  class preview : public board
+  class decorator
   {
     public:
-      preview(WINDOW*, int, int, int, int);
+      decorator(WINDOW*, int, int, int, int);
 
     public:
-      void draw() override;
-      void trigger(int) override;
+      void draw();
       void set_pwd(std::string);
       void set_pos(std::string);
 
     public: 
       WINDOW* win;
 
-    private: 
-      void set_title();
-      void fill(bool, WINDOW*, std::string);
-      void sort();
-
     private:
       WINDOW* parent_win;
       std::string PWD;
-      std::string PWD_PREV; 
       int height, width;
-
+      int select_pos = 0;
       Files current_files;
   };
 }

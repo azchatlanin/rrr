@@ -14,7 +14,7 @@ namespace rrr
 
     PWD = hack::utils::exec("pwd");
     PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
-    sort();
+    sort(current_files, PWD);
 
     getmaxyx(stdscr, ft.height, ft.width);
     state_manager::instance().max_y = ft.height;
@@ -26,9 +26,9 @@ namespace rrr
     box(win, 0 , 0);	
     set_title();
 
-    win_history = board::make<history>(win, ft.height - 2, ft.width / 3, 1, 1);
+    win_history = std::make_shared<decorator>(win, ft.height - 2, ft.width / 3, 1, 1);
     win_navigation = derwin(win, ft.height - 2, ft.width / 3 + 1, 1, ft.width / 3);
-    win_preview = board::make<preview>(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
+    win_preview = std::make_shared<decorator>(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
 
     wrefresh(win);
     wrefresh(win_history->win);
@@ -48,13 +48,13 @@ namespace rrr
   {
     auto pos = PWD.find_last_of("/");
     PWD = pos ? PWD.substr(0, pos) : "/";
-    sort();
+    sort(current_files, PWD);
   }
 
   void browser::next_pwd()
   {
     PWD += "/" + std::string(current_files.at(select_pos).name);
-    sort();
+    sort(current_files, PWD);
   }
 
   void browser::draw()
@@ -66,7 +66,7 @@ namespace rrr
     win_history->set_pos(PWD);
     win_history->draw();
     
-    set_cursor_position(current_files);
+    set_cursor_position();
 
     for(auto&& f : current_files)
     {
@@ -87,41 +87,15 @@ namespace rrr
       wattroff(win_navigation, (select_pos == i ? A_BOLD : 0));
     }
 
-    win_preview->set_pwd(PWD);
-    auto f = current_files.at(select_pos);
-    if (f.type == config::type::FILE_TYPE::DIR)
-      win_preview->set_pos(f.name);
+    win_preview->set_pwd(PWD_PREW);
+    win_preview->set_pos(PWD);
     win_preview->draw();
 
     wrefresh(win_navigation);
     wrefresh(win_preview->win);
   }
 
-  void browser::sort()
-  {
-    current_files = get_files_struct(PWD);
-    Files tmp;
-    tmp.reserve(current_files.size());
-    Files tmp_files;
-    tmp_files.reserve(current_files.size() / 2);
-
-    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp), [&tmp_files](const File& entry) -> bool { 
-      if (entry.type == config::type::FILE_TYPE::DIR)
-        return true;
-      else
-      {
-        tmp_files.push_back(entry);
-        return false;
-      }
-    });
-
-    std::sort(tmp_files.begin(), tmp_files.end());
-    std::sort(tmp.begin(), tmp.end());
-    tmp.insert(tmp.end(), tmp_files.begin(), tmp_files.end());
-    current_files= tmp;
-  }
-
-  void browser::set_cursor_position(const Files& result)
+  void browser::set_cursor_position()
   {
     switch (key) 
     {
@@ -141,7 +115,7 @@ namespace rrr
         select_pos = 0;
     }
     if (select_pos <= 0) select_pos = 0;
-    if (select_pos >= static_cast<int>(result.size())) select_pos = result.size() - 1;
+    if (select_pos >= static_cast<int>(current_files.size())) select_pos = current_files.size() - 1;
   }
 
   void browser::trigger(int k)

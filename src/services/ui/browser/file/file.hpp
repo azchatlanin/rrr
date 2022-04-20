@@ -2,11 +2,14 @@
 
 #include <vector>
 #include <filesystem>
+#include <map>
 
 #include "utils/config.hpp"
 
 namespace rrr
 {
+  inline std::map<std::string, std::string> state;
+
   struct File 
   {
     config::type::FILE_TYPE type;
@@ -52,7 +55,7 @@ namespace rrr
 
   using Files = std::vector<File>;
 
-  inline Files get_files_struct(const std::string path)
+  inline Files get_files_struct(const std::string& path)
   {
     Files f;
     std::filesystem::path p(path);
@@ -60,6 +63,30 @@ namespace rrr
     std::filesystem::directory_iterator end;
     std::transform(start, end, std::back_inserter(f), filesystem_convert());
     return f;
+  }
+
+  inline void sort(Files& current_files, std::string& PWD)
+  {
+    current_files = get_files_struct(PWD);
+    Files tmp;
+    tmp.reserve(current_files.size());
+    Files tmp_files;
+    tmp_files.reserve(current_files.size() / 2);
+
+    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp), [&tmp_files](const File& entry) -> bool { 
+      if (entry.type == config::type::FILE_TYPE::DIR)
+        return true;
+      else
+      {
+        tmp_files.push_back(entry);
+        return false;
+      }
+    });
+
+    std::sort(tmp_files.begin(), tmp_files.end());
+    std::sort(tmp.begin(), tmp.end());
+    tmp.insert(tmp.end(), tmp_files.begin(), tmp_files.end());
+    current_files= tmp;
   }
 
 }
