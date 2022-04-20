@@ -25,7 +25,10 @@ namespace rrr
   {
     wmove(win, 1, 1);
     wclrtoeol(win);
+    box(win, 0, 0);
+
     mvwaddstr(win, 1, 1, std::string(" path: " + PWD).c_str());
+
     wrefresh(win);
   }
 
