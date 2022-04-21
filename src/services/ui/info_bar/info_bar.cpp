@@ -16,19 +16,16 @@ namespace rrr
 
     win = newwin(max_y / 7, max_x / 2, max_y - max_y / 7, ft.start_x);
     box(win, 0, 0);
-
     set_title();
+
     wrefresh(win);
   }
 
   void info_bar::draw()
   {
     wmove(win, 1, 1);
-    wclrtoeol(win);
-    box(win, 0, 0);
-
+    clear();
     mvwaddstr(win, 1, 1, std::string(" path: " + PWD).c_str());
-
     wrefresh(win);
   }
 
@@ -52,5 +49,12 @@ namespace rrr
         PWD = std::any_cast<std::string>(data);
         break;
     }
+  }
+
+  void info_bar::clear()
+  {
+    wclrtoeol(win);
+    box(win, 0, 0);
+    set_title();
   }
 }

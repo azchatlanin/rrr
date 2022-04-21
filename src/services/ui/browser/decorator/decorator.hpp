@@ -30,5 +30,6 @@ namespace rrr
       int height, width;
       int select_pos = 0;
       Files current_files;
+      bool is_last = false;
   };
 }

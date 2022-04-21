@@ -23,5 +23,6 @@ namespace rrr
 
     private:
       void set_title();
+      void clear();
   };
 }

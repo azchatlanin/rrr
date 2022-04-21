@@ -15,37 +15,48 @@ namespace rrr
   
   void decorator::draw()
   {
-    for(auto&& f : current_files)
-    {
-      auto i = &f - current_files.data();
+    if (!is_last)
+      for(auto&& f : current_files)
+      {
+        auto i = &f - current_files.data();
 
-      if (f.type == config::type::FILE_TYPE::DIR)
-      {
-        wattron(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
-        select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
+        if (f.type == config::type::FILE_TYPE::DIR)
+        {
+          wattron(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+          select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
+        }
+        else
+        {
+          wattron(win, (select_pos == i ? A_BOLD : 0));
+          select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
+        }
+        mvwaddstr(win, i + 1, 4, f.name.c_str());
+        wattroff(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
+        wattroff(win, (select_pos == i ? A_BOLD : 0));
       }
-      else
-      {
-        wattron(win, (select_pos == i ? A_BOLD : 0));
-        select_pos == i ? mvwaddch(win, i + 1, 2, ACS_RARROW) : 0;
-      }
-      mvwaddstr(win, i + 1, 4, f.name.c_str());
-      wattroff(win, COLOR_PAIR(1) | (select_pos == i ? A_BOLD : 0));
-      wattroff(win, (select_pos == i ? A_BOLD : 0));
+    else
+    {
+      wattron(win, COLOR_PAIR(1) | A_BOLD);
+      mvwaddch(win, 1, 2, ACS_RARROW);
+      mvwaddstr(win, 1, 4, "/");
+      wattroff(win, COLOR_PAIR(1) | A_BOLD);
     }
-    
+
     wrefresh(win);
   }
 
   void decorator::set_pwd(std::string pwd)
   {
+    if (PWD.compare("/") == 0)
+    {
+      is_last = true;
+      return;
+    }
+    else 
+      is_last = false;
+
     PWD = pwd;
     fill(current_files, PWD);
-    // HERE !!!!!!!!!!!!!!!!!!!!!!!!
-    // if (PWD.compare("/") != 0)
-    //   fill(current_files, PWD);
-    // else 
-    //   current_files.emplace_back(config::type::FILE_TYPE::DIR, "/");
   }
 
   void decorator::set_pos(std::string p)

@@ -21,7 +21,7 @@ void init_nc()
   curs_set(0);
   cbreak();			
   keypad(stdscr, TRUE);
-  ESCDELAY=0;
+  ESCDELAY = 0;
   refresh();
 }
 

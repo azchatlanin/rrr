@@ -56,7 +56,7 @@ namespace rrr
     select_pos = 0;
 
     // fill pos in no state
-    for (auto& f : current_files)
+    for (auto&& f : current_files)
     {
       auto i = &f - current_files.data();
       if (file_name.compare(f.name) == 0)
@@ -64,7 +64,7 @@ namespace rrr
     }
 
     // fill pos if exist state
-    for (auto& f : current_files)
+    for (auto&& f : current_files)
     {
       auto i = &f - current_files.data();
       if (state[PWD].compare(f.name) == 0)
@@ -74,7 +74,14 @@ namespace rrr
 
   void browser::next_pwd()
   {
-    PWD += "/" + std::string(current_files.at(select_pos).name);
+    if (!std::filesystem::is_directory(PWD + (PWD.compare("/") == 0 
+      ? std::string(current_files.at(select_pos).name) 
+      : "/" + std::string(current_files.at(select_pos).name)))) return;
+
+    PWD += PWD.compare("/") == 0 
+      ? std::string(current_files.at(select_pos).name) 
+      : "/" + std::string(current_files.at(select_pos).name);
+
     fill(current_files, PWD);
     BOARD->execute(event::CHANGE_PWD, PWD); 
     select_pos = 0;
@@ -114,9 +121,13 @@ namespace rrr
     auto pos = PWD.find_last_of("/");
     auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
 
-    win_history->set_pwd(PWD_PREW);
-    win_history->set_pos(PWD);
-    win_history->draw();
+
+    if (std::filesystem::is_directory(PWD))
+    {
+      win_history->set_pwd(PWD_PREW);
+      win_history->set_pos(PWD);
+      win_history->draw();
+    }
     
     if (std::filesystem::is_directory(PWD + "/" + state[PWD]))
     {
@@ -125,8 +136,8 @@ namespace rrr
     }
     else
     {
-      win_preview->set_pwd(PWD);
-      win_preview->set_pos(state[PWD]);
+      // win_preview->set_pwd(PWD);
+      // win_preview->set_pos(state[PWD]);
     }
 
     win_preview->draw();
