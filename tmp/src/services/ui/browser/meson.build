@@ -1,7 +1,5 @@
-headers = [ 'file/file.hpp', 'browser.hpp', 'decorator/decorator.hpp', 'history/history.hpp' ]
-sources = [ 'browser.cpp', 'decorator/decorator.cpp', 'history/history.cpp' ]
-
-deps += managers_dep
+headers = ['file/file.hpp', 'browser.hpp', 'decorator/decorator.hpp']
+sources = ['browser.cpp', 'decorator/decorator.cpp']
 
 lib = library(
   'browser',

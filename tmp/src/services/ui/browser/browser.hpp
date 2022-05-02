@@ -1,17 +1,17 @@
 #pragma once
 
-#include "services/managers/manager/manager.hpp"
-#include "services/managers/state_manager/state_manager.hpp"
+#include <curses.h>
+#include <memory>
+#include <vector>
+#include <filesystem>
 
+#include "services/managers/manager.hpp"
 #include "utils/config.hpp"
-
-#include "history/history.hpp"
-
 #include "decorator/decorator.hpp"
 
 namespace rrr
 {
-  class browser : public board 
+  class browser : public board
   {
     public:
       browser();
@@ -24,19 +24,20 @@ namespace rrr
     public: 
       WINDOW* win;
       WINDOW* win_navigation;
-      std::shared_ptr<history> win_history;
+      std::shared_ptr<decorator> win_history;
       std::shared_ptr<decorator> win_preview;
 
     private: 
       void set_title();
       void next_pwd();
       void prew_pwd();
-      void up();
-      void down();
 
     private:
+      const int MAIN_KEY = 'F';
+      std::string PWD;
       int key;
       int select_pos = 0;
+      bool on_this = false;
       Files current_files;
   };
 }

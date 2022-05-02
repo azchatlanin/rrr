@@ -1,6 +1,5 @@
 inc += include_directories('.')
 
-subdir('services/managers')
 subdir('services/ui/browser')
 subdir('services/ui/info_bar')
 

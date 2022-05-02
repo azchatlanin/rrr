@@ -8,25 +8,26 @@
 
 namespace rrr
 {
-  class decorator
+  class history
   {
     public:
-      decorator(WINDOW*, int, int, int, int);
+      history(WINDOW*, int, int, int, int);
 
     public:
       void draw();
-      void set_pwd(std::string);
-      void set_pos(std::string);
+      void set_pwd();
 
     public: 
-      WINDOW* win;
+      std::shared_ptr<WINDOW> win;
 
     private:
-      WINDOW* parent_win;
-      std::string PWD;
-      int height, width;
       int select_pos = 0;
       Files current_files;
       bool is_last = false;
+
+    private: 
+      void set_pos();
+      void root_draw();
+      void dirs_draw();
   };
 }

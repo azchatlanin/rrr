@@ -1,16 +1,20 @@
 #include "browser.hpp"
 
+#include <curses.h>
+#include <iterator>
+
 #include "utils/utils.hpp"
 
 namespace rrr
 {
-  browser::browser() : board { 'F' }
+
+  browser::browser()
   {
     title = " File browser ";    
 
-    state_manager::instance().PWD = hack::utils::exec("pwd");
-    state_manager::instance().PWD.erase(std::remove(state_manager::instance().PWD.begin(), state_manager::instance().PWD.end(), '\n'), state_manager::instance().PWD.end());
-    fill(current_files, state_manager::instance().PWD);
+    PWD = hack::utils::exec("pwd");
+    PWD.erase(std::remove(PWD.begin(), PWD.end(), '\n'), PWD.end());
+    fill(current_files, PWD);
 
     getmaxyx(stdscr, ft.height, ft.width);
     state_manager::instance().max_y = ft.height;
@@ -22,12 +26,12 @@ namespace rrr
     box(win, 0 , 0);	
     set_title();
 
-    win_history = std::make_shared<history>(win, ft.height - 2, ft.width / 3, 1, 1);
+    win_history = std::make_shared<decorator>(win, ft.height - 2, ft.width / 3, 1, 1);
     win_navigation = derwin(win, ft.height - 2, ft.width / 3 + 1, 1, ft.width / 3);
     win_preview = std::make_shared<decorator>(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
 
     wrefresh(win);
-    wrefresh(win_history->win.get());
+    wrefresh(win_history->win);
     wrefresh(win_navigation);
     wrefresh(win_preview->win);
   };
@@ -42,12 +46,12 @@ namespace rrr
 
   void browser::prew_pwd()
   {
-    auto pos = state_manager::instance().PWD.find_last_of("/");
-    auto file_name = state_manager::instance().PWD.substr(pos + 1);
+    auto pos = PWD.find_last_of("/");
+    auto file_name = PWD.substr(pos + 1);
 
-    state_manager::instance().PWD = pos ? state_manager::instance().PWD.substr(0, pos) : "/";
-    fill(current_files, state_manager::instance().PWD);
-    BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD); 
+    PWD = pos ? PWD.substr(0, pos) : "/";
+    fill(current_files, PWD);
+    BOARD->execute(event::CHANGE_PWD, PWD); 
 
     select_pos = 0;
 
@@ -63,28 +67,29 @@ namespace rrr
     for (auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      if (state[state_manager::instance().PWD].compare(f.name) == 0)
+      if (state[PWD].compare(f.name) == 0)
         select_pos = i;
     }
   }
 
   void browser::next_pwd()
   {
-    if (!std::filesystem::is_directory(state_manager::instance().PWD + (state_manager::instance().PWD.compare("/") == 0 
+    if (!std::filesystem::is_directory(PWD + (PWD.compare("/") == 0 
       ? std::string(current_files.at(select_pos).name) 
       : "/" + std::string(current_files.at(select_pos).name)))) return;
 
-    state_manager::instance().PWD += state_manager::instance().PWD.compare("/") == 0 
+    PWD += PWD.compare("/") == 0 
       ? std::string(current_files.at(select_pos).name) 
       : "/" + std::string(current_files.at(select_pos).name);
 
-    fill(current_files, state_manager::instance().PWD);
+    fill(current_files, PWD);
+    BOARD->execute(event::CHANGE_PWD, PWD); 
     select_pos = 0;
 
     for (auto& f : current_files)
     {
       auto i = &f - current_files.data();
-      if (state[state_manager::instance().PWD].compare(f.name) == 0)
+      if (state[PWD].compare(f.name) == 0)
         select_pos = i;
     }
   }
@@ -110,23 +115,24 @@ namespace rrr
       wattroff(win_navigation, (select_pos == i ? A_BOLD : 0));
 
       if (select_pos == i)
-      {
-        state[state_manager::instance().PWD] = f.name;
-        BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD + "/" + f.name); 
-      }
-
+        state[PWD] = f.name;
     }
 
-    if (std::filesystem::is_directory(state_manager::instance().PWD))
+    auto pos = PWD.find_last_of("/");
+    auto PWD_PREW = pos ? PWD.substr(0, pos) : "/";
+
+
+    if (std::filesystem::is_directory(PWD))
     {
-      win_history->set_pwd();
+      win_history->set_pwd(PWD_PREW);
+      win_history->set_pos(PWD);
       win_history->draw();
     }
     
-    if (std::filesystem::is_directory(state_manager::instance().PWD + "/" + state[state_manager::instance().PWD]))
+    if (std::filesystem::is_directory(PWD + "/" + state[PWD]))
     {
-      win_preview->set_pwd(state_manager::instance().PWD + "/" + state[state_manager::instance().PWD]);
-      win_preview->set_pos(state[state_manager::instance().PWD + "/" + state[state_manager::instance().PWD]]);
+      win_preview->set_pwd(PWD + "/" + state[PWD]);
+      win_preview->set_pos(state[PWD + "/" + state[PWD]]);
     }
     else
     {
@@ -140,24 +146,15 @@ namespace rrr
     wrefresh(win_preview->win);
   }
 
-  void browser::up()
-  {
-    --select_pos;
-  }
-
-  void browser::down()
-  {
-    ++select_pos;
-  }
-
   void browser::trigger(int k)
   {
-    if (!on_this()) return;
+    on_this = state_manager::instance().cmd == MAIN_KEY ? true : false;
+    if (!on_this) return;
 
     key = k; 
+
     switch (key) 
     {
-      // selsect
       case 'h':
         prew_pwd();
         break;
@@ -170,19 +167,17 @@ namespace rrr
       case 10: // this is a key enter too
         next_pwd();
         break;
-        
-      // navigation
       case 'j':
-        down();
+        ++select_pos;
         break;
       case KEY_DOWN:
-        down();
+        ++select_pos;
         break;
       case 'k':
-        up();
+        --select_pos;
         break;
       case KEY_UP:
-        up();
+        --select_pos;
         break;
     }
 
@@ -190,7 +185,7 @@ namespace rrr
     if (select_pos >= static_cast<int>(current_files.size())) select_pos = current_files.size() - 1;
 
     werase(win_navigation);
-    werase(win_history->win.get());
+    werase(win_history->win);
     werase(win_preview->win);
   }
 

@@ -3,7 +3,6 @@
 #include <vector>
 #include <filesystem>
 #include <map>
-#include <ncurses.h>
 
 #include "utils/config.hpp"
 
@@ -14,7 +13,7 @@ namespace rrr
   struct File 
   {
     config::type::FILE_TYPE type;
-    std::string name;
+    std::filesystem::path name;
 
     File& operator=(const File& other)
     {
@@ -39,17 +38,8 @@ namespace rrr
       return name_tmp.compare(other_name_tmp) < 0;
     }
 
-    void draw(bool is_selected, int pos_x, std::shared_ptr<WINDOW> win)
-    {
-      if (type == config::type::FILE_TYPE::DIR)
-      {
-        wattron(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
-        is_selected ? mvwaddch(win.get(), pos_x + 1, 2, ACS_RARROW) : 0;
-      }
-      mvwaddstr(win.get(), pos_x + 1, 4, name.c_str());
-      wattroff(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
-      wattroff(win.get(), (is_selected ? A_BOLD : 0));
-    }
+    void draw()
+    {}
   };
 
   struct filesystem_convert

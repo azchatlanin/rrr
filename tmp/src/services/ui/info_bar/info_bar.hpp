@@ -1,9 +1,7 @@
 #pragma once
 
 #include <ncurses.h>
-
-#include "services/managers/manager/manager.hpp"
-#include "services/managers/state_manager/state_manager.hpp"
+#include "services/managers/manager.hpp"
 
 namespace rrr
 {

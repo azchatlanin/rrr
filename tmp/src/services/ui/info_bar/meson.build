@@ -1,8 +1,6 @@
 headers = ['info_bar.hpp']
 sources = ['info_bar.cpp']
 
-deps += managers_dep
-
 lib = library(
   'info_bar',
   include_directories : inc,

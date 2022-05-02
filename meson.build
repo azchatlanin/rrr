@@ -3,7 +3,7 @@ project(
   'rrr', 
   'cpp', 
   version : '0.0.1', 
-  default_options : ['cpp_std=c++2a']
+  default_options : ['cpp_std=c++20']
 )
 
 add_project_arguments (
@@ -21,23 +21,20 @@ elif compiler.get_id() == 'clang'
   message('Compiler: LLVM/clang')
 endif
 
-deps = [ 
-  dependency('threads'), 
-  dependency('ncurses'), 
-  dependency('menu'), 
-]
-
-args = [
-  '-lpanel',
-  '-lncursesw',
-  '-lncursesutf8',
-  '-lmenu'
-]
-
+args = []
 inc = []
+deps = []
 
-hack = subproject('hack')
-deps += hack.get_variable('logger_dep')
+args += '-lpanel'
+args += '-lncursesw'
+args += '-lncursesutf8'
+args += '-lmenu'
+
+
+deps += dependency('threads')
+deps += dependency('ncurses')
+deps += dependency('menu')
+deps += subproject('hack').get_variable('logger_dep')
 
 subdir('src')
 subdir('bin')

@@ -1,9 +1,12 @@
 #pragma once
 
 #include <curses.h>
+#include <memory>
+#include <vector>
+#include <filesystem>
 
 #include "../file/file.hpp"
-#include "services/managers/manager/manager.hpp"
+#include "services/managers/manager.hpp"
 #include "utils/config.hpp"
 
 namespace rrr

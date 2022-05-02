@@ -1,5 +1,8 @@
 #include "decorator.hpp"
 
+#include <curses.h>
+#include <iterator>
+
 #include "utils/utils.hpp"
 
 namespace rrr
