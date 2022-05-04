@@ -12,6 +12,9 @@ namespace rrr
   
   void history::draw()
   {
+    if (!std::filesystem::is_directory(state_manager::instance().PWD))
+      return;
+      
     is_last ? root_draw() : dirs_draw();
     wrefresh(win.get());
   }
@@ -33,34 +36,32 @@ namespace rrr
     }
   }
 
-  void history::set_pwd()
+  void history::fill()
   {
-    auto pos = state_manager::instance().PWD.find_last_of("/");
-    std::string pwd = pos ? state_manager::instance().PWD.substr(0, pos) : "/";
-    std::string relative_pwd = std::filesystem::path(state_manager::instance().PWD).relative_path();
-
-    if (relative_pwd.compare("") == 0)
-    {
-      pwd = "/";
-      is_last = true;
+    if (!std::filesystem::is_directory(state_manager::instance().PWD))
       return;
-    }
-    else 
+
+    if (state_manager::instance().PWD == state_manager::instance().PWD.root_path())
+      is_last = true;
+    else
       is_last = false;
 
-    fill(current_files, pwd);
-    set_pos();
+    std::filesystem::path parent_path = state_manager::instance().PWD.parent_path();
+    current_files = file_utils::fill(parent_path);
+    set_cursor_pos();
   }
 
-  void history::set_pos()
+  void history::set_cursor_pos()
   {
-    std::string pwd_slice = state_manager::instance().PWD.substr(state_manager::instance().PWD.find_last_of("/") + 1);
+    if (current_files.empty()) return;
 
-    auto find_pred = [&](File f) -> bool { 
-      return f.name.compare(pwd_slice) == 0 ? true : false;
+    std::filesystem::path file_name = state_manager::instance().PWD.filename();
+
+    auto find_pred = [&](file f) -> bool {
+      return f.path.filename() == file_name;
     };
 
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
-    select_pos = it != std::end(current_files) ? it - current_files.begin() : 0;
+    select_pos = std::distance(current_files.begin(), it);
   }
 }

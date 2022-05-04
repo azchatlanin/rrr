@@ -21,7 +21,7 @@ namespace rrr
       WINDOW* win;
 
     private:
-      std::string PWD;
+      std::filesystem::path pwd;
 
     private:
       void set_title();

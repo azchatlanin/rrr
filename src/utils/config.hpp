@@ -45,8 +45,3 @@ namespace rrr::config::key
     inline key MOVE_UP = "k";
   }
 }
-
-namespace rrr::config::type
-{
-  enum class FILE_TYPE { FILE, DIR };
-}

@@ -1,5 +1,5 @@
-headers = [ 'file/file.hpp', 'browser.hpp', 'decorator/decorator.hpp', 'history/history.hpp' ]
-sources = [ 'browser.cpp', 'decorator/decorator.cpp', 'history/history.cpp' ]
+headers = [ 'file/file.hpp', 'browser.hpp', 'history/history.hpp', 'navigation/navigation.hpp', 'preview/preview.hpp' ]
+sources = [ 'file/file.cpp', 'browser.cpp', 'history/history.cpp', 'navigation/navigation.cpp', 'preview/preview.cpp' ]
 
 deps += managers_dep
 

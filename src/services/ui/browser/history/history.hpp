@@ -15,18 +15,18 @@ namespace rrr
 
     public:
       void draw();
-      void set_pwd();
+      void fill();
 
     public: 
       std::shared_ptr<WINDOW> win;
 
     private:
       int select_pos = 0;
-      Files current_files;
+      file_utils::files current_files;
       bool is_last = false;
 
     private: 
-      void set_pos();
+      void set_cursor_pos();
       void root_draw();
       void dirs_draw();
   };

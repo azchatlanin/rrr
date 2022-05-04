@@ -15,6 +15,8 @@ namespace rrr
     box(win, 0, 0);
     set_title();
 
+    pwd = state_manager::instance().PWD / buffer::state[state_manager::instance().PWD];
+
     wrefresh(win);
   }
 
@@ -22,7 +24,7 @@ namespace rrr
   {
     wmove(win, 1, 1);
     clear();
-    mvwaddstr(win, 1, 1, std::string(" path: " + PWD).c_str());
+    mvwaddstr(win, 1, 1, std::string(" current path: " + pwd.string()).c_str());
     wrefresh(win);
   }
 
@@ -44,7 +46,7 @@ namespace rrr
     switch (e)
     {
       case CHANGE_PWD:
-        PWD = std::any_cast<std::string>(data);
+        pwd = std::any_cast<std::filesystem::path>(data);
         break;
     }
   }

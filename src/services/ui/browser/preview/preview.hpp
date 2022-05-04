@@ -8,25 +8,26 @@
 
 namespace rrr
 {
-  class decorator
+  class preview
   {
     public:
-      decorator(WINDOW*, int, int, int, int);
+      preview(WINDOW*, int, int, int, int);
 
     public:
       void draw();
-      void set_pwd(std::string);
-      void set_pos(std::string);
+      void fill();
 
     public: 
-      WINDOW* win;
+      std::shared_ptr<WINDOW> win;
 
     private:
-      WINDOW* parent_win;
-      std::string PWD;
-      int height, width;
       int select_pos = 0;
-      Files current_files;
+      file_utils::files current_files;
       bool is_last = false;
+      std::filesystem::path pwd;
+
+    private: 
+      void set_cursor_pos();
+      void dirs_draw();
   };
 }

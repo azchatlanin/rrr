@@ -2,101 +2,83 @@
 
 #include <vector>
 #include <filesystem>
-#include <map>
 #include <ncurses.h>
 
 #include "utils/config.hpp"
 
 namespace rrr
 {
-  inline std::map<std::string, std::string> state;
-
-  struct File 
+  class file 
   {
-    config::type::FILE_TYPE type;
-    std::string name;
+    public: 
+      file(std::filesystem::path path_, bool is_dir) : path { path_ }, directory { is_dir } {}
 
-    File& operator=(const File& other)
-    {
-      if (this == &other)
-        return *this;
-      type = other.type;
-      name = other.name;
-      return *this;
-    }
+    public:
+      file& operator=(const file& other);
+      bool operator<(const file& other);
+      void draw(bool is_selected, int pos_x, std::shared_ptr<WINDOW> win);
+      bool is_directory() const { return directory(); }
 
-    bool operator<(const File& other)
-    {
-      std::string name_tmp = name;
-      std::string other_name_tmp = other.name;
+    public:
+      std::filesystem::path path;
 
-      for (char &ch : name_tmp)
-        ch = std::tolower(ch);
-
-      for (char &ch : other_name_tmp)
-        ch = std::tolower(ch);
-
-      return name_tmp.compare(other_name_tmp) < 0;
-    }
-
-    void draw(bool is_selected, int pos_x, std::shared_ptr<WINDOW> win)
-    {
-      if (type == config::type::FILE_TYPE::DIR)
+    private:
+      struct dir 
       {
-        wattron(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
-        is_selected ? mvwaddch(win.get(), pos_x + 1, 2, ACS_RARROW) : 0;
-      }
-      mvwaddstr(win.get(), pos_x + 1, 4, name.c_str());
-      wattroff(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
-      wattroff(win.get(), (is_selected ? A_BOLD : 0));
-    }
+        dir(bool d) : is_dir { d } {}
+        bool operator()() const { return is_dir; }
+        bool is_dir;
+      } directory;
   };
+}
+
+namespace rrr::file_utils
+{
+  using files = std::vector<file>;
 
   struct filesystem_convert
   {
-    File operator()(const std::filesystem::directory_entry& entry) const
+    file operator()(const std::filesystem::directory_entry& entry) const
     {
-      File f;
-      f.name = entry.path().filename().string();
-      f.type = std::filesystem::is_directory(entry) ? config::type::FILE_TYPE::DIR : config::type::FILE_TYPE::FILE;
+      file f(entry.path(), std::filesystem::is_directory(entry));
       return f;
     }
   };
 
-  using Files = std::vector<File>;
-
-  inline Files get_files_struct(const std::string& path)
+  inline files get_files_struct(const std::filesystem::path& path)
   {
-    Files f;
-    std::filesystem::path p(path);
-    std::filesystem::directory_iterator start(p);
+    files f;
+    std::filesystem::directory_iterator start(path);
     std::filesystem::directory_iterator end;
     std::transform(start, end, std::back_inserter(f), filesystem_convert());
     return f;
   }
 
-  inline void fill(Files& current_files, std::string& PWD)
+  inline files fill(std::filesystem::path& pwd)
   {
-    current_files = get_files_struct(PWD);
-    Files tmp;
-    tmp.reserve(current_files.size());
-    Files tmp_files;
-    tmp_files.reserve(current_files.size() / 2);
+    files current_files = get_files_struct(pwd);
+    files tmp_dir;
+    tmp_dir.reserve(current_files.size());
 
-    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp), [&tmp_files](const File& entry) -> bool { 
-      if (entry.type == config::type::FILE_TYPE::DIR)
-        return true;
-      else
-      {
-        tmp_files.push_back(entry);
-        return false;
-      }
+    files tmp_files;
+    tmp_files.reserve(current_files.size() / 2); // TODO:: very strange mehtod. maybe use without / 2 ???
+
+    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp_dir), [](const file& f) -> bool { 
+      if (f.is_directory()) return true;
+      else return false;
     });
 
-    std::sort(tmp_files.begin(), tmp_files.end());
-    std::sort(tmp.begin(), tmp.end());
-    tmp.insert(tmp.end(), tmp_files.begin(), tmp_files.end());
-    current_files= tmp;
-  }
+    std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp_files), [](const file& f) -> bool { 
+      if (!f.is_directory()) return true;
+      else return false;
+    });
 
+    std::sort(tmp_dir.begin(), tmp_dir.end());
+    std::sort(tmp_files.begin(), tmp_files.end());
+
+    tmp_dir.insert(tmp_dir.end(), tmp_files.begin(), tmp_files.end());
+    current_files= tmp_dir;
+
+    return current_files;
+  }
 }

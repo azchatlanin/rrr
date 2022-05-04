@@ -1,13 +1,12 @@
 #pragma once
 
 #include "services/managers/manager/manager.hpp"
-#include "services/managers/state_manager/state_manager.hpp"
 
 #include "utils/config.hpp"
 
 #include "history/history.hpp"
-
-#include "decorator/decorator.hpp"
+#include "navigation/navigation.hpp"
+#include "preview/preview.hpp"
 
 namespace rrr
 {
@@ -23,20 +22,21 @@ namespace rrr
 
     public: 
       WINDOW* win;
-      WINDOW* win_navigation;
       std::shared_ptr<history> win_history;
-      std::shared_ptr<decorator> win_preview;
+      std::shared_ptr<navigation> win_navigation;
+      std::shared_ptr<preview> win_preview;
 
     private: 
       void set_title();
-      void next_pwd();
-      void prew_pwd();
-      void up();
-      void down();
+      void next();
+      void prew();
+      void move(int);
+      void refresh();
+      void erise();
+      void update();
 
     private:
       int key;
       int select_pos = 0;
-      Files current_files;
   };
 }
