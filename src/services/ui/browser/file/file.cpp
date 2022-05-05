@@ -2,6 +2,12 @@
 
 namespace rrr
 {
+  file::file(std::filesystem::path path_, bool is_dir) : path { path_ }, directory { is_dir } {}
+
+  file::file(file&& f) : path { std::move(f.path) }, directory { std::move(f.directory) } {}
+
+  file::file(const file& f) : path { f.path }, directory { f.directory } {}
+
   file& file::operator=(const file& other)
   {
     if (this == &other)

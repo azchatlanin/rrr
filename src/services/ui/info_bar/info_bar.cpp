@@ -24,7 +24,8 @@ namespace rrr
   {
     wmove(win, 1, 1);
     clear();
-    mvwaddstr(win, 1, 1, std::string(" current path: " + pwd.string()).c_str());
+
+    mvwaddstr(win, 1, 1, std::string(" path: " + pwd.string()).c_str());
     wrefresh(win);
   }
 

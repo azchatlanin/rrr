@@ -11,7 +11,9 @@ namespace rrr
   class file 
   {
     public: 
-      file(std::filesystem::path path_, bool is_dir) : path { path_ }, directory { is_dir } {}
+      file(std::filesystem::path path_, bool is_dir);
+      file(file&&);
+      file(const file&);
 
     public:
       file& operator=(const file& other);
@@ -26,6 +28,18 @@ namespace rrr
       struct dir 
       {
         dir(bool d) : is_dir { d } {}
+        dir(dir&& d) : is_dir { std::move(d.is_dir) } {}
+        dir(const dir& d) : is_dir { d.is_dir } {}
+
+        dir& operator=(const dir& d) 
+        { 
+          if (this == &d)
+            return *this;
+    
+          is_dir = d.is_dir; 
+          return *this;
+        };
+
         bool operator()() const { return is_dir; }
         bool is_dir;
       } directory;
@@ -40,17 +54,24 @@ namespace rrr::file_utils
   {
     file operator()(const std::filesystem::directory_entry& entry) const
     {
-      file f(entry.path(), std::filesystem::is_directory(entry));
-      return f;
+      return { entry.path(), std::filesystem::is_directory(entry) };
     }
   };
 
   inline files get_files_struct(const std::filesystem::path& path)
   {
     files f;
-    std::filesystem::directory_iterator start(path);
-    std::filesystem::directory_iterator end;
-    std::transform(start, end, std::back_inserter(f), filesystem_convert());
+    try 
+    {
+      std::filesystem::directory_iterator start(path);
+      std::filesystem::directory_iterator end;
+      std::transform(start, end, std::back_inserter(f), filesystem_convert());
+    }
+    catch(...)
+    {
+      f.push_back({path / "no permission", true});
+    }
+
     return f;
   }
 

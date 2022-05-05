@@ -9,20 +9,19 @@ int main(int argc, char **argv)
 {
   nc::init();
   nc::init_style();
-  
+
   auto browser = rrr::board::make<rrr::browser>();
   auto info_bar = rrr::board::make<rrr::info_bar>();
 
   rrr::manager manager { browser, info_bar };
   manager.draw();
-
+  
   while(int key = getch())
   {
     manager.trigger(key);
     manager.draw();
-
     nc::refresh();
   }
-  
+
   nc::end();
 }

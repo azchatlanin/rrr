@@ -22,6 +22,7 @@ namespace rrr
 
     private:
       std::filesystem::path pwd;
+      std::string log;
 
     private:
       void set_title();

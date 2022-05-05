@@ -29,6 +29,7 @@ args += '-lpanel'
 args += '-lncursesw'
 args += '-lncursesutf8'
 args += '-lmenu'
+args += '-lfmt'
 
 
 deps += dependency('threads')
