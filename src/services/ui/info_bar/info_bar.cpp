@@ -11,7 +11,7 @@ namespace rrr
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    win = newwin(max_y / 7, max_x / 2, max_y - max_y / 7, ft.start_x);
+    win = newwin(max_y / 7 - 3, max_x / 2, max_y - max_y / 7, ft.start_x);
     box(win, 0, 0);
     set_title();
 

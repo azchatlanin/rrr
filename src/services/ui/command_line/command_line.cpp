@@ -1,29 +1,30 @@
-#include "system_bar.hpp"
+#include "command_line.hpp"
 
 #include "utils/utils.hpp"
 
 namespace rrr
 {
-  system_bar::system_bar() : board { 'S' }
+
+  command_line::command_line() : board { 'C' }
   {
-    title = " System ";    
+    title = " Command ";    
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    win = newwin(max_y / 7 - 3, max_x / 2, max_y - max_y / 7, ft.start_x + max_x / 2);
+    win = newwin(3, max_x, max_y - 3, 0);
     box(win, 0, 0);
     set_title();
 
     wrefresh(win);
   }
 
-  void system_bar::draw()
+  void command_line::draw()
   {
     mvwaddstr(win, 1, 1, "adf");
     wrefresh(win);
   }
 
-  void system_bar::set_title()
+  void command_line::set_title()
   {
     wattron(win, COLOR_PAIR(1) | A_BOLD);
     mvwaddstr(win, 0, 3, title.substr(0,2).c_str());
@@ -31,16 +32,16 @@ namespace rrr
     mvwaddstr(win, 0, 5, title.substr(2, title.at(title.length()-1)).c_str());
   }
 
-  void system_bar::trigger(int key)
+  void command_line::trigger(int key)
   {
     if (!on_this()) return;
   }
 
-  void system_bar::execute(event e, std::any data)
+  void command_line::execute(event e, std::any data)
   {
   }
 
-  void system_bar::clear()
+  void command_line::clear()
   {
     wclrtoeol(win);
     box(win, 0, 0);
