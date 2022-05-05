@@ -67,6 +67,7 @@ namespace rrr
     win_navigation->set_cursor_pos(i);
     win_navigation->buffer_update();
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
+    BOARD->execute(event::SPACE_INFO, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
   void browser::update()
@@ -76,6 +77,7 @@ namespace rrr
     win_navigation->buffer_update();
     win_history->fill();
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
+    BOARD->execute(event::SPACE_INFO, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
   void browser::draw()

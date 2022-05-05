@@ -24,8 +24,19 @@ namespace rrr
   {
     wmove(win, 1, 1);
     clear();
+    wmove(win, 3, 1);
+    clear();
+    wmove(win, 4, 1);
+    clear();
+    wmove(win, 5, 1);
+    clear();
 
     mvwaddstr(win, 1, 1, std::string(" path: " + pwd.string()).c_str());
+
+    mvwaddstr(win, 3, 1, std::string(" capacity: " + std::to_string(space_info.capacity)).c_str());
+    mvwaddstr(win, 4, 1, std::string(" free: " + std::to_string(space_info.free)).c_str());
+    mvwaddstr(win, 5, 1, std::string(" available: " + std::to_string(space_info.available)).c_str());
+
     wrefresh(win);
   }
 
@@ -49,7 +60,17 @@ namespace rrr
       case CHANGE_PWD:
         pwd = std::any_cast<std::filesystem::path>(data);
         break;
+      case SPACE_INFO:
+        space_pwd = std::any_cast<std::filesystem::path>(data);
+        get_space_info();
+        break;
     }
+  }
+
+  void info_bar::get_space_info()
+  {
+    if (!std::filesystem::is_directory(space_pwd)) return;
+    space_info = std::filesystem::space(space_pwd);
   }
 
   void info_bar::clear()

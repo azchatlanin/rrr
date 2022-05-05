@@ -35,7 +35,6 @@ namespace rrr
         { 
           if (this == &d)
             return *this;
-    
           is_dir = d.is_dir; 
           return *this;
         };
@@ -82,7 +81,7 @@ namespace rrr::file_utils
     tmp_dir.reserve(current_files.size());
 
     files tmp_files;
-    tmp_files.reserve(current_files.size() / 2); // TODO:: very strange mehtod. maybe use without / 2 ???
+    tmp_files.reserve(current_files.size()); // TODO:: very strange mehtod. maybe use without / 2 ???
 
     std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp_dir), [](const file& f) -> bool { 
       if (f.is_directory()) return true;

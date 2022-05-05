@@ -11,7 +11,7 @@ namespace rrr
 {
   enum event 
   {
-    CHANGE_PWD
+    CHANGE_PWD, SPACE_INFO
   };
 
   struct i_board

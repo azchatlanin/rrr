@@ -7,10 +7,10 @@
 
 namespace rrr
 {
-  class info_bar : public board
+  class system_bar : public board
   {
     public:
-      info_bar();
+      system_bar();
 
     public:
       void draw() override;
@@ -21,13 +21,7 @@ namespace rrr
       WINDOW* win;
 
     private:
-      std::filesystem::path pwd;
-      std::filesystem::path space_pwd;
-      std::filesystem::space_info space_info;
-
-    private:
       void set_title();
-      void get_space_info();
       void clear();
   };
 }
