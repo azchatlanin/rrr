@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ncurses.h>
 #include <filesystem>
 #include <optional>
 #include <unordered_map>
@@ -27,12 +28,15 @@ namespace rrr
           break;
         case 27: // ESC
           cmd = 'F';
+          curs_set(0);
           break;
         case 'C':
           cmd = key;
+          curs_set(1);
           break;
         case ':':
           cmd = key;
+          curs_set(1);
           break;
       }
     }

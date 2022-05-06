@@ -33,10 +33,10 @@ namespace rrr
         state_manager::instance().set(key);
         if (key == 27) 
         {
-          for (auto& b : boards) b->drop();
+          for (auto&& b : boards) b->drop();
           return;
         }
-        for (auto& b : boards) b->trigger(key);
+        for (auto&& b : boards) b->trigger(key);
       }
 
     private: 

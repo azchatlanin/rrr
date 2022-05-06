@@ -22,8 +22,12 @@ namespace rrr
 
   void command_line::draw()
   {
+    // перемещение виртуального курсора в самом окне
     wmove(win, 1, 1);
     clear();
+
+    // перемещение физического курсора, тот который мигает
+    move(LINES - 2, cmd.size() + 1);
 
     mvwaddstr(win, 1, 1, std::string(cmd).c_str());
     wrefresh(win);
@@ -40,7 +44,10 @@ namespace rrr
   void command_line::trigger(int key)
   {
     if (!on_this()) return;
-    cmd = key == 58 ? ":" : cmd + std::to_string(key);
+    if (key == 58 ||  key == 'C')
+      cmd = ":";
+    else
+      cmd.push_back(key); 
   }
 
   void command_line::execute(event e, std::any data)
