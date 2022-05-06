@@ -133,6 +133,9 @@ namespace rrr
 
   void browser::execute(event e, std::any) {}
 
+  void browser::drop() 
+  {}
+
   void browser::refresh()
   {
     wrefresh(win);

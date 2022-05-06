@@ -1,5 +1,7 @@
 #include <any>
 #include <memory>
+#include <vector>
+
 
 #include "../../state_manager/state_manager.hpp"
 
@@ -23,13 +25,14 @@ namespace rrr
   class board 
   {
     public: 
-      explicit board(const int main_key);
+      explicit board(std::initializer_list<int>);
       virtual ~board() = default;
 
     public: 
       virtual void draw() = 0;
       virtual void trigger(int) = 0;
       virtual void execute(event, std::any) = 0;
+      virtual void drop() = 0;
 
       template<typename T, typename... Args>
       static std::shared_ptr<T> make(Args... args)
@@ -43,7 +46,7 @@ namespace rrr
 
     protected: 
       // главная клавиша каждой доски по которой эта доска активируется
-      const int MAIN_KEY;
+      std::vector<int> MAIN_KEYS;
       i_board* BOARD;
       std::string title;
       struct features

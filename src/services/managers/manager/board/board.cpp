@@ -2,7 +2,7 @@
 
 namespace rrr
 {
-  board::board(const int main_key) : MAIN_KEY { main_key } 
+  board::board(std::initializer_list<int> keys) : MAIN_KEYS { keys } 
   {}
 
   void board::set(i_board* b_) 
@@ -12,6 +12,10 @@ namespace rrr
 
   bool board::on_this()
   {
-    return  state_manager::instance().cmd == MAIN_KEY ? true : false;
+    auto it = std::find_if(MAIN_KEYS.begin(), MAIN_KEYS.end(), [](const int v) {
+        return v == state_manager::instance().cmd;
+    });
+
+    return it != std::end(MAIN_KEYS);
   }
 }

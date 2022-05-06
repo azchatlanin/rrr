@@ -1,11 +1,13 @@
 #include "command_line.hpp"
 
+#include "logger/logger.hpp"
+
 #include "utils/utils.hpp"
 
 namespace rrr
 {
 
-  command_line::command_line() : board { 'C' }
+  command_line::command_line() : board { { 'C', ':' } }
   {
     title = " Command ";    
     auto max_x = state_manager::instance().max_x;
@@ -20,7 +22,10 @@ namespace rrr
 
   void command_line::draw()
   {
-    mvwaddstr(win, 1, 1, "adf");
+    wmove(win, 1, 1);
+    clear();
+
+    mvwaddstr(win, 1, 1, std::string(cmd).c_str());
     wrefresh(win);
   }
 
@@ -35,10 +40,16 @@ namespace rrr
   void command_line::trigger(int key)
   {
     if (!on_this()) return;
+    cmd = key == 58 ? ":" : cmd + std::to_string(key);
   }
 
   void command_line::execute(event e, std::any data)
   {
+  }
+
+  void command_line::drop() 
+  {
+    cmd = "";
   }
 
   void command_line::clear()

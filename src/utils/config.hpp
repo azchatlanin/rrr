@@ -36,12 +36,4 @@ namespace rrr::config::key
       inline key SCRIPT = "S";
     }
   }
-
-  //========================================
-
-  namespace MOVE
-  {
-    inline key MOVE_DOWN = "j";
-    inline key MOVE_UP = "k";
-  }
 }

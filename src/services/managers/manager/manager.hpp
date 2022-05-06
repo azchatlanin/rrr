@@ -30,10 +30,13 @@ namespace rrr
 
       void trigger(int key) 
       {
-        auto sm = rrr::state_manager::instance();
-        sm.set(key);
-        for (auto&& b : boards) 
-          b->trigger(key);
+        state_manager::instance().set(key);
+        if (key == 27) 
+        {
+          for (auto& b : boards) b->drop();
+          return;
+        }
+        for (auto& b : boards) b->trigger(key);
       }
 
     private: 
