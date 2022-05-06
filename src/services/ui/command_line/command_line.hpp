@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <ncurses.h>
 
 #include "services/managers/manager/manager.hpp"
@@ -23,9 +24,11 @@ namespace rrr
 
     private: 
       std::string cmd;
+      std::vector<std::string> commands { ":rename", ":delete", ":copy", ":paste"};
 
     private:
       void set_title();
+      void auto_fill();
       void clear();
   };
 }

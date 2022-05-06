@@ -46,8 +46,22 @@ namespace rrr
     if (!on_this()) return;
     if (key == 58 ||  key == 'C')
       cmd = ":";
+    else if (key == 9)
+      auto_fill();
     else
       cmd.push_back(key); 
+  }
+
+  void command_line::auto_fill()
+  {
+    auto it = std::find_if(commands.begin(), commands.end(), [&](const std::string& c) {
+      auto n = c.find(cmd);
+      if (n == std::string::npos || n != 0)
+        return false;
+      return true;
+    });
+
+    if (it != std::end(commands)) cmd = it->data();
   }
 
   void command_line::execute(event e, std::any data)
