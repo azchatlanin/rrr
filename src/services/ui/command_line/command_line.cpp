@@ -6,6 +6,7 @@
 
 // hack
 #include "utils/utils.hpp"
+#include "string/string.hpp"
 
 namespace rrr
 {
@@ -58,6 +59,9 @@ namespace rrr
       case config::key::ENTER:
         command_run();
         break;
+      case config::key::BACKSPACE:
+        remove_last();
+        break;
       default: 
         cmd.push_back(key);
     }
@@ -82,7 +86,15 @@ namespace rrr
       case DROP:
         drop();
         break;
+      default:
+        break;
     }
+  }
+
+  void command_line::remove_last()
+  {
+    if(!cmd.empty())
+      cmd.pop_back();
   }
 
   void command_line::drop() 
@@ -92,18 +104,54 @@ namespace rrr
 
   void command_line::command_run()
   {
-    if (cmd.compare("rename"))
+    v_cmd = hack::string::split_str(cmd, ' ');
+    if (v_cmd.empty()) return;
+
+    if (v_cmd.at(0) == std::string("rename"))
       rename();
+    if (v_cmd.at(0) == std::string("touch"))
+      create("touch ");
+    if (v_cmd.at(0) == std::string("trash"))
+      trash();
+    if (v_cmd.at(0) == std::string("mkdir"))
+      create("mkdir -p ");
+    if (v_cmd.at(0) == std::string("delete"))
+      rm_rf();
+  }
+
+  void command_line::create(std::string unix_cmd)
+  {
+    auto name = std::filesystem::path(v_cmd.at(1));
+    if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
+    hack::utils::exec((unix_cmd + (state_manager::instance().PWD / name).string()).c_str());
+    BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
   void command_line::rename()
   {
-    auto old_name = state_manager::instance().PWD / buffer::state[state_manager::instance().PWD].filename();
-    auto new_name = std::filesystem::path(cmd.substr(cmd.find_first_of(" ") + 1, cmd.size()));
-    if (!new_name.empty()) new_name = state_manager::instance().PWD / new_name;
-    hack::utils::exec(("mv " + old_name.string() + " " + new_name.string()).c_str());
+    auto old_name = buffer::state[state_manager::instance().PWD].filename();
+    auto new_name = std::filesystem::path(v_cmd.at(1));
+    if (new_name.empty()) 
+    {
+      BOARD->execute(event::COMMAND_COMPLETED, true);
+      return; 
+    }
+    hack::utils::exec(("mv " + (state_manager::instance().PWD /old_name).string() + " " + (state_manager::instance().PWD / new_name).string()).c_str());
+    BOARD->execute(event::COMMAND_COMPLETED, true);
+  }
 
-    BOARD->execute(event::RENAME_COMPLETED, true); 
+  void command_line::trash()
+  {
+    auto name = buffer::state[state_manager::instance().PWD].filename();
+    hack::utils::exec(("trash " + (state_manager::instance().PWD / name).string()).c_str());
+    BOARD->execute(event::COMMAND_COMPLETED, true);
+  }
+
+  void command_line::rm_rf()
+  {
+    auto name = buffer::state[state_manager::instance().PWD].filename();
+    hack::utils::exec(("rm -rf " + (state_manager::instance().PWD / name).string()).c_str());
+    BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
   void command_line::clear()

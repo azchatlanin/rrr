@@ -23,7 +23,8 @@ namespace rrr
 
     private: 
       std::string cmd;
-      std::vector<std::string> commands { "rename", "delete", "copy", "paste"};
+      std::vector<std::string> v_cmd;
+      std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete" };
 
     private:
       void set_title();
@@ -32,5 +33,9 @@ namespace rrr
       void drop();
       void command_run();
       void rename();
+      void trash();
+      void rm_rf();
+      void create(std::string);
+      void remove_last();
   };
 }

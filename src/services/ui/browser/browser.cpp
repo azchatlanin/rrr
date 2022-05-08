@@ -125,6 +125,8 @@ namespace rrr
       case KEY_UP:
         move(-1);
         break;
+      default:
+        break;
     }
 
     erise();
@@ -134,10 +136,12 @@ namespace rrr
   {
     switch (e)
     {
-      case RENAME_COMPLETED:
+      case COMMAND_COMPLETED:
         erise();
         win_navigation->fill();
         win_history->fill();
+        break;
+      default:
         break;
     }
   }

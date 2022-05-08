@@ -61,6 +61,8 @@ namespace rrr
         space_pwd = std::any_cast<std::filesystem::path>(data);
         get_space_info();
         break;
+      default:
+        break;
     }
   }
 

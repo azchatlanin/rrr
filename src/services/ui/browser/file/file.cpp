@@ -21,6 +21,8 @@ namespace rrr
 
   bool file::operator<(const file& other)
   {
+    // используем тут дял сравнеия именно .compare т.к. это помогает делать верную сортировку
+    // т.к. compare помогает сравнить имеено порядок
     return path.string().compare(other.path.string()) < 0;
   }
 

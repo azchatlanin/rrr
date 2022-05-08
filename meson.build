@@ -36,6 +36,7 @@ deps += dependency('threads')
 deps += dependency('ncurses')
 deps += dependency('menu')
 deps += subproject('hack').get_variable('logger_dep')
+deps += subproject('hack').get_variable('string_dep')
 
 subdir('src')
 subdir('bin')

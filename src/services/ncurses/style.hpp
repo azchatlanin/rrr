@@ -1,10 +1,11 @@
 #include <curses.h>
+#include <system_error>
 
 namespace nc
 {
   inline void init_style()
   {
-    if (!has_colors()) throw "Don't set color";
+    if (!has_colors()) throw std::runtime_error{ "Don't set color" };
 
     use_default_colors();
     start_color();

@@ -13,7 +13,7 @@ namespace rrr
 {
   enum event 
   {
-    CHANGE_PWD, SPACE_INFO, RENAME_COMPLETED, DROP
+    CHANGE_PWD, SPACE_INFO, COMMAND_COMPLETED, DROP
   };
 
   struct i_board
