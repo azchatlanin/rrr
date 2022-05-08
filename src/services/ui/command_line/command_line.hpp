@@ -17,18 +17,20 @@ namespace rrr
       void draw() override;
       void trigger(int) override;
       void execute(event, std::any) override;
-      void drop() override;
 
     public: 
       WINDOW* win;
 
     private: 
       std::string cmd;
-      std::vector<std::string> commands { ":rename", ":delete", ":copy", ":paste"};
+      std::vector<std::string> commands { "rename", "delete", "copy", "paste"};
 
     private:
       void set_title();
       void auto_fill();
       void clear();
+      void drop();
+      void command_run();
+      void rename();
   };
 }

@@ -130,10 +130,17 @@ namespace rrr
     erise();
   }
 
-  void browser::execute(event e, std::any) {}
-
-  void browser::drop() 
-  {}
+  void browser::execute(event e, std::any) 
+  {
+    switch (e)
+    {
+      case RENAME_COMPLETED:
+        erise();
+        win_navigation->fill();
+        win_history->fill();
+        break;
+    }
+  }
 
   void browser::refresh()
   {
@@ -145,9 +152,8 @@ namespace rrr
 
   void browser::erise()
   {
-     werase(win_navigation->win.get());
+    werase(win_navigation->win.get());
     werase(win_history->win.get());
     werase(win_preview->win.get());
   }
-
 }

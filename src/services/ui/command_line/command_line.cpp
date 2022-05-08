@@ -4,6 +4,9 @@
 
 #include "utils/config.hpp"
 
+// hack
+#include "utils/utils.hpp"
+
 namespace rrr
 {
 
@@ -26,9 +29,9 @@ namespace rrr
     clear();
 
     // перемещение физического курсора, тот который мигает
-    move(LINES - 2, cmd.size() + 1);
+    move(LINES - 2, cmd.size() + 2);
 
-    mvwaddstr(win, 1, 1, std::string(cmd).c_str());
+    mvwaddstr(win, 1, 1, std::string(!on_this() ? "" : ":" + cmd).c_str());
     wrefresh(win);
   }
 
@@ -47,13 +50,13 @@ namespace rrr
     switch (key) 
     {
       case config::key::COLON_COLON:
-        cmd = ":";
+        cmd = "";
         break;
       case config::key::TAB:
         auto_fill();
         break;
       case config::key::ENTER:
-        cmd = ":";
+        command_run();
         break;
       default: 
         cmd.push_back(key);
@@ -74,11 +77,33 @@ namespace rrr
 
   void command_line::execute(event e, std::any data)
   {
+    switch (e)
+    {
+      case DROP:
+        drop();
+        break;
+    }
   }
 
   void command_line::drop() 
   {
-    cmd = "";
+    cmd.clear();
+  }
+
+  void command_line::command_run()
+  {
+    if (cmd.compare("rename"))
+      rename();
+  }
+
+  void command_line::rename()
+  {
+    auto old_name = state_manager::instance().PWD / buffer::state[state_manager::instance().PWD].filename();
+    auto new_name = std::filesystem::path(cmd.substr(cmd.find_first_of(" ") + 1, cmd.size()));
+    if (!new_name.empty()) new_name = state_manager::instance().PWD / new_name;
+    hack::utils::exec(("mv " + old_name.string() + " " + new_name.string()).c_str());
+
+    BOARD->execute(event::RENAME_COMPLETED, true); 
   }
 
   void command_line::clear()

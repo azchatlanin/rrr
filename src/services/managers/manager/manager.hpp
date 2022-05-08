@@ -20,7 +20,12 @@ namespace rrr
 
       void execute(event e, std::any data) const override
       {
-        for (auto&& b : boards) b->execute(e, data);
+        for (auto&& b : boards)
+        {
+          b->execute(e, data);
+          state_manager::instance().set(config::key::ESC);
+          b->execute(event::DROP, true);
+        }
       }
 
       void draw() 
@@ -32,10 +37,9 @@ namespace rrr
       {
         state_manager::instance().set(key);
 
-        // всеобщий ESC
-        if (key == 27) 
+        if (key == config::key::ESC) 
         {
-          for (auto&& b : boards) b->drop();
+          for (auto&& b : boards) b->execute(event::DROP, true);
           return;
         }
 

@@ -70,9 +70,6 @@ namespace rrr
     space_info = std::filesystem::space(space_pwd);
   }
 
-  void info_bar::drop() 
-  {}
-
   void info_bar::clear()
   {
     wclrtoeol(win);

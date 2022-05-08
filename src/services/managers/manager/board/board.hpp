@@ -13,7 +13,7 @@ namespace rrr
 {
   enum event 
   {
-    CHANGE_PWD, SPACE_INFO
+    CHANGE_PWD, SPACE_INFO, RENAME_COMPLETED, DROP
   };
 
   struct i_board
@@ -32,7 +32,6 @@ namespace rrr
       virtual void draw() = 0;
       virtual void trigger(int) = 0;
       virtual void execute(event, std::any) = 0;
-      virtual void drop() = 0;
 
       template<typename T, typename... Args>
       static std::shared_ptr<T> make(Args... args)

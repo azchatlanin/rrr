@@ -37,9 +37,6 @@ namespace rrr
   {
   }
 
-  void system_bar::drop() 
-  {}
-
   void system_bar::clear()
   {
     wclrtoeol(win);
