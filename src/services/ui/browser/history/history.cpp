@@ -1,7 +1,5 @@
 #include "history.hpp"
 
-#include "utils/utils.hpp"
-
 namespace rrr
 {
 

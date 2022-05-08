@@ -2,15 +2,14 @@
 
 #include "services/managers/state_manager/state_manager.hpp"
 
+// hack
 #include "logger/logger.hpp"
 #include "utils/utils.hpp"
 
 namespace rrr
 {
-  browser::browser() : board { 'F' }
+  browser::browser() : board { { 'F' }, " File browser " }
   {
-    title = " File browser ";    // TODO: move it to the constructor in the board
-
     try 
     {
       std::string tmp_pwd = hack::utils::exec("pwd");

@@ -9,31 +9,8 @@
 
 namespace rrr::config::key
 {
-  using key = const std::string;
-
-  inline key ESC = "ESC";
-
-  namespace TOP_MENU
-  {
-    namespace FILE 
-    {
-      inline key FILE = "F";
-      inline key NEW = "N";
-      inline key EDIT = "E";
-      inline key DELETE = "D";
-      inline key SELECT = "S";
-      inline key COPY = "C";
-      inline key PASTE = "P";
-      inline key QUITE = "Q";
-    }
-
-    namespace VIEW
-    {
-      inline key VIEW = "V";
-      inline key INFO = "I";
-      inline key LOGS = "L";
-      inline key MONITOR = "M";
-      inline key SCRIPT = "S";
-    }
-  }
+  inline const int ENTER = 10;
+  inline const int COLON_COLON = 58;
+  inline const int TAB = 9;
+  inline const int ESC = 27;
 }

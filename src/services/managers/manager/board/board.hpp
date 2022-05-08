@@ -25,7 +25,7 @@ namespace rrr
   class board 
   {
     public: 
-      explicit board(std::initializer_list<int>);
+      explicit board(std::initializer_list<int>, std::string);
       virtual ~board() = default;
 
     public: 

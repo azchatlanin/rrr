@@ -5,8 +5,10 @@
 #include <optional>
 #include <unordered_map>
 
+#include "utils/config.hpp"
+
 /*
- Даннфй клас определяет глобальное состояние некоторых параметров.
+ Данный клас определяет глобальное состояние некоторых параметров.
  например: 
  - максимальные размеры терминала
  - текущую нажатую клавишу, которую неоходимо знать в других окнах. (типа leader в vim)
@@ -26,13 +28,9 @@ namespace rrr
         case 'V':
           cmd = key;
           break;
-        case 27: // ESC
+        case config::key::ESC: // ESC
           cmd = 'F';
           curs_set(0);
-          break;
-        case 'C':
-          cmd = key;
-          curs_set(1);
           break;
         case ':':
           cmd = key;

@@ -2,14 +2,13 @@
 
 #include "logger/logger.hpp"
 
-#include "utils/utils.hpp"
+#include "utils/config.hpp"
 
 namespace rrr
 {
 
-  command_line::command_line() : board { { 'C', ':' } }
+  command_line::command_line() : board { { 'C', ':' }, " :Command " }
   {
-    title = " Command ";    
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
@@ -44,12 +43,21 @@ namespace rrr
   void command_line::trigger(int key)
   {
     if (!on_this()) return;
-    if (key == 58 ||  key == 'C')
-      cmd = ":";
-    else if (key == 9)
-      auto_fill();
-    else
-      cmd.push_back(key); 
+   
+    switch (key) 
+    {
+      case config::key::COLON_COLON:
+        cmd = ":";
+        break;
+      case config::key::TAB:
+        auto_fill();
+        break;
+      case config::key::ENTER:
+        cmd = ":";
+        break;
+      default: 
+        cmd.push_back(key);
+    }
   }
 
   void command_line::auto_fill()

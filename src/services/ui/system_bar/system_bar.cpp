@@ -1,12 +1,9 @@
 #include "system_bar.hpp"
 
-#include "utils/utils.hpp"
-
 namespace rrr
 {
-  system_bar::system_bar() : board { 'S' }
+  system_bar::system_bar() : board { { 'S' }, " System " }
   {
-    title = " System ";    
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 

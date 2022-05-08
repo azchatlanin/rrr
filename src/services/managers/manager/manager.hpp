@@ -31,11 +31,14 @@ namespace rrr
       void trigger(int key) 
       {
         state_manager::instance().set(key);
+
+        // всеобщий ESC
         if (key == 27) 
         {
           for (auto&& b : boards) b->drop();
           return;
         }
+
         for (auto&& b : boards) b->trigger(key);
       }
 

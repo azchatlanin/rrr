@@ -1,13 +1,10 @@
 #include "info_bar.hpp"
 
-#include "utils/utils.hpp"
-
 namespace rrr
 {
 
-  info_bar::info_bar() : board { 'F' }
+  info_bar::info_bar() : board { { 'F' }, " Info "}
   {
-    title = " Info ";    
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 

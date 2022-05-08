@@ -2,7 +2,7 @@
 
 namespace rrr
 {
-  board::board(std::initializer_list<int> keys) : MAIN_KEYS { keys } 
+  board::board(std::initializer_list<int> keys, std::string t) : MAIN_KEYS { keys }, title { t }
   {}
 
   void board::set(i_board* b_) 
