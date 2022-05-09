@@ -102,6 +102,10 @@ namespace rrr
     cmd.clear();
   }
 
+  // HERE
+  // сделать выделение
+  // сдеать массовое копирование
+  // сдеать массовое удаление
   void command_line::command_run()
   {
     v_cmd = hack::string::split_str(cmd, ' ');
@@ -109,6 +113,10 @@ namespace rrr
 
     if (v_cmd.at(0) == std::string("rename"))
       rename();
+    if (v_cmd.at(0) == std::string("copy"))
+      copy();
+    if (v_cmd.at(0) == std::string("paste"))
+      paste();
     if (v_cmd.at(0) == std::string("touch"))
       create("touch ");
     if (v_cmd.at(0) == std::string("trash"))
@@ -121,6 +129,7 @@ namespace rrr
 
   void command_line::create(std::string unix_cmd)
   {
+    if (v_cmd.size() < 2) return;
     auto name = std::filesystem::path(v_cmd.at(1));
     if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
     hack::utils::exec((unix_cmd + (state_manager::instance().PWD / name).string()).c_str());
@@ -129,6 +138,7 @@ namespace rrr
 
   void command_line::rename()
   {
+    if (v_cmd.size() < 2) return;
     auto old_name = buffer::state[state_manager::instance().PWD].filename();
     auto new_name = std::filesystem::path(v_cmd.at(1));
     if (new_name.empty()) 
@@ -137,6 +147,32 @@ namespace rrr
       return; 
     }
     hack::utils::exec(("mv " + (state_manager::instance().PWD /old_name).string() + " " + (state_manager::instance().PWD / new_name).string()).c_str());
+    BOARD->execute(event::COMMAND_COMPLETED, true);
+  }
+
+  void command_line::copy()
+  {
+    auto name = buffer::state[state_manager::instance().PWD].filename();
+    buffer_path.push_back(state_manager::instance().PWD / name);
+    BOARD->execute(event::COMMAND_COMPLETED, true);
+  }
+
+  void command_line::paste()
+  {
+    for (auto&& p : buffer_path)
+    {
+      std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
+      std::filesystem::path destination = state_manager::instance().PWD / p.filename();
+
+      if (std::filesystem::exists(state_manager::instance().PWD / p)) 
+      {
+        std::string file_name = p.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        destination = state_manager::instance().PWD / std::filesystem::path(file_name);
+      }
+
+      hack::utils::exec((unix_cmd + p.string() + " " + destination.string()).c_str());
+    }
+    buffer_path.clear();
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 

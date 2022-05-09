@@ -22,9 +22,14 @@ namespace rrr
       WINDOW* win;
 
     private: 
+      // текущая команда
       std::string cmd;
+      // вектор строк после разбора комантной строки по разделителю
       std::vector<std::string> v_cmd;
-      std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete" };
+      // список доступных команд
+      std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete", "copy", "paste" };
+      // буфер путей к файлам с которыми массово что-то сделать
+      std::vector<std::filesystem::path> buffer_path;
 
     private:
       void set_title();
@@ -34,6 +39,8 @@ namespace rrr
       void command_run();
       void rename();
       void trash();
+      void copy();
+      void paste();
       void rm_rf();
       void create(std::string);
       void remove_last();
