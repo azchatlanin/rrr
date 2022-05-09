@@ -27,7 +27,7 @@ namespace rrr
       // вектор строк после разбора комантной строки по разделителю
       std::vector<std::string> v_cmd;
       // список доступных команд
-      std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete", "copy", "paste" };
+      std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete", "paste", "move" };
      
     private:
       void set_title();
@@ -36,11 +36,11 @@ namespace rrr
       void drop();
       void command_run();
       void rename();
-      void trash();
-      void copy();
+      void moving();
       void paste();
-      void rm_rf();
+      void remove(std::string);
       void create(std::string);
       void remove_last();
+      std::filesystem::path destination(const std::filesystem::path& p);
   };
 }

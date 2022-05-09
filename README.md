@@ -14,14 +14,14 @@ At this stage, the project is launched by cloning this repository and building l
 3. run: meson setup build
 4. run the script: . run
 
-*how to use:*
+**Use:**
 - moving is similar to vim (h, j, k, l)
 - you use autocompleted in the command: ren <tab> -> rename
 - rename selected file - set cursor to the file for change and run (it vim :) - :rename new_file_name
 - create file - :touch file_name
 - trash - this command to moved file in the your folder by name .trash. Please create your own script trash.sh whish do it and put this script in your sistem folder - bin.
 ```
-for example:
+for example trash.sh:
 mkdir -p $trash
 DATE=`date +%Y-%m-%d`
 TIME=`date +%H:%M:%S`
@@ -34,9 +34,6 @@ done
 ```
 - delete - if you want use rm -rf, run - :delete
 - create dir - :mkdir dir_name
-- copy file/dir - set cursor on the file/dir and run :copy
-- paste file/dir - set cursor to the necessary directory and run :paste
-- select files/dirs - pres space
-
+- select files/dirs - press space. If you want to do: paste, delete, move or trash, then you must first select the file/files/dir/dirs
 
 Tests are written out of necessity and in the presence of the right mood! But you can always fix it. :)

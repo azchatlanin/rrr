@@ -103,12 +103,6 @@ namespace rrr
   }
 
   // HERE
-  // при массовом копировании появляется лишний файл
-  // перенести выбор при копировании и перемещении в буфер
-  //
-  // сдеать массовое копирование
-  // сдеать массовое удаление
-  // сделать массовое перемещение
   // при нажатии на esc снять все выделения
   void command_line::command_run()
   {
@@ -117,18 +111,18 @@ namespace rrr
 
     if (v_cmd.at(0) == std::string("rename"))
       rename();
-    if (v_cmd.at(0) == std::string("copy"))
-      copy();
     if (v_cmd.at(0) == std::string("paste"))
       paste();
     if (v_cmd.at(0) == std::string("touch"))
       create("touch ");
     if (v_cmd.at(0) == std::string("trash"))
-      trash();
+      remove("trash ");
     if (v_cmd.at(0) == std::string("mkdir"))
       create("mkdir -p ");
     if (v_cmd.at(0) == std::string("delete"))
-      rm_rf();
+      remove("rm -rf ");
+    if (v_cmd.at(0) == std::string("move"))
+      moving();
   }
 
   void command_line::create(std::string unix_cmd)
@@ -150,14 +144,27 @@ namespace rrr
       BOARD->execute(event::COMMAND_COMPLETED, true);
       return; 
     }
-    hack::utils::exec(("mv " + (state_manager::instance().PWD /old_name).string() + " " + (state_manager::instance().PWD / new_name).string()).c_str());
+    hack::utils::exec(("mv " + (state_manager::instance().PWD / old_name).string() + " " + destination(state_manager::instance().PWD / new_name).string()).c_str());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
-  void command_line::copy()
+  std::filesystem::path command_line::destination(const std::filesystem::path& p)
   {
-    auto name = buffer::state[state_manager::instance().PWD].filename();
-    state_manager::instance().buffer_path.push_back(state_manager::instance().PWD / name);
+    std::filesystem::path destination = state_manager::instance().PWD / p.filename();
+    if (std::filesystem::exists(destination)) 
+    {
+      std::string file_name = p.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+      destination = state_manager::instance().PWD / std::filesystem::path(file_name);
+    }
+    return destination;
+  }
+
+  void command_line::moving()
+  {
+    for (auto&& p : state_manager::instance().buffer_path)
+    {
+      hack::utils::exec(("mv " + p.string() + " " + destination(p).string()).c_str());
+    }
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
@@ -166,31 +173,16 @@ namespace rrr
     for (auto&& p : state_manager::instance().buffer_path)
     {
       std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
-      std::filesystem::path destination = state_manager::instance().PWD / p.filename();
-
-      if (std::filesystem::exists(state_manager::instance().PWD / p)) 
-      {
-        std::string file_name = p.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-        destination = state_manager::instance().PWD / std::filesystem::path(file_name);
-      }
-
-      hack::utils::exec((unix_cmd + p.string() + " " + destination.string()).c_str());
+      hack::utils::exec((unix_cmd + p.string() + " " + destination(p).string()).c_str());
     }
     state_manager::instance().buffer_path.clear();
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
-  void command_line::trash()
+  void command_line::remove(std::string unix_cmd)
   {
-    auto name = buffer::state[state_manager::instance().PWD].filename();
-    hack::utils::exec(("trash " + (state_manager::instance().PWD / name).string()).c_str());
-    BOARD->execute(event::COMMAND_COMPLETED, true);
-  }
-
-  void command_line::rm_rf()
-  {
-    auto name = buffer::state[state_manager::instance().PWD].filename();
-    hack::utils::exec(("rm -rf " + (state_manager::instance().PWD / name).string()).c_str());
+    for (auto&& p : state_manager::instance().buffer_path)
+      hack::utils::exec((unix_cmd + p.string()).c_str());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
