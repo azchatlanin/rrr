@@ -23,6 +23,7 @@ namespace rrr
 
     public:
       std::filesystem::path path;
+      bool in_buffer = false;
 
     private:
       struct dir 

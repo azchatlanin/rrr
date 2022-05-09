@@ -28,9 +28,7 @@ namespace rrr
       std::vector<std::string> v_cmd;
       // список доступных команд
       std::vector<std::string> commands { "rename", "touch", "trash", "mkdir", "delete", "copy", "paste" };
-      // буфер путей к файлам с которыми массово что-то сделать
-      std::vector<std::filesystem::path> buffer_path;
-
+     
     private:
       void set_title();
       void auto_fill();

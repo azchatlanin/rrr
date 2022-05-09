@@ -16,7 +16,13 @@ namespace rrr
     if (!std::filesystem::is_directory(state_manager::instance().PWD))
       return;
 
-    dirs_draw();
+    for(auto& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      bool select = select_pos == i;
+      f.draw(select, i, win);
+    }
+
     wrefresh(win.get());
   }
 
@@ -39,16 +45,6 @@ namespace rrr
     }
   }
 
-  void navigation::dirs_draw()
-  {
-    for(auto& f : current_files)
-    {
-      auto i = &f - current_files.data();
-      bool select = select_pos == i;
-      f.draw(select, i, win);
-    }
-  }
-
   // @anotation
   // заполняет массив с файлами из текущей директории
   void navigation::fill()
@@ -57,6 +53,21 @@ namespace rrr
       return;
 
     current_files = file_utils::fill(state_manager::instance().PWD);
+  }
+
+  void navigation::in_buffer()
+  {
+    for(auto& f : current_files)
+    {
+      if (std::find(state_manager::instance().buffer_path.begin(),
+                    state_manager::instance().buffer_path.end(),
+                    f.path) != std::end(state_manager::instance().buffer_path))
+      {
+        auto i = &f - current_files.data();
+        if (select_pos == i)
+          f.in_buffer = !f.in_buffer;
+      }
+    }
   }
 
   void navigation::set_cursor_pos()

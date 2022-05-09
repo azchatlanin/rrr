@@ -36,6 +36,7 @@ done
 - create dir - :mkdir dir_name
 - copy file/dir - set cursor on the file/dir and run :copy
 - paste file/dir - set cursor to the necessary directory and run :paste
+- select files/dirs - pres space
 
 
 Tests are written out of necessity and in the presence of the right mood! But you can always fix it. :)

@@ -103,9 +103,13 @@ namespace rrr
   }
 
   // HERE
-  // сделать выделение
+  // при массовом копировании появляется лишний файл
+  // перенести выбор при копировании и перемещении в буфер
+  //
   // сдеать массовое копирование
   // сдеать массовое удаление
+  // сделать массовое перемещение
+  // при нажатии на esc снять все выделения
   void command_line::command_run()
   {
     v_cmd = hack::string::split_str(cmd, ' ');
@@ -153,13 +157,13 @@ namespace rrr
   void command_line::copy()
   {
     auto name = buffer::state[state_manager::instance().PWD].filename();
-    buffer_path.push_back(state_manager::instance().PWD / name);
+    state_manager::instance().buffer_path.push_back(state_manager::instance().PWD / name);
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
   void command_line::paste()
   {
-    for (auto&& p : buffer_path)
+    for (auto&& p : state_manager::instance().buffer_path)
     {
       std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
       std::filesystem::path destination = state_manager::instance().PWD / p.filename();
@@ -172,7 +176,7 @@ namespace rrr
 
       hack::utils::exec((unix_cmd + p.string() + " " + destination.string()).c_str());
     }
-    buffer_path.clear();
+    state_manager::instance().buffer_path.clear();
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 

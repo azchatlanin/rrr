@@ -12,6 +12,8 @@ namespace rrr
   {
     if (std::filesystem::is_directory(pwd))
       dirs_draw();
+    else 
+      file_draw();
 
     wrefresh(win.get());
   }
@@ -23,6 +25,11 @@ namespace rrr
       auto i = &f - current_files.data();
       f.draw(select_pos == i, i, win);
     }
+  }
+
+  void preview::file_draw()
+  {
+    
   }
 
   void preview::fill()

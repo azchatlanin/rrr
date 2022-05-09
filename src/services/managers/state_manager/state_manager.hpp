@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <filesystem>
 #include <optional>
+#include <vector>
 #include <unordered_map>
 
 #include "utils/config.hpp"
@@ -46,7 +47,10 @@ namespace rrr
     // текущее выбранное рабочее пространство
     int cmd = 'F';
     // текущая виртуальная дирректория расположения пользователя, она может отличается от его расположения в терминале по факту
-    std::filesystem::path PWD;
+    std::filesystem::path PWD; 
+    // буфер путей к файлам с которыми массово что-то сделать
+    std::vector<std::filesystem::path> buffer_path;
+
   };
 }
 

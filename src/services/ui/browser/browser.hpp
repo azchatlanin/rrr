@@ -33,6 +33,7 @@ namespace rrr
       void move(int);
       void refresh();
       void erise();
+      void in_buffer();
       void update();
 
     private:

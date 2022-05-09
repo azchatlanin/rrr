@@ -29,5 +29,6 @@ namespace rrr
     private: 
       void set_cursor_pos();
       void dirs_draw();
+      void file_draw();
   };
 }

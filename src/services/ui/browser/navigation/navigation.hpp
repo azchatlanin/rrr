@@ -22,6 +22,7 @@ namespace rrr
       void set_cursor_pos(int);
       void set_cursor_pos();
       void buffer_update();
+      void in_buffer();
 
     public: 
       std::shared_ptr<WINDOW> win;
@@ -31,8 +32,5 @@ namespace rrr
       file_utils::files current_files;
       bool is_last = false;
       std::filesystem::path file_name;
-
-    private: 
-      void dirs_draw();
   };
 }

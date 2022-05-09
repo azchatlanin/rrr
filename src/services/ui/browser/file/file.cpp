@@ -1,5 +1,9 @@
 #include "file.hpp"
 
+#include "services/managers/state_manager/state_manager.hpp"
+
+#include "logger/logger.hpp"
+
 namespace rrr
 {
   file::file(std::filesystem::path path_, bool is_dir) : path { path_ }, directory { is_dir } {}
@@ -34,12 +38,16 @@ namespace rrr
     else 
       wattron(win.get(), (is_selected  ? A_BOLD : 0));
 
+    if (in_buffer)
+      wattron(win.get(), COLOR_PAIR(2) | (is_selected ? A_BOLD : 0));
+
     // draw
     if (is_selected) mvwaddch(win.get(), pos_x + 1, 2, ACS_RARROW);
-    mvwaddstr(win.get(), pos_x + 1, 4, path.filename().string().c_str());
+    mvwaddstr(win.get(), pos_x + 1, in_buffer ? 5 : 4, path.filename().string().c_str());
 
     // attributes off
     wattroff(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
+    wattroff(win.get(), COLOR_PAIR(2) | (is_selected ? A_BOLD : 0));
     wattroff(win.get(), (is_selected ? A_BOLD : 0));
   }
 }

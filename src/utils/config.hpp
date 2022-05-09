@@ -14,6 +14,7 @@ namespace rrr::config::key
   inline const int TAB = 9;
   inline const int ESC = 27;
   inline const int BACKSPACE = 263;
+  inline const int SPACE = 32;
 }
 
 namespace rrr::config::path 

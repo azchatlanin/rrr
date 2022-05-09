@@ -1,5 +1,7 @@
 #include "browser.hpp"
 
+#include <algorithm>
+
 #include "services/managers/state_manager/state_manager.hpp"
 
 // hack
@@ -93,8 +95,11 @@ namespace rrr
   void browser::trigger(int k)
   {
     if (!on_this()) return;
+    key = k;
 
-    key = k; 
+    if (key == config::key::SPACE)
+      in_buffer();
+
     switch (key) 
     {
       // selsect
@@ -152,6 +157,21 @@ namespace rrr
     wrefresh(win_history->win.get());
     wrefresh(win_navigation->win.get());
     wrefresh(win_preview->win.get());
+  }
+
+  void browser::in_buffer()
+  {
+    bool ex = false;
+    if (std::find(state_manager::instance().buffer_path.begin(), 
+                  state_manager::instance().buffer_path.end(), 
+                  state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]) != state_manager::instance().buffer_path.end())
+      ex = true;
+
+    // state_manager::instance().buffer_path.erase(std::remove_if(state_manager::instance().buffer_path.begin(), state_manager::instance().buffer_path.end(), [&](const std::filesystem::path& p){
+    //   return p == state_manager::instance().PWD / buffer::state[state_manager::instance().PWD];
+    // }));
+    if (!ex) state_manager::instance().buffer_path.push_back(state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
+    win_navigation->in_buffer();
   }
 
   void browser::erise()
