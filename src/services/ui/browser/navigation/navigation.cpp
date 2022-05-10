@@ -55,8 +55,16 @@ namespace rrr
     current_files = file_utils::fill(state_manager::instance().PWD);
   }
 
-  void navigation::in_buffer()
+  void navigation::select()
   {
+    bool exist = false;
+    if (std::find(state_manager::instance().buffer_path.begin(), 
+                  state_manager::instance().buffer_path.end(), 
+                  state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]) != state_manager::instance().buffer_path.end())
+      exist = true;
+
+    if (!exist) state_manager::instance().buffer_path.push_back(state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
+
     for(auto& f : current_files)
     {
       if (std::find(state_manager::instance().buffer_path.begin(),
@@ -68,6 +76,11 @@ namespace rrr
           f.in_buffer = !f.in_buffer;
       }
     }
+
+    if (exist)
+      state_manager::instance().buffer_path.erase(std::remove_if(state_manager::instance().buffer_path.begin(), state_manager::instance().buffer_path.end(), [&](const std::filesystem::path& p){
+        return p == state_manager::instance().PWD / buffer::state[state_manager::instance().PWD];
+      }));
   }
 
   void navigation::set_cursor_pos()

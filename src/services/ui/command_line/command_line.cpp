@@ -104,6 +104,7 @@ namespace rrr
 
   // HERE
   // при нажатии на esc снять все выделения
+  // сделать вывод инфо
   void command_line::command_run()
   {
     v_cmd = hack::string::split_str(cmd, ' ');
@@ -130,7 +131,7 @@ namespace rrr
     if (v_cmd.size() < 2) return;
     auto name = std::filesystem::path(v_cmd.at(1));
     if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
-    hack::utils::exec((unix_cmd + (state_manager::instance().PWD / name).string()).c_str());
+    hack::utils::exec((unix_cmd + destination(state_manager::instance().PWD / name).string()).c_str());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
@@ -181,8 +182,12 @@ namespace rrr
 
   void command_line::remove(std::string unix_cmd)
   {
-    for (auto&& p : state_manager::instance().buffer_path)
-      hack::utils::exec((unix_cmd + p.string()).c_str());
+    if (state_manager::instance().buffer_path.size() != 0)
+      for (auto&& p : state_manager::instance().buffer_path)
+        hack::utils::exec((unix_cmd + p.string()).c_str());
+    else 
+      hack::utils::exec((unix_cmd + buffer::state[state_manager::instance().PWD].string()).c_str());
+
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 

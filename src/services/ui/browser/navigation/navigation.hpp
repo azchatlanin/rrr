@@ -22,7 +22,7 @@ namespace rrr
       void set_cursor_pos(int);
       void set_cursor_pos();
       void buffer_update();
-      void in_buffer();
+      void select();
 
     public: 
       std::shared_ptr<WINDOW> win;
