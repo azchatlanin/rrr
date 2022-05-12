@@ -2,12 +2,15 @@
 
 namespace rrr
 {
-  system_bar::system_bar() : board { { 'S' }, " System " }
+  system_bar::system_bar()
   {
+    MAIN_KEYS = { 'S' };
+    title = " system ";
+
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    win = newwin(max_y / 7 - 3, max_x / 2, max_y - max_y / 7, ft.start_x + max_x / 2);
+    win = newwin(9, max_x / 2, max_y - 12, max_x / 2);
     box(win, 0, 0);
     set_title();
 

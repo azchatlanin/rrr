@@ -1,5 +1,5 @@
 headers = [ 'manager/board/board.hpp', 'state_manager/state_manager.hpp', 'manager/manager.hpp' ]
-sources = [ 'manager/board/board.cpp', 'state_manager/state_manager.cpp' ]
+sources = [ 'manager/board/board.cpp', 'state_manager/state_manager.cpp', 'manager/manager.cpp' ]
 
 lib = library(
   'managers',

@@ -1,5 +1,8 @@
 #include "preview.hpp"
 
+// hack 
+#include "utils/utils.hpp"
+
 namespace rrr
 {
 
@@ -10,7 +13,7 @@ namespace rrr
   
   void preview::draw()
   {
-    if (std::filesystem::is_directory(pwd))
+    if (std::filesystem::is_directory(buffer::state[state_manager::instance().PWD]))
       dirs_draw();
     else 
       file_draw();
@@ -25,22 +28,41 @@ namespace rrr
       auto i = &f - current_files.data();
       f.draw(select_pos == i, i, win);
     }
+
+    if (current_files.empty())
+      draw_empty_dir();
+  }
+
+  file_utils::files preview::get_current_files()
+  {
+    return current_files;
+  }
+
+  void preview::draw_empty_dir()
+  {
+    wattron(win.get(), COLOR_PAIR(3) | A_BOLD);
+    mvwaddstr(win.get(), 1,  4, "is empty");
+    wattroff(win.get(), COLOR_PAIR(3) | A_BOLD);
   }
 
   void preview::file_draw()
   {
-    
+    mvwaddstr(win.get(), 1, 0, file_content.c_str());
   }
 
   void preview::fill()
   {
-    pwd = state_manager::instance().PWD / buffer::state[state_manager::instance().PWD].filename();
+    auto pwd = buffer::state[state_manager::instance().PWD];
 
-    if (!std::filesystem::is_directory(pwd))
-      return;
-
-    current_files = file_utils::fill(pwd);
-    set_cursor_pos();
+    if (std::filesystem::is_directory(pwd))
+    {
+      current_files = file_utils::fill(pwd);
+      set_cursor_pos();
+    }
+    else 
+    {
+      file_content = std::filesystem::file_size(pwd) < 1'000'000 ? hack::utils::exec("cat " + pwd.string()) : "this file size is very big";
+    }
   }
 
   // @anotation
@@ -49,6 +71,7 @@ namespace rrr
   {
     if (current_files.empty()) return;
 
+    auto pwd = buffer::state[state_manager::instance().PWD];
     std::filesystem::path file_name;
 
     if (std::filesystem::is_directory(pwd))

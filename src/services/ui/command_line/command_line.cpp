@@ -10,9 +10,11 @@
 
 namespace rrr
 {
-
-  command_line::command_line() : board { { 'C', ':' }, " :Command " }
+  command_line::command_line()
   {
+    MAIN_KEYS = { ':' };
+    title = " :command ";
+
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
@@ -50,9 +52,6 @@ namespace rrr
    
     switch (key) 
     {
-      case config::key::COLON_COLON:
-        cmd = "";
-        break;
       case config::key::TAB:
         auto_fill();
         break;
@@ -100,11 +99,11 @@ namespace rrr
   void command_line::drop() 
   {
     cmd.clear();
+    // HERE:
+    // при раскоментировании данной строки и удалении/переименовании файла присходит выброс исключения !!!
+    // v_cmd.clear();
   }
 
-  // HERE
-  // при нажатии на esc снять все выделения
-  // сделать вывод инфо
   void command_line::command_run()
   {
     v_cmd = hack::string::split_str(cmd, ' ');
@@ -124,6 +123,8 @@ namespace rrr
       remove("rm -rf ");
     if (v_cmd.at(0) == std::string("move"))
       moving();
+
+    drop();
   }
 
   void command_line::create(std::string unix_cmd)
@@ -131,41 +132,47 @@ namespace rrr
     if (v_cmd.size() < 2) return;
     auto name = std::filesystem::path(v_cmd.at(1));
     if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
-    hack::utils::exec((unix_cmd + destination(state_manager::instance().PWD / name).string()).c_str());
+    hack::utils::exec(unix_cmd + destination(state_manager::instance().PWD / name).string());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
+  // HERE:
+  // при переименовании перескакивает курсор
+  // решение смотри в HERE про set_cursor_pos  в navigation
   void command_line::rename()
   {
     if (v_cmd.size() < 2) return;
-    auto old_name = buffer::state[state_manager::instance().PWD].filename();
+
+    auto pwd = state_manager::instance().PWD;
+    auto old_name = buffer::state[pwd].filename();
     auto new_name = std::filesystem::path(v_cmd.at(1));
+
     if (new_name.empty()) 
     {
       BOARD->execute(event::COMMAND_COMPLETED, true);
       return; 
     }
-    hack::utils::exec(("mv " + (state_manager::instance().PWD / old_name).string() + " " + destination(state_manager::instance().PWD / new_name).string()).c_str());
+    hack::utils::exec("mv " + (pwd / old_name).string() + " " + destination(pwd / new_name).string());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
   std::filesystem::path command_line::destination(const std::filesystem::path& p)
   {
-    std::filesystem::path destination = state_manager::instance().PWD / p.filename();
-    if (std::filesystem::exists(destination)) 
+    auto pwd = state_manager::instance().PWD;
+    std::filesystem::path ds = pwd / p.filename();
+
+    if (std::filesystem::exists(ds)) 
     {
       std::string file_name = p.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-      destination = state_manager::instance().PWD / std::filesystem::path(file_name);
+      ds = pwd / std::filesystem::path(file_name);
     }
-    return destination;
+    return ds;
   }
 
   void command_line::moving()
   {
     for (auto&& p : state_manager::instance().buffer_path)
-    {
-      hack::utils::exec(("mv " + p.string() + " " + destination(p).string()).c_str());
-    }
+      hack::utils::exec("mv " + p.string() + " " + destination(p).string());
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
@@ -174,7 +181,7 @@ namespace rrr
     for (auto&& p : state_manager::instance().buffer_path)
     {
       std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
-      hack::utils::exec((unix_cmd + p.string() + " " + destination(p).string()).c_str());
+      hack::utils::exec(unix_cmd + p.string() + " " + destination(p).string());
     }
     state_manager::instance().buffer_path.clear();
     BOARD->execute(event::COMMAND_COMPLETED, true);
@@ -182,13 +189,15 @@ namespace rrr
 
   void command_line::remove(std::string unix_cmd)
   {
-    if (state_manager::instance().buffer_path.size() != 0)
-      for (auto&& p : state_manager::instance().buffer_path)
-        hack::utils::exec((unix_cmd + p.string()).c_str());
-    else 
-      hack::utils::exec((unix_cmd + buffer::state[state_manager::instance().PWD].string()).c_str());
+    auto bfp = state_manager::instance().buffer_path;
 
-    BOARD->execute(event::COMMAND_COMPLETED, true);
+    if (bfp.size() != 0)
+      for (auto&& p : bfp)
+        hack::utils::exec(unix_cmd + p.string());
+    else 
+      hack::utils::exec((unix_cmd + buffer::state[state_manager::instance().PWD].string()));
+
+    BOARD->execute(event::REMOVE_COMMAND_COMPLETED, true);
   }
 
   void command_line::clear()

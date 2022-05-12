@@ -1,8 +1,8 @@
 #!/bin/sh
 
 PROJECT_NAME="rrr"
-TEST="meson test -C build"
 RUN="./build/bin/$PROJECT_NAME"
+TEST="meson test create_file_for_test navigation preview -C build"
 
 command meson compile -C build
 

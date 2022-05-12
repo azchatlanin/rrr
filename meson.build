@@ -40,10 +40,4 @@ deps += subproject('hack').get_variable('string_dep')
 
 subdir('src')
 subdir('bin')
-#subdir('tests')
-
-
-
-
-
-
+subdir('tests')

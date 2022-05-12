@@ -3,46 +3,45 @@
 #include <vector>
 #include <filesystem>
 #include <ncurses.h>
+#include <algorithm>
 
 #include "utils/config.hpp"
 
 namespace rrr
 {
+  struct dir 
+  {
+    dir(bool);
+    dir(dir&&);
+    dir(const dir&);
+
+    dir& operator=(const dir&);
+    bool operator()() const;
+
+    bool is_dir;
+  };
+
   class file 
   {
     public: 
-      file(std::filesystem::path path_, bool is_dir);
+      file(std::filesystem::path, bool);
       file(file&&);
       file(const file&);
 
     public:
-      file& operator=(const file& other);
-      bool operator<(const file& other);
-      void draw(bool is_selected, int pos_x, std::shared_ptr<WINDOW> win);
+      file& operator=(const file&);
+      bool operator<(const file&);
+      void draw(bool, int, std::shared_ptr<WINDOW>);
+      bool operator==(const file&) const;
       bool is_directory() const { return directory(); }
+      friend std::ostream& operator<<(std::ostream&, const file&);
 
     public:
       std::filesystem::path path;
       bool in_buffer = false;
 
     private:
-      struct dir 
-      {
-        dir(bool d) : is_dir { d } {}
-        dir(dir&& d) : is_dir { std::move(d.is_dir) } {}
-        dir(const dir& d) : is_dir { d.is_dir } {}
-
-        dir& operator=(const dir& d) 
-        { 
-          if (this == &d)
-            return *this;
-          is_dir = d.is_dir; 
-          return *this;
-        };
-
-        bool operator()() const { return is_dir; }
-        bool is_dir;
-      } directory;
+      struct dir directory;
   };
 }
 
@@ -82,7 +81,7 @@ namespace rrr::file_utils
     tmp_dir.reserve(current_files.size());
 
     files tmp_files;
-    tmp_files.reserve(current_files.size()); // TODO:: very strange mehtod. maybe use without / 2 ???
+    tmp_files.reserve(current_files.size());
 
     std::copy_if(current_files.begin(), current_files.end(), std::back_inserter(tmp_dir), [](const file& f) -> bool { 
       if (f.is_directory()) return true;

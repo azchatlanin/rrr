@@ -10,8 +10,11 @@
 
 namespace rrr
 {
-  browser::browser() : board { { 'F' }, " File browser " }
+  browser::browser()
   {
+    MAIN_KEYS = { 'F' };
+    title = " File browser ";
+
     try 
     {
       std::string tmp_pwd = hack::utils::exec("pwd");
@@ -24,19 +27,15 @@ namespace rrr
       hack::log()("pwd", state_manager::instance().PWD);
     }
 
-    getmaxyx(stdscr, ft.height, ft.width);
-    state_manager::instance().max_y = ft.height;
-    state_manager::instance().max_x = ft.width;
+    getmaxyx(stdscr, state_manager::instance().max_y, state_manager::instance().max_x);
 
-    ft.height -= ft.height / 7;
-
-    win = newwin(ft.height, ft.width, ft.start_y, ft.start_x);
+    win = newwin(state_manager::instance().max_y - 12, state_manager::instance().max_x, 0, 0);
     box(win, 0 , 0);	
     set_title();
 
-    win_history = std::make_shared<history>(win, ft.height - 2, ft.width / 3, 1, 1);
-    win_navigation = std::make_shared<navigation>(win, ft.height - 2, ft.width / 3 + 1, 1, ft.width / 3);
-    win_preview = std::make_shared<preview>(win, ft.height - 2, ft.width / 3 - 1, 1, ft.width * 2 / 3);
+    win_history = std::make_shared<history>(win, state_manager::instance().max_y - 14, state_manager::instance().max_x / 3, 1, 1);
+    win_navigation = std::make_shared<navigation>(win, state_manager::instance().max_y - 14, state_manager::instance().max_x / 3 + 1, 1, state_manager::instance().max_x / 3);
+    win_preview = std::make_shared<preview>(win, state_manager::instance().max_y - 14, state_manager::instance().max_x / 3 - 1, 1, state_manager::instance().max_x * 2 / 3);
 
     win_navigation->fill();
     win_history->fill();
@@ -59,16 +58,29 @@ namespace rrr
 
   void browser::next()
   {
+    if (win_preview->get_current_files().empty()) return;
     state_manager::instance().PWD = buffer::state[state_manager::instance().PWD];
     update();
   }
 
-  void browser::move(int i)
+  // HERE
+  // сделать скролл
+  void browser::up()
   {
-    win_navigation->set_cursor_pos(i);
+    win_navigation->cursor_up();
+    // HERE
+    // вынести это и ниже в отдельный метод
     win_navigation->buffer_update();
+    win_preview->fill();
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
-    BOARD->execute(event::SPACE_INFO, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
+  }
+
+  void browser::down()
+  {
+    win_navigation->cursor_down();
+    win_navigation->buffer_update();
+    win_preview->fill();
+    BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
   void browser::update()
@@ -77,18 +89,14 @@ namespace rrr
     win_navigation->set_cursor_pos();
     win_navigation->buffer_update();
     win_history->fill();
+    win_preview->fill();
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
-    BOARD->execute(event::SPACE_INFO, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
   void browser::draw()
   {
     win_history->draw();
-
-    win_navigation->buffer_update();
     win_navigation->draw();
-
-    win_preview->fill();
     win_preview->draw();
   }
 
@@ -119,16 +127,16 @@ namespace rrr
         
       // navigation
       case 'j':
-        move(1);
+        down();
         break;
       case KEY_DOWN:
-        move(1);
+        down();
         break;
       case 'k':
-        move(-1);
+        up();
         break;
       case KEY_UP:
-        move(-1);
+        up();
         break;
       default:
         break;
@@ -144,7 +152,12 @@ namespace rrr
       case COMMAND_COMPLETED:
         erise();
         win_navigation->fill();
-        win_history->fill();
+        win_navigation->set_cursor_pos();
+        break;
+      case REMOVE_COMMAND_COMPLETED:
+        erise();
+        win_navigation->fill();
+        win_navigation->set_cursor_pos(-2);
         break;
       default:
         break;

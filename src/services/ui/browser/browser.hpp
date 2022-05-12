@@ -30,7 +30,8 @@ namespace rrr
       void set_title();
       void next();
       void prew();
-      void move(int);
+      void up();
+      void down();
       void refresh();
       void erise();
       void select();

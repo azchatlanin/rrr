@@ -13,7 +13,7 @@ namespace rrr
 {
   enum event 
   {
-    CHANGE_PWD, SPACE_INFO, COMMAND_COMPLETED, DROP
+    CHANGE_PWD, COMMAND_COMPLETED, REMOVE_COMMAND_COMPLETED, DROP
   };
 
   struct i_board
@@ -25,7 +25,7 @@ namespace rrr
   class board 
   {
     public: 
-      explicit board(std::initializer_list<int>, std::string);
+      board() = default;
       virtual ~board() = default;
 
     public: 
@@ -48,13 +48,5 @@ namespace rrr
       std::vector<int> MAIN_KEYS;
       i_board* BOARD;
       std::string title;
-      struct features
-      {
-        int start_x = 0; 
-        int start_y = 0; 
-        int width = 0; 
-        int height = 0;
-      } ft;
-
   };
 }

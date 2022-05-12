@@ -29,5 +29,7 @@ namespace rrr
       void set_title();
       void get_space_info();
       void clear();
+      std::string file_size();
+      std::string disk_size(std::intmax_t);
   };
 }

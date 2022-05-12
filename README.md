@@ -37,3 +37,6 @@ done
 - select files/dirs - press space. If you want to do: paste, delete, move or trash, then you must first select the file/files/dir/dirs
 
 Tests are written out of necessity and in the presence of the right mood! But you can always fix it. :)
+
+**On the future:**
+- save history path if rename file/dir

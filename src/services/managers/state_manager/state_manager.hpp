@@ -20,24 +20,35 @@ namespace rrr
   {
     // установка текущего рабочего пространства
     template<typename T>
-    void set(T key)
+    bool set(T key)
     {
-      switch (key) {
-        case 'F':
-          cmd = key;
-          break;
-        case 'V':
-          cmd = key;
-          break;
-        case config::key::ESC: // ESC
-          cmd = 'F';
-          curs_set(0);
-          break;
-        case ':':
-          cmd = key;
-          curs_set(1);
-          break;
+      bool result = false;
+      if (key == config::key::ESC)
+      {
+        cmd = 'F';
+        curs_set(0);
+        result = true;
       }
+      
+      if (cmd != ':')
+        switch (key) 
+        {
+          case 'F':
+            cmd = key;
+            result = true;
+            break;
+          case 'V':
+            cmd = key;
+            result = true;
+            break;
+          case ':':
+            cmd = key;
+            curs_set(1);
+            result = true;
+            break;
+        }
+
+      return result;
     }
 
     static state_manager& instance();
@@ -61,6 +72,7 @@ namespace buffer
       return path ? std::filesystem::hash_value(path.value()) : 0;
     }
   };
+
   // данный буфер позволяетпо ключу найти состояние history и preview
   inline std::unordered_map<std::filesystem::path, std::filesystem::path, opt_path_hash> state;
 }

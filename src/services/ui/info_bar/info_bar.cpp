@@ -3,12 +3,15 @@
 namespace rrr
 {
 
-  info_bar::info_bar() : board { { 'F' }, " Info "}
+  info_bar::info_bar()
   {
+    MAIN_KEYS = { 'I' };
+    title = " info ";
+
     auto max_x = state_manager::instance().max_x;
     auto max_y = state_manager::instance().max_y;
 
-    win = newwin(max_y / 7 - 3, max_x / 2, max_y - max_y / 7, ft.start_x);
+    win = newwin(9, max_x / 2, max_y - 12, 0);
     box(win, 0, 0);
     set_title();
 
@@ -19,6 +22,8 @@ namespace rrr
 
   void info_bar::draw()
   {
+    // HERE
+    // ну это же стремно так
     wmove(win, 1, 1);
     clear();
     wmove(win, 3, 1);
@@ -28,13 +33,30 @@ namespace rrr
     wmove(win, 5, 1);
     clear();
 
-    mvwaddstr(win, 1, 1, std::string(" path: " + pwd.string()).c_str());
+//    mvwaddstr(win, 1, 1, (" path: " + pwd.string() + file_size()).c_str());
 
-    mvwaddstr(win, 3, 1, std::string(" capacity: " + std::to_string(space_info.capacity)).c_str());
-    mvwaddstr(win, 4, 1, std::string(" free: " + std::to_string(space_info.free)).c_str());
-    mvwaddstr(win, 5, 1, std::string(" available: " + std::to_string(space_info.available)).c_str());
+    // mvwaddstr(win, 3, 1, (" disk capacity:  " + disk_size(space_info.capacity)).c_str());
+    // mvwaddstr(win, 4, 1, (" disk free:      " + disk_size(space_info.free)).c_str());
+    // mvwaddstr(win, 5, 1, (" disk available: " + disk_size(space_info.available)).c_str());
 
     wrefresh(win);
+  }
+
+  std::string info_bar::file_size()
+  {
+    if (std::filesystem::is_directory(pwd)) return "";
+
+    auto size = std::filesystem::file_size(pwd);
+    return " (" + 
+      (size > 1'000 ? std::to_string(size / 1'000) + "." + std::to_string(size%1'000) : std::to_string(size))
+      + " kb)";
+  }
+
+  std::string info_bar::disk_size(std::intmax_t size)
+  {
+    return " " + 
+      (size > 1'000'000'000 ? std::to_string(size / 1'000'000'000) + "." + std::to_string(size%1'000'000'000/1'000'000) : std::to_string(size))
+      + " Gb";
   }
 
   void info_bar::set_title()
@@ -56,9 +78,6 @@ namespace rrr
     {
       case CHANGE_PWD:
         pwd = std::any_cast<std::filesystem::path>(data);
-        break;
-      case SPACE_INFO:
-        space_pwd = std::any_cast<std::filesystem::path>(data);
         get_space_info();
         break;
       default:
@@ -68,8 +87,8 @@ namespace rrr
 
   void info_bar::get_space_info()
   {
-    if (!std::filesystem::is_directory(space_pwd)) return;
-    space_info = std::filesystem::space(space_pwd);
+    if (!std::filesystem::is_directory(pwd)) return;
+    space_info = std::filesystem::space(pwd);
   }
 
   void info_bar::clear()

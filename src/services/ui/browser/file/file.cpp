@@ -6,6 +6,23 @@
 
 namespace rrr
 {
+  dir::dir(bool d) : is_dir { d } {}
+  dir::dir(dir&& d) : is_dir { std::move(d.is_dir) } {}
+  dir::dir(const dir& d) : is_dir { d.is_dir } {}
+
+  dir& dir::operator=(const dir& d) 
+  { 
+    if (this == &d)
+      return *this;
+    is_dir = d.is_dir; 
+    return *this;
+  };
+
+  bool dir::operator()() const 
+  {
+    return is_dir; 
+  }
+
   file::file(std::filesystem::path path_, bool is_dir) : path { path_ }, directory { is_dir } {}
 
   file::file(file&& f) : path { std::move(f.path) }, directory { std::move(f.directory) } {}
@@ -28,6 +45,18 @@ namespace rrr
     // используем тут дял сравнеия именно .compare т.к. это помогает делать верную сортировку
     // т.к. compare помогает сравнить имеено порядок
     return path.string().compare(other.path.string()) < 0;
+  }
+
+  bool file::operator==(const file& f) const
+  { 
+    if (this->path ==  f.path && this->in_buffer == f.in_buffer && this->is_directory() == f.is_directory())
+      return true;
+    return false;
+  };
+
+  std::ostream& operator<<(std::ostream& os, const file& f)
+  {
+    return os << f.path << std::endl;
   }
 
   void file::draw(bool is_selected, int pos_x, std::shared_ptr<WINDOW> win)
