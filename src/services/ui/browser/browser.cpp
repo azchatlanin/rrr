@@ -168,7 +168,9 @@ namespace rrr
       case COMMAND_REMOVE_COMPLETED:
         erise();
         win_navigation->fill();
-        win_navigation->set_cursor_pos(-2);
+        win_navigation->cursor_up();
+        win_navigation->buffer_update();
+        win_preview->fill();
         break;
       default:
         break;

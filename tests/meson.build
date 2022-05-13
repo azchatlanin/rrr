@@ -44,9 +44,39 @@ test(
 test(
   'command_line',
   executable(
-    'command_line',
+    'mkdir',
     'src/command_line/mkdir.cpp',
     dependencies: [ deps, gtest_dep ]
   ),
   is_parallel : false
 )
+
+test(
+  'command_line',
+  executable(
+    'autofill',
+    'src/command_line/autofill.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
+  'command_line',
+  executable(
+    'remove',
+    'src/command_line/remove.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+# test(
+#   'command_line',
+#   executable(
+#     'command_line',
+#     'src/command_line/touch.cpp',
+#     dependencies: [ deps, gtest_dep ]
+#   ),
+#   is_parallel : false
+# )

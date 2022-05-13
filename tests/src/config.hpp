@@ -46,6 +46,23 @@ inline std::vector<rrr::file> build_dir_after_mkdir {
   { "/mnt/develop/projects/cpp/rrr/build/compile_commands.json", false }
 };
 
+inline std::vector<rrr::file> build_dir_after_touch { 
+  { "/mnt/develop/projects/cpp/rrr/build/bin", true },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-info", true },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-logs", true },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private", true },
+  { "/mnt/develop/projects/cpp/rrr/build/src", true },
+  { "/mnt/develop/projects/cpp/rrr/build/subprojects", true },
+  { "/mnt/develop/projects/cpp/rrr/build/tests", true },
+  { "/mnt/develop/projects/cpp/rrr/build/.gitignore", false },
+  { "/mnt/develop/projects/cpp/rrr/build/.hgignore", false },
+  { "/mnt/develop/projects/cpp/rrr/build/.ninja_deps", false },
+  { "/mnt/develop/projects/cpp/rrr/build/.ninja_log", false },
+  { "/mnt/develop/projects/cpp/rrr/build/build.ninja", false },
+  { "/mnt/develop/projects/cpp/rrr/build/compile_commands.json", false },
+  { "/mnt/develop/projects/cpp/rrr/build/my_test_dir.txt", false }
+};
+
 inline std::vector<rrr::file> build_bin_dir { 
   { "/mnt/develop/projects/cpp/rrr/build/bin/rrr.p", true },
   { "/mnt/develop/projects/cpp/rrr/build/bin/rrr", false }
@@ -63,6 +80,19 @@ inline std::vector<rrr::file> build_meson_info_dir {
   { "/mnt/develop/projects/cpp/rrr/build/meson-info/intro-tests.json", false },
   { "/mnt/develop/projects/cpp/rrr/build/meson-info/meson-info.json", false }
  };
+
+inline std::vector<rrr::file> build_meson_private_dir { 
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/build.dat", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/cmd_line.txt", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/coredata.dat", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/coredata.dat.prev", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/install.dat", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/meson.lock", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/meson_benchmark_setup.dat", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/meson_test_setup.dat", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/sanitycheckcpp.cc", false },
+  { "/mnt/develop/projects/cpp/rrr/build/meson-private/sanitycheckcpp.exe", false }
+};
 
 inline std::vector<rrr::file> build_src_dir { 
   { "/mnt/develop/projects/cpp/rrr/build/src/services", true }
