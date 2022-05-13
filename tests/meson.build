@@ -2,28 +2,51 @@ gtest_proj = subproject('gtest')
 gtest_dep = gtest_proj.get_variable('gtest_main_dep')
 
 test(
-  'create_file_for_test',
+  'navigation',
   executable(
-    'create_file_struct',
-    'src/create_file_struct.cpp',
+    'up_down',
+    'src/navigation/up_down.cpp',
     dependencies: [ deps, gtest_dep ]
-  )
+  ),
+  is_parallel : false
 )
 
 test(
   'navigation',
   executable(
-    'navigation',
-    'src/navigation.cpp',
+    'left_right',
+    'src/navigation/left_right.cpp',
     dependencies: [ deps, gtest_dep ]
-  )
+  ),
+  is_parallel : false
 )
 
 test(
   'preview',
   executable(
     'preview',
-    'src/preview.cpp',
+    'src/preview/preview.cpp',
     dependencies: [ deps, gtest_dep ]
-  )
+  ),
+  is_parallel : false
+)
+
+test(
+  'history',
+  executable(
+    'history',
+    'src/history/history.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
+  'command_line',
+  executable(
+    'command_line',
+    'src/command_line/mkdir.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
 )

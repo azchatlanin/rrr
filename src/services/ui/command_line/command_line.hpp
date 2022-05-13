@@ -20,6 +20,7 @@ namespace rrr
 
     public: 
       WINDOW* win;
+      std::string get_cmd();
 
     private: 
       // текущая команда

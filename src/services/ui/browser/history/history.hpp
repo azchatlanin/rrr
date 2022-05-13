@@ -16,12 +16,14 @@ namespace rrr
     public:
       void draw();
       void fill();
+      int get_cursor_pos();
+      file_utils::files get_current_files();
 
     public: 
       std::shared_ptr<WINDOW> win;
 
     private:
-      int select_pos = 0;
+      int cursor_pos = 0;
       file_utils::files current_files;
       bool is_last = false;
 

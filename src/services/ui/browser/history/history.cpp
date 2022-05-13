@@ -17,6 +17,16 @@ namespace rrr
     wrefresh(win.get());
   }
 
+  int history::get_cursor_pos()
+  {
+    return cursor_pos;
+  }
+
+  file_utils::files history::get_current_files()
+  {
+    return current_files;
+  }
+
   void history::root_draw()
   {
     wattron(win.get(), COLOR_PAIR(1) | A_BOLD);
@@ -30,7 +40,7 @@ namespace rrr
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      f.draw(select_pos == i, i, win);
+      f.draw(cursor_pos == i, i, win);
     }
   }
 
@@ -60,6 +70,6 @@ namespace rrr
     };
 
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
-    select_pos = std::distance(current_files.begin(), it);
+    cursor_pos = std::distance(current_files.begin(), it);
   }
 }

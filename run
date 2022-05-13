@@ -1,15 +1,17 @@
 #!/bin/sh
 
 PROJECT_NAME="rrr"
-RUN="./build/bin/$PROJECT_NAME"
-TEST="meson test create_file_for_test navigation preview -C build"
+RUN="./bin/$PROJECT_NAME"
+TEST="meson test navigation preview history command_line -C build"
 
 command meson compile -C build
 
 if [[ $1 == "test" ]]; then
   command $TEST 
 else
+  cd build
   command $RUN
+  cd ..
 fi
 
 return 0

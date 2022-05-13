@@ -37,8 +37,9 @@ namespace rrr
     win_navigation = std::make_shared<navigation>(win, state_manager::instance().max_y - 14, state_manager::instance().max_x / 3 + 1, 1, state_manager::instance().max_x / 3);
     win_preview = std::make_shared<preview>(win, state_manager::instance().max_y - 14, state_manager::instance().max_x / 3 - 1, 1, state_manager::instance().max_x * 2 / 3);
 
-    win_navigation->fill();
     win_history->fill();
+    win_navigation->fill();
+    win_preview->fill();
   };
   
   void browser::set_title()
@@ -145,7 +146,7 @@ namespace rrr
     erise();
   }
 
-  void browser::execute(event e, std::any) 
+  void browser::execute(event e, std::any data) 
   {
     switch (e)
     {
@@ -154,7 +155,17 @@ namespace rrr
         win_navigation->fill();
         win_navigation->set_cursor_pos();
         break;
-      case REMOVE_COMMAND_COMPLETED:
+      case COMMAND_CREATED_COMPLETED:
+        erise();
+        {
+          auto pwd = std::any_cast<std::filesystem::path>(data);
+          win_navigation->fill();
+          win_navigation->set_cursor_pos(pwd);
+          win_navigation->buffer_update();
+          win_preview->fill();
+        }
+        break;
+      case COMMAND_REMOVE_COMPLETED:
         erise();
         win_navigation->fill();
         win_navigation->set_cursor_pos(-2);

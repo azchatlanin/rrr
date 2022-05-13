@@ -27,6 +27,16 @@ namespace rrr
     wrefresh(win.get());
   }
 
+  void navigation::set_cursor_pos(std::filesystem::path p)
+  {
+    for(auto& f : current_files)
+    {
+      auto i = &f - current_files.data();
+      if (f.path == p)
+        cursor_pos = i;
+    }
+  }
+
   void navigation::buffer_update()
   {
     for(auto& f : current_files)

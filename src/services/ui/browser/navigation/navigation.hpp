@@ -22,6 +22,8 @@ namespace rrr
       void cursor_check();
       void set_cursor_pos(int);
       void set_cursor_pos();
+      // устанавливает позицию курсора по пути, нужно при создании файла или дирректории и подобного
+      void set_cursor_pos(std::filesystem::path);
       void buffer_update();
       void select();
       int get_cursor_pos();

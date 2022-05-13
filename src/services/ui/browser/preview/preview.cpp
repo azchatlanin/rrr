@@ -26,11 +26,16 @@ namespace rrr
     for(auto&& f : current_files)
     {
       auto i = &f - current_files.data();
-      f.draw(select_pos == i, i, win);
+      f.draw(cursor_pos == i, i, win);
     }
 
     if (current_files.empty())
       draw_empty_dir();
+  }
+
+  int preview::get_cursor_pos()
+  {
+    return cursor_pos;
   }
 
   file_utils::files preview::get_current_files()
@@ -82,6 +87,6 @@ namespace rrr
     };
 
     auto it = std::find_if(current_files.begin(), current_files.end(), find_pred);
-    select_pos = it == std::end(current_files) ? 0 : std::distance(current_files.begin(), it);
+    cursor_pos = it == std::end(current_files) ? 0 : std::distance(current_files.begin(), it);
   }
 }

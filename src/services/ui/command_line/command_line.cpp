@@ -66,6 +66,11 @@ namespace rrr
     }
   }
 
+  std::string command_line::get_cmd()
+  {
+    return cmd;
+  }
+
   void command_line::auto_fill()
   {
     auto it = std::find_if(commands.begin(), commands.end(), [&](const std::string& c) {
@@ -132,8 +137,10 @@ namespace rrr
     if (v_cmd.size() < 2) return;
     auto name = std::filesystem::path(v_cmd.at(1));
     if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
-    hack::utils::exec(unix_cmd + destination(state_manager::instance().PWD / name).string());
-    BOARD->execute(event::COMMAND_COMPLETED, true);
+    name = destination(name);
+    std::filesystem::create_directories(name);
+    //hack::utils::exec(unix_cmd + destination(state_manager::instance().PWD / name).string());
+    BOARD->execute(event::COMMAND_CREATED_COMPLETED, name);
   }
 
   // HERE:
@@ -156,14 +163,15 @@ namespace rrr
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
-  std::filesystem::path command_line::destination(const std::filesystem::path& p)
+  // если файл/дир существует, то ве равно создаем но с измененным именем по милдисекундам
+  std::filesystem::path command_line::destination(const std::filesystem::path& f)
   {
     auto pwd = state_manager::instance().PWD;
-    std::filesystem::path ds = pwd / p.filename();
+    std::filesystem::path ds = pwd / f;
 
     if (std::filesystem::exists(ds)) 
     {
-      std::string file_name = p.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+      std::string file_name = f.string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
       ds = pwd / std::filesystem::path(file_name);
     }
     return ds;
@@ -197,7 +205,7 @@ namespace rrr
     else 
       hack::utils::exec((unix_cmd + buffer::state[state_manager::instance().PWD].string()));
 
-    BOARD->execute(event::REMOVE_COMMAND_COMPLETED, true);
+    BOARD->execute(event::COMMAND_REMOVE_COMPLETED, true);
   }
 
   void command_line::clear()

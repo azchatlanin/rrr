@@ -20,9 +20,10 @@ namespace rrr
     public: 
       std::shared_ptr<WINDOW> win;
       file_utils::files get_current_files();
+      int get_cursor_pos();
 
     private:
-      int select_pos = 0;
+      int cursor_pos = 0;
       file_utils::files current_files;
       bool is_last = false;
       std::string file_content;
