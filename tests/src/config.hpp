@@ -94,6 +94,12 @@ inline std::vector<rrr::file> build_meson_private_dir {
   { "/mnt/develop/projects/cpp/rrr/build/meson-private/sanitycheckcpp.exe", false }
 };
 
+inline std::vector<std::filesystem::path> buffer_path {
+  "/mnt/develop/projects/cpp/rrr/build/bin", 
+  "/mnt/develop/projects/cpp/rrr/build/meson-info", 
+  "/mnt/develop/projects/cpp/rrr/build/meson-logs"
+};
+
 inline std::vector<rrr::file> build_src_dir { 
   { "/mnt/develop/projects/cpp/rrr/build/src/services", true }
 };

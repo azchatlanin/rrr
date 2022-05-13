@@ -71,6 +71,26 @@ test(
   is_parallel : false
 )
 
+test(
+  'select',
+  executable(
+    'select',
+    'src/select/select.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+# HERE
+# touch
+# multidelete
+# multitrash
+# paste
+# move
+# rename
+#
+#
+#
 # test(
 #   'command_line',
 #   executable(
