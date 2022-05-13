@@ -20,6 +20,7 @@ namespace rrr
     public: 
       std::shared_ptr<WINDOW> win;
       file_utils::files get_current_files();
+      std::string get_file_content();
       int get_cursor_pos();
 
     private:

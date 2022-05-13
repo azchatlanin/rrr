@@ -138,8 +138,7 @@ namespace rrr
     auto name = std::filesystem::path(v_cmd.at(1));
     if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
     name = destination(name);
-    std::filesystem::create_directories(name);
-    //hack::utils::exec(unix_cmd + destination(state_manager::instance().PWD / name).string());
+    hack::utils::exec(unix_cmd + destination(name).string());
     BOARD->execute(event::COMMAND_CREATED_COMPLETED, name);
   }
 

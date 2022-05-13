@@ -81,8 +81,17 @@ test(
   is_parallel : false
 )
 
+test(
+  'command_line',
+  executable(
+    'command_line',
+    'src/command_line/touch.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
 # HERE
-# touch
 # multidelete
 # multitrash
 # paste
@@ -91,12 +100,3 @@ test(
 #
 #
 #
-# test(
-#   'command_line',
-#   executable(
-#     'command_line',
-#     'src/command_line/touch.cpp',
-#     dependencies: [ deps, gtest_dep ]
-#   ),
-#   is_parallel : false
-# )

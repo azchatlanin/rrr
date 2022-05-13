@@ -66,8 +66,16 @@ namespace rrr
     }
     else 
     {
+      // делаем ограничение на размер файла, а то много читать бяда-печaль
       file_content = std::filesystem::file_size(pwd) < 1'000'000 ? hack::utils::exec("cat " + pwd.string()) : "this file size is very big";
+      file_content = file_content.empty() ? "is empty" : file_content;
+      current_files.clear();
     }
+  }
+
+  std::string preview::get_file_content()
+  {
+    return file_content;
   }
 
   // @anotation

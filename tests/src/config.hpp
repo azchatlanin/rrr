@@ -60,7 +60,7 @@ inline std::vector<rrr::file> build_dir_after_touch {
   { "/mnt/develop/projects/cpp/rrr/build/.ninja_log", false },
   { "/mnt/develop/projects/cpp/rrr/build/build.ninja", false },
   { "/mnt/develop/projects/cpp/rrr/build/compile_commands.json", false },
-  { "/mnt/develop/projects/cpp/rrr/build/my_test_dir.txt", false }
+  { "/mnt/develop/projects/cpp/rrr/build/my_test_file.txt", false }
 };
 
 inline std::vector<rrr::file> build_bin_dir { 
