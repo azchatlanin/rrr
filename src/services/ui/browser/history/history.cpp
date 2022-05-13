@@ -44,6 +44,10 @@ namespace rrr
     }
   }
 
+  // HERE
+  // сохранять историю пути если мы переименовали файл
+  // это сложно, но прикольно. нужно редактировать сами ключи.
+  // необязательная фишка, но интересная
   void history::fill()
   {
     if (!std::filesystem::is_directory(state_manager::instance().PWD))
