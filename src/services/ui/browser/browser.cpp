@@ -69,8 +69,6 @@ namespace rrr
   void browser::up()
   {
     win_navigation->cursor_up();
-    // HERE
-    // вынести это и ниже в отдельный метод
     win_navigation->buffer_update();
     win_preview->fill();
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);

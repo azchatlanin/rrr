@@ -70,6 +70,8 @@ namespace rrr
     current_files = file_utils::fill(pwd);
   }
 
+  // чистим буфер при выборе пробелом
+  // и делаем сам выбор
   void navigation::select()
   {
     auto&& bf = state_manager::instance().buffer_path;
