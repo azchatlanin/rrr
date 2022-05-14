@@ -4,6 +4,12 @@ namespace rrr
 {
   void manager::execute(event e, std::any data) const
   {
+    if (e == QUIT)
+    {
+      endwin();
+      exit(0);
+    }
+
     for (auto&& b : boards)
     {
       b->execute(e, data);

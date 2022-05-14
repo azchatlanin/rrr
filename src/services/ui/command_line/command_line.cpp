@@ -128,6 +128,8 @@ namespace rrr
       remove("rm -rf ");
     if (v_cmd.at(0) == std::string("move"))
       moving();
+    if (v_cmd.at(0) == std::string("qa"))
+      BOARD->execute(event::QUIT, true);
 
     drop();
   }
@@ -142,9 +144,6 @@ namespace rrr
     BOARD->execute(event::COMMAND_CREATED_COMPLETED, path);
   }
 
-  // HERE:
-  // при переименовании перескакивает курсор
-  // решение смотри в HERE про set_cursor_pos  в navigation
   void command_line::rename()
   {
     if (v_cmd.size() < 2) return;

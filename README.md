@@ -35,6 +35,7 @@ done
 - delete - if you want use rm -rf, run - :delete
 - create dir - :mkdir dir_name
 - select files/dirs - press space. If you want to do: paste, delete, move or trash, then you must first select the file/files/dir/dirs
+- quit, it same as vim - :qa
 
 **TESTS:**
 - run test: . run test
