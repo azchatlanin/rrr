@@ -2,7 +2,7 @@
 
 #include "src/config.hpp"
 
-TEST(rrr, win_preview)
+TEST(rrr, rename)
 {
   auto browser = rrr::board::make<rrr::browser>();
   auto info_bar = rrr::board::make<rrr::info_bar>();
@@ -43,10 +43,10 @@ TEST(rrr, win_preview)
   manager.trigger(':');
   ASSERT_EQ(rrr::state_manager::instance().cmd, ':');
 
-  manager.trigger('m');
-  manager.trigger('k');
+  manager.trigger('r');
+  manager.trigger('e');
   manager.trigger(rrr::config::key::TAB); 
-  ASSERT_EQ(command_line->get_cmd(), "mkdir");
+  ASSERT_EQ(command_line->get_cmd(), "rename");
 
   manager.trigger(rrr::config::key::SPACE);
   manager.trigger('m');
@@ -56,40 +56,12 @@ TEST(rrr, win_preview)
   manager.trigger('e');
   manager.trigger('s');
   manager.trigger('t');
-  manager.trigger('_');
-  manager.trigger('d');
-  manager.trigger('i');
-  manager.trigger('r');
   manager.trigger(rrr::config::key::ENTER);
-  ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
-  ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
-  ASSERT_EQ(browser->win_preview->get_content(), "is empty");
-
-  manager.trigger(rrr::config::key::SPACE);
-  ASSERT_EQ(rrr::state_manager::instance().buffer_path.size(), 1);
-  manager.trigger('k');
-
-  manager.trigger(rrr::config::key::ENTER);
-
-  manager.trigger(':');
-  ASSERT_EQ(rrr::state_manager::instance().cmd, ':');
-
-  manager.trigger('m');
-  manager.trigger('o');
-  manager.trigger(rrr::config::key::TAB); 
-  ASSERT_EQ(command_line->get_cmd(), "move");
-  
-  manager.trigger(rrr::config::key::ENTER);
-  ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
-  ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
-  ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
-  ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
-  ASSERT_EQ(browser->win_preview->get_content(), "is empty");
-  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 0);
-  ASSERT_EQ(browser->win_navigation->get_current_files().size(), 1);
-
-  manager.trigger('h');
   ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 4);
+  ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
+  ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
+  ASSERT_EQ(browser->win_preview->get_content(), "is empty");
+
   manager.trigger(':');
   manager.trigger('d');
   manager.trigger(rrr::config::key::TAB);

@@ -131,7 +131,12 @@ test(
   is_parallel : false
 )
 
-# HERE
-# move
-# rename
-#
+test(
+  'command_line',
+  executable(
+    'rename',
+    'src/command_line/rename.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)

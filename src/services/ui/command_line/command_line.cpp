@@ -158,7 +158,9 @@ namespace rrr
       BOARD->execute(event::COMMAND_COMPLETED, true);
       return; 
     }
-    hack::utils::exec("mv " + (pwd / old_name).string() + " " + destination(pwd / new_name).string());
+    new_name = destination(pwd / new_name);
+    hack::utils::exec("mv " + (pwd / old_name).string() + " " + new_name.string());
+    buffer::state[pwd] = new_name;
     BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
@@ -177,7 +179,7 @@ namespace rrr
 
   void command_line::moving()
   {
-    auto bfp = state_manager::instance().buffer_path;
+    auto&& bfp = state_manager::instance().buffer_path;
     auto pwd = state_manager::instance().PWD;
 
     if (bfp.empty() || pwd.empty()) return;
@@ -195,7 +197,7 @@ namespace rrr
 
   void command_line::paste()
   {
-    auto bfp = state_manager::instance().buffer_path;
+    auto&& bfp = state_manager::instance().buffer_path;
     auto pwd = state_manager::instance().PWD;
 
     if (bfp.empty() || pwd.empty()) return;
