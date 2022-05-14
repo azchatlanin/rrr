@@ -20,19 +20,18 @@ namespace rrr
     public: 
       std::shared_ptr<WINDOW> win;
       file_utils::files get_current_files();
-      std::string get_file_content();
+      std::string get_content();
       int get_cursor_pos();
 
     private:
       int cursor_pos = 0;
       file_utils::files current_files;
       bool is_last = false;
-      std::string file_content;
+      std::string content = "is empty";
 
     private: 
       void set_cursor_pos();
-      void dirs_draw();
-      void file_draw();
-      void draw_empty_dir();
+      void draw_dirs();
+      void draw_content();
   };
 }

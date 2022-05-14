@@ -136,10 +136,10 @@ namespace rrr
   {
     if (v_cmd.size() < 2) return;
     auto name = std::filesystem::path(v_cmd.at(1));
-    if (!name.empty()) BOARD->execute(event::COMMAND_COMPLETED, true); 
-    name = destination(name);
-    hack::utils::exec(unix_cmd + destination(name).string());
-    BOARD->execute(event::COMMAND_CREATED_COMPLETED, name);
+    auto pwd = state_manager::instance().PWD;
+    auto path = destination(pwd / name);
+    hack::utils::exec(unix_cmd + path.string());
+    BOARD->execute(event::COMMAND_CREATED_COMPLETED, path);
   }
 
   // HERE:
@@ -163,15 +163,14 @@ namespace rrr
   }
 
   // если файл/дир существует, то ве равно создаем но с измененным именем по милдисекундам
-  std::filesystem::path command_line::destination(const std::filesystem::path& f)
+  std::filesystem::path command_line::destination(const std::filesystem::path f)
   {
-    auto pwd = state_manager::instance().PWD;
-    std::filesystem::path ds = pwd / f;
+    std::filesystem::path ds = f;
 
     if (std::filesystem::exists(ds)) 
     {
-      std::string file_name = f.string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-      ds = pwd / std::filesystem::path(file_name);
+      std::string file_name = f.filename().string() + "_" +  std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+      ds = f.parent_path() / std::filesystem::path(file_name);
     }
     return ds;
   }
@@ -185,13 +184,21 @@ namespace rrr
 
   void command_line::paste()
   {
-    for (auto&& p : state_manager::instance().buffer_path)
+    auto bfp = state_manager::instance().buffer_path;
+    auto pwd = state_manager::instance().PWD;
+
+    if (bfp.empty() || pwd.empty()) return;
+
+    for (auto&& p : bfp)
     {
       std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
-      hack::utils::exec(unix_cmd + p.string() + " " + destination(p).string());
+      unix_cmd = unix_cmd + p.string() + " " + destination(state_manager::instance().PWD / p.filename()).string();
+      hack::log()(unix_cmd, state_manager::instance().PWD / p.filename());
+      hack::utils::exec(unix_cmd);
     }
-    state_manager::instance().buffer_path.clear();
-    BOARD->execute(event::COMMAND_COMPLETED, true);
+
+    BOARD->execute(event::COMMAND_PASTE_COMPLETED, bfp.at(state_manager::instance().buffer_path.size() - 1));
+    bfp.clear();
   }
 
   void command_line::remove(std::string unix_cmd)

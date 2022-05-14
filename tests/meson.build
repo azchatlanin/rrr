@@ -22,6 +22,16 @@ test(
 )
 
 test(
+  'navigation',
+  executable(
+    'empty_dir',
+    'src/navigation/empty_dir.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
   'preview',
   executable(
     'preview',
@@ -91,12 +101,29 @@ test(
   is_parallel : false
 )
 
+test(
+  'command_line',
+  executable(
+    'multiremove',
+    'src/command_line/multiremove.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
+  'command_line',
+  executable(
+    'paste',
+    'src/command_line/paste.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+
+
 # HERE
-# multidelete
-# multitrash
-# paste
 # move
 # rename
-#
-#
 #

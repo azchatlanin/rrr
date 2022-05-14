@@ -59,7 +59,7 @@ namespace rrr
 
   void browser::next()
   {
-    if (win_preview->get_current_files().empty()) return;
+    if (win_navigation->get_current_files().empty()) return;
     state_manager::instance().PWD = buffer::state[state_manager::instance().PWD];
     update();
   }
@@ -169,6 +169,16 @@ namespace rrr
         win_navigation->cursor_up();
         win_navigation->buffer_update();
         win_preview->fill();
+        break;
+      case COMMAND_PASTE_COMPLETED:
+        erise();
+        {
+          auto pwd = std::any_cast<std::filesystem::path>(data);
+          win_navigation->fill();
+          win_navigation->set_cursor_pos(pwd);
+          win_navigation->buffer_update();
+          win_preview->fill();
+        }
         break;
       default:
         break;

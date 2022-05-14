@@ -42,6 +42,6 @@ namespace rrr
       void remove(std::string);
       void create(std::string);
       void remove_last();
-      std::filesystem::path destination(const std::filesystem::path& p);
+      std::filesystem::path destination(const std::filesystem::path p);
   };
 }

@@ -2,7 +2,13 @@
 
 PROJECT_NAME="rrr"
 RUN="./bin/$PROJECT_NAME"
-TEST="meson test navigation preview history command_line select -C build"
+TEST="meson test
+  navigation
+  preview
+  history
+  command_line
+  select
+  -C build"
 
 command meson compile -C build
 

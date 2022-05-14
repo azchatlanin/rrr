@@ -2,7 +2,7 @@
 
 #include "src/config.hpp"
 
-TEST(rrr, command_line_touch_uniq)
+TEST(rrr, empty_dir_navigation)
 {
   auto browser = rrr::board::make<rrr::browser>();
   auto info_bar = rrr::board::make<rrr::info_bar>();
@@ -14,9 +14,10 @@ TEST(rrr, command_line_touch_uniq)
   manager.trigger(':');
   ASSERT_EQ(rrr::state_manager::instance().cmd, ':');
 
-  manager.trigger('t');
+  manager.trigger('m');
+  manager.trigger('k');
   manager.trigger(rrr::config::key::TAB); 
-  ASSERT_EQ(command_line->get_cmd(), "touch");
+  ASSERT_EQ(command_line->get_cmd(), "mkdir");
 
   manager.trigger(rrr::config::key::SPACE);
   manager.trigger('m');
@@ -27,26 +28,27 @@ TEST(rrr, command_line_touch_uniq)
   manager.trigger('s');
   manager.trigger('t');
   manager.trigger('_');
-  manager.trigger('f');
+  manager.trigger('d');
   manager.trigger('i');
-  manager.trigger('l');
-  manager.trigger('e');
-  manager.trigger('.');
-  manager.trigger('t');
-  manager.trigger('x');
-  manager.trigger('t');
+  manager.trigger('r');
   manager.trigger(rrr::config::key::ENTER);
-  ASSERT_EQ(browser->win_navigation->get_current_files(), build_dir_after_touch);
-  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 13);
+  ASSERT_EQ(browser->win_navigation->get_current_files(), build_dir_after_mkdir);
+  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 4);
   ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
   ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
   ASSERT_EQ(browser->win_preview->get_content(), "is empty");
 
+  manager.trigger(rrr::config::key::ENTER);
+  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 0);
+  ASSERT_EQ(browser->win_navigation->get_content(), "is empty");
+  ASSERT_EQ(browser->win_preview->get_content(), "is empty");
+
+  manager.trigger('h');
   manager.trigger(':');
   manager.trigger('d');
   manager.trigger('e');
   manager.trigger(rrr::config::key::TAB); 
   manager.trigger(rrr::config::key::ENTER);
-  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 12);
+  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 3);
   ASSERT_EQ(browser->win_navigation->get_current_files(), build_dir);
 }

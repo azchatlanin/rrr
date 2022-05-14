@@ -11,10 +11,12 @@ namespace rrr
     public:
       navigation(WINDOW*, int, int, int, int);
 
+    public: 
+      std::shared_ptr<WINDOW> win;
+
     public:
       void draw();
       void fill();
-      //@annotation
       // две перегруженные функции для установки позиции курсора
       // первая ставит по индексу, вторая при перехоже на другую страницу
       void cursor_up();
@@ -27,14 +29,16 @@ namespace rrr
       void buffer_update();
       void select();
       int get_cursor_pos();
+      std::string get_content();
       file_utils::files get_current_files();
 
-    public: 
-      std::shared_ptr<WINDOW> win;
-
     private:
+      std::string content = "is empty";
       int cursor_pos = 0;
       file_utils::files current_files;
       bool is_last = false;
+
+    private: 
+      void draw_content();
   };
 }

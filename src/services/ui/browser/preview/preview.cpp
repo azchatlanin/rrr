@@ -2,6 +2,7 @@
 
 // hack 
 #include "utils/utils.hpp"
+#include "logger/logger.hpp"
 
 namespace rrr
 {
@@ -14,14 +15,14 @@ namespace rrr
   void preview::draw()
   {
     if (std::filesystem::is_directory(buffer::state[state_manager::instance().PWD]))
-      dirs_draw();
+      draw_dirs();
     else 
-      file_draw();
+      draw_content();
 
     wrefresh(win.get());
   }
 
-  void preview::dirs_draw()
+  void preview::draw_dirs()
   {
     for(auto&& f : current_files)
     {
@@ -30,7 +31,7 @@ namespace rrr
     }
 
     if (current_files.empty())
-      draw_empty_dir();
+      draw_content();
   }
 
   int preview::get_cursor_pos()
@@ -43,16 +44,11 @@ namespace rrr
     return current_files;
   }
 
-  void preview::draw_empty_dir()
+  void preview::draw_content()
   {
     wattron(win.get(), COLOR_PAIR(3) | A_BOLD);
-    mvwaddstr(win.get(), 1,  4, "is empty");
+    mvwaddstr(win.get(), 1, 0, content.c_str());
     wattroff(win.get(), COLOR_PAIR(3) | A_BOLD);
-  }
-
-  void preview::file_draw()
-  {
-    mvwaddstr(win.get(), 1, 0, file_content.c_str());
   }
 
   void preview::fill()
@@ -64,18 +60,25 @@ namespace rrr
       current_files = file_utils::fill(pwd);
       set_cursor_pos();
     }
-    else 
+    else if (!pwd.empty() && std::filesystem::exists(pwd))
     {
       // делаем ограничение на размер файла, а то много читать бяда-печaль
-      file_content = std::filesystem::file_size(pwd) < 1'000'000 ? hack::utils::exec("cat " + pwd.string()) : "this file size is very big";
-      file_content = file_content.empty() ? "is empty" : file_content;
+      content = std::filesystem::file_size(pwd) < 1'000'000 ? hack::utils::exec("cat " + pwd.string()) : "this file size is very big";
+      content = content.empty() ? "is empty" : content;
+      cursor_pos = 0;
+      current_files.clear();
+    }
+    else 
+    {
+      content = "is empty";
+      cursor_pos = 0;
       current_files.clear();
     }
   }
 
-  std::string preview::get_file_content()
+  std::string preview::get_content()
   {
-    return file_content;
+    return content;
   }
 
   // @anotation

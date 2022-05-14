@@ -17,19 +17,22 @@ namespace rrr
     if (!std::filesystem::is_directory(state_manager::instance().PWD))
       return;
 
-    for(auto& f : current_files)
+    for (auto& f : current_files)
     {
       auto i = &f - current_files.data();
       bool select = cursor_pos == i;
       f.draw(select, i, win);
     }
 
+    if (current_files.empty())
+      draw_content();
+
     wrefresh(win.get());
   }
 
   void navigation::set_cursor_pos(std::filesystem::path p)
   {
-    for(auto& f : current_files)
+    for (auto& f : current_files)
     {
       auto i = &f - current_files.data();
       if (f.path == p)
@@ -48,6 +51,18 @@ namespace rrr
     }
   }
 
+  std::string navigation::get_content()
+  {
+    return content;
+  }
+
+  void navigation::draw_content()
+  {
+    wattron(win.get(), COLOR_PAIR(3) | A_BOLD);
+    mvwaddstr(win.get(), 1, 0, content.c_str());
+    wattroff(win.get(), COLOR_PAIR(3) | A_BOLD);
+  }
+
   int navigation::get_cursor_pos()
   {
     return cursor_pos;
@@ -58,16 +73,13 @@ namespace rrr
     return current_files;
   }
 
-  // @anotation
   // заполняет массив с файлами из текущей директории
   void navigation::fill()
   {
     auto pwd = state_manager::instance().PWD;
 
-    if (!std::filesystem::is_directory(pwd))
-      return;
-
-    current_files = file_utils::fill(pwd);
+    if (std::filesystem::is_directory(pwd))
+      current_files = file_utils::fill(pwd);
   }
 
   // чистим буфер при выборе пробелом
@@ -83,7 +95,7 @@ namespace rrr
 
     if (!exist) bf.push_back(pwd / buffer::state[pwd]);
 
-    for(auto& f : current_files)
+    for (auto& f : current_files)
     {
       if (std::find(bf.begin(), bf.end(), f.path) != std::end(bf))
       {
@@ -122,7 +134,11 @@ namespace rrr
 
   void navigation::set_cursor_pos()
   {
-    if (current_files.empty()) return;
+    if (current_files.empty())
+    {
+      cursor_pos = 0;
+      return;
+    }
 
     auto bf_state = buffer::state[state_manager::instance().PWD];
 
