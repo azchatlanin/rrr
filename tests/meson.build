@@ -121,7 +121,15 @@ test(
   is_parallel : false
 )
 
-
+test(
+  'command_line',
+  executable(
+    'move',
+    'src/command_line/move.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
 
 # HERE
 # move

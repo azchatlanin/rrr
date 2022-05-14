@@ -39,3 +39,6 @@ done
 **TESTS:**
 - run test: . run test
 If your want to run certain tests, please to edit file run.sh
+**ATTENTION!!!** this tests created taikint into account my dirs. you must to fix int in the .tests/config.hpp
+
+

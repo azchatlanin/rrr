@@ -177,9 +177,20 @@ namespace rrr
 
   void command_line::moving()
   {
-    for (auto&& p : state_manager::instance().buffer_path)
-      hack::utils::exec("mv " + p.string() + " " + destination(p).string());
-    BOARD->execute(event::COMMAND_COMPLETED, true);
+    auto bfp = state_manager::instance().buffer_path;
+    auto pwd = state_manager::instance().PWD;
+
+    if (bfp.empty() || pwd.empty()) return;
+
+    for (auto&& p : bfp)
+    {
+      std::string unix_cmd = "mv ";
+      unix_cmd = unix_cmd + p.string() + " " + destination(state_manager::instance().PWD / p.filename()).string();
+      hack::utils::exec(unix_cmd);
+    }
+
+    BOARD->execute(event::COMMAND_PASTE_COMPLETED, bfp.at(state_manager::instance().buffer_path.size() - 1));
+    bfp.clear();
   }
 
   void command_line::paste()
@@ -193,7 +204,6 @@ namespace rrr
     {
       std::string unix_cmd = std::filesystem::is_directory(p) ? "cp -R " : "cp ";
       unix_cmd = unix_cmd + p.string() + " " + destination(state_manager::instance().PWD / p.filename()).string();
-      hack::log()(unix_cmd, state_manager::instance().PWD / p.filename());
       hack::utils::exec(unix_cmd);
     }
 
