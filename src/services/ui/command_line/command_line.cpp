@@ -104,9 +104,6 @@ namespace rrr
   void command_line::drop() 
   {
     cmd.clear();
-    // HERE:
-    // при раскоментировании данной строки и удалении/переименовании файла присходит выброс исключения !!!
-    // v_cmd.clear();
   }
 
   void command_line::command_run()
@@ -130,8 +127,8 @@ namespace rrr
       moving();
     if (v_cmd.at(0) == std::string("qa"))
       BOARD->execute(event::QUIT, true);
-
-    drop();
+    else 
+      BOARD->execute(event::COMMAND_COMPLETED, true);
   }
 
   void command_line::create(std::string unix_cmd)
