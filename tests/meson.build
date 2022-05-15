@@ -114,16 +114,6 @@ test(
 test(
   'command_line',
   executable(
-    'paste',
-    'src/command_line/paste.cpp',
-    dependencies: [ deps, gtest_dep ]
-  ),
-  is_parallel : false
-)
-
-test(
-  'command_line',
-  executable(
     'move',
     'src/command_line/move.cpp',
     dependencies: [ deps, gtest_dep ]
@@ -136,6 +126,26 @@ test(
   executable(
     'rename',
     'src/command_line/rename.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
+  'command_line',
+  executable(
+    'paste',
+    'src/command_line/paste.cpp',
+    dependencies: [ deps, gtest_dep ]
+  ),
+  is_parallel : false
+)
+
+test(
+  'complex',
+  executable(
+    'complex',
+    'src/complex/complex.cpp',
     dependencies: [ deps, gtest_dep ]
   ),
   is_parallel : false

@@ -6,6 +6,8 @@
 The author does not pretend in any way to the purity of implementation and fidelity of execution. 
 So if you think you can do it in a different way, then please do it.
 
+![rrr's video_pres](./video.mp4)
+
 At this stage, the project is launched by cloning this repository and building locally using the installed meson build system.
 
 **Steps:**

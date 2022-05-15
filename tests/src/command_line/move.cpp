@@ -64,6 +64,7 @@ TEST(rrr, win_preview)
   ASSERT_EQ(browser->win_preview->get_cursor_pos(), 0);
   ASSERT_EQ(browser->win_preview->get_current_files().size(), 0);
   ASSERT_EQ(browser->win_preview->get_content(), "is empty");
+  ASSERT_EQ(browser->win_navigation->get_cursor_pos(), 5);
 
   manager.trigger(rrr::config::key::SPACE);
   ASSERT_EQ(rrr::state_manager::instance().buffer_path.size(), 1);

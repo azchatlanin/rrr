@@ -3,8 +3,6 @@
 #include <vector>
 #include <filesystem>
 
-#include "logger/logger.hpp"
-
 #include "services/managers/manager/manager.hpp"
 #include "services/ui/browser/browser.hpp"
 #include "services/ui/info_bar/info_bar.hpp"

@@ -8,6 +8,7 @@ TEST="meson test
   history
   command_line
   select
+  complex
   -C build"
 
 command meson compile -C build

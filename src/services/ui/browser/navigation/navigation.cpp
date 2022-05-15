@@ -20,15 +20,13 @@ namespace rrr
     std::vector<file>::iterator it;
     auto futer = state_manager::instance().max_y - 15;
     int begin = cursor_pos > futer - 1 ? cursor_pos - futer + 1: 0;
-    hack::log()(begin, cursor_pos, futer);
+    auto end = current_files.begin() + begin + futer > current_files.end() ? current_files.end() : current_files.begin() + begin + futer;
     int i;
     int pos = 0;
-    auto end = current_files.begin() + begin + futer > current_files.end() ? current_files.end() : current_files.begin() + begin + futer;
-    for(it = current_files.begin() + begin, i = begin; it != end; ++i, ++it)
+    for(it = current_files.begin() + begin, i = begin; it != end; ++i, ++it, ++pos)
     { 
       bool select = cursor_pos == i;
       it->draw(select, pos, win);
-      ++pos;
     }
 
     if (current_files.empty())
