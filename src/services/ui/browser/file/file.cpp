@@ -68,8 +68,8 @@ namespace rrr
       wattron(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
     else if (std::filesystem::is_symlink(path))
       wattron(win.get(), COLOR_PAIR(4) | (is_selected ? A_BOLD : 0));
-    else if (hack::utils::exec("test -x " + path.string() + " && echo true || echo false") == "true\n")
-      wattron(win.get(), COLOR_PAIR(5) | A_BOLD);
+    // else if (hack::utils::exec("test -x " + path.string() + " && echo true || echo false") == "true\n")
+    //   wattron(win.get(), COLOR_PAIR(5) | A_BOLD);
     else 
       wattron(win.get(), (is_selected  ? A_BOLD : 0));
 
@@ -83,6 +83,8 @@ namespace rrr
     // attributes off
     wattroff(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
     wattroff(win.get(), COLOR_PAIR(2) | (is_selected ? A_BOLD : 0));
+    wattroff(win.get(), COLOR_PAIR(4) | (is_selected ? A_BOLD : 0));
+    wattroff(win.get(), COLOR_PAIR(5) | A_BOLD);
     wattroff(win.get(), (is_selected ? A_BOLD : 0));
   }
 }

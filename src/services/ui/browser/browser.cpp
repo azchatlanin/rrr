@@ -64,8 +64,6 @@ namespace rrr
     update();
   }
 
-  // HERE
-  // сделать скролл
   void browser::up()
   {
     win_navigation->cursor_up();
@@ -92,9 +90,6 @@ namespace rrr
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
-  // HERE
-  // сделать подсветку исполняемых файлов и симлинков
-  // сделать вывод статистики
   void browser::draw()
   {
     win_history->draw();
@@ -155,6 +150,7 @@ namespace rrr
         erise();
         win_navigation->fill();
         win_navigation->set_cursor_pos();
+        BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
         break;
       case COMMAND_CREATED_COMPLETED:
         erise();
@@ -165,6 +161,7 @@ namespace rrr
           win_navigation->buffer_update();
           win_preview->fill();
         }
+        BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
         break;
       case COMMAND_REMOVE_COMPLETED:
         erise();
@@ -172,6 +169,7 @@ namespace rrr
         win_navigation->cursor_up();
         win_navigation->buffer_update();
         win_preview->fill();
+        BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
         break;
       case COMMAND_PASTE_COMPLETED:
         erise();
@@ -182,6 +180,7 @@ namespace rrr
           win_navigation->buffer_update();
           win_preview->fill();
         }
+        BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
         break;
       default:
         break;

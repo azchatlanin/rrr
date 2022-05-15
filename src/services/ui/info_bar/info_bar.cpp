@@ -1,4 +1,6 @@
 #include "info_bar.hpp"
+#include <algorithm>
+#include <filesystem>
 
 namespace rrr
 {
@@ -22,29 +24,26 @@ namespace rrr
 
   void info_bar::draw()
   {
-    // HERE
-    // ну это же стремно так
-    wmove(win, 1, 1);
-    clear();
-    wmove(win, 3, 1);
-    clear();
-    wmove(win, 4, 1);
-    clear();
-    wmove(win, 5, 1);
-    clear();
+    for (int i = 1; i < 7; ++i)
+    {
+      wmove(win, i, 1);
+      clear();
+    }
 
-//    mvwaddstr(win, 1, 1, (" path: " + pwd.string() + file_size()).c_str());
+    //wattron(win, COLOR_PAIR(1) | A_BOLD);
+    mvwaddstr(win, 1, 1, (" path: " + pwd.string() + file_size()).c_str());
+    //wattroff(win, COLOR_PAIR(1) | A_BOLD);
 
-    // mvwaddstr(win, 3, 1, (" disk capacity:  " + disk_size(space_info.capacity)).c_str());
-    // mvwaddstr(win, 4, 1, (" disk free:      " + disk_size(space_info.free)).c_str());
-    // mvwaddstr(win, 5, 1, (" disk available: " + disk_size(space_info.available)).c_str());
+    mvwaddstr(win, 3, 1, (" disk capacity:  " + disk_size(space_info.capacity)).c_str());
+    mvwaddstr(win, 4, 1, (" disk free:      " + disk_size(space_info.free)).c_str());
+    mvwaddstr(win, 5, 1, (" disk available: " + disk_size(space_info.available)).c_str());
 
     wrefresh(win);
   }
 
   std::string info_bar::file_size()
   {
-    if (std::filesystem::is_directory(pwd)) return "";
+    if (!std::filesystem::exists(pwd) || std::filesystem::is_directory(pwd)) return "";
 
     auto size = std::filesystem::file_size(pwd);
     return " (" + 
@@ -87,7 +86,7 @@ namespace rrr
 
   void info_bar::get_space_info()
   {
-    if (!std::filesystem::is_directory(pwd)) return;
+    if (!std::filesystem::exists(pwd) || !std::filesystem::is_directory(pwd)) return;
     space_info = std::filesystem::space(pwd);
   }
 
