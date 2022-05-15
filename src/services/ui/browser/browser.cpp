@@ -92,6 +92,9 @@ namespace rrr
     BOARD->execute(event::CHANGE_PWD, state_manager::instance().PWD / buffer::state[state_manager::instance().PWD]);
   }
 
+  // HERE
+  // сделать подсветку исполняемых файлов и симлинков
+  // сделать вывод статистики
   void browser::draw()
   {
     win_history->draw();

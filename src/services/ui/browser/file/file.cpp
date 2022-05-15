@@ -2,7 +2,9 @@
 
 #include "services/managers/state_manager/state_manager.hpp"
 
+// hack
 #include "logger/logger.hpp"
+#include "utils/utils.hpp"
 
 namespace rrr
 {
@@ -64,6 +66,10 @@ namespace rrr
     // attributes on
     if (directory())
       wattron(win.get(), COLOR_PAIR(1) | (is_selected ? A_BOLD : 0));
+    else if (std::filesystem::is_symlink(path))
+      wattron(win.get(), COLOR_PAIR(4) | (is_selected ? A_BOLD : 0));
+    else if (hack::utils::exec("test -x " + path.string() + " && echo true || echo false") == "true\n")
+      wattron(win.get(), COLOR_PAIR(5) | A_BOLD);
     else 
       wattron(win.get(), (is_selected  ? A_BOLD : 0));
 
