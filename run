@@ -11,7 +11,7 @@ TEST="meson test
   complex
   -C build"
 
-command meson compile -C build
+command meson compile -C build 
 
 if [[ $1 == "test" ]]; then
   command $TEST 

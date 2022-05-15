@@ -19,7 +19,8 @@ namespace rrr
 
   void system_bar::draw()
   {
-    mvwaddstr(win, 1, 1, "Here is a very important information about your system. It maybe will be make in the future.");
+    mvwaddstr(win, 1, 1, "Here is a very important information about your system."); 
+    mvwaddstr(win, 2, 1, "It maybe will be make in the future.");
     wrefresh(win);
   }
 
