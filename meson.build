@@ -25,11 +25,11 @@ args = []
 inc = []
 deps = []
 
-args += '-lpanel'
 args += '-lncursesw'
-args += '-lncursesutf8'
-args += '-lmenu'
-args += '-lfmt'
+# args += '-lpanel'
+# args += '-lncursesutf8'
+# args += '-lmenu'
+# args += '-lfmt'
 
 
 deps += dependency('threads')
