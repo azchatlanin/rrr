@@ -31,7 +31,7 @@ for obj in "$@"
 do
   mv $obj $trash
   name=`echo $obj | rev | cut -d '/' -f '1' | rev`
-  mv $trash/$name $trash/$name.$DATE.$TIME
+  mv -b $trash/$name $trash/$name.$DATE.$TIME
 done
 ```
 - delete - if you want use rm -rf, run - :delete
@@ -41,6 +41,7 @@ done
 
 **TESTS:**
 - run test: . run test
+
 If your want to run certain tests, please to edit file run.sh
 **ATTENTION!!!** this tests created taikint into account my dirs. you must to fix int in the .tests/config.hpp
 
