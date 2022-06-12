@@ -1,7 +1,7 @@
 ![rrr's logo](./img_logo.png)
 
 *This is a simple file manager, with a set of functions that, it seems to me, can make it convenient.*
-*This project is my term paper. According to this, it will definitely be brought to its logical conclusion.*
+*This is an attempt to get to know ncurses.*
 
 The author does not pretend in any way to the purity of implementation and fidelity of execution. 
 So if you think you can do it in a different way, then please do it.
