@@ -1,3 +1,5 @@
+**ATTENTION!!! This repository moved to https://gitcast.ru/chatlanin/rrr**
+
 ![rrr's logo](./img_logo.png)
 
 *This is a simple file manager, with a set of functions that, it seems to me, can make it convenient.*
