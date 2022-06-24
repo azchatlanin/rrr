@@ -117,11 +117,11 @@ namespace rrr
       paste();
     if (v_cmd.at(0) == std::string("touch"))
       create("touch ");
-    if (v_cmd.at(0) == std::string("trash"))
-      remove("trash ");
+    if (v_cmd.at(0) == std::string("delete"))
+      remove("delete ");
     if (v_cmd.at(0) == std::string("mkdir"))
       create("mkdir -p ");
-    if (v_cmd.at(0) == std::string("delete"))
+    if (v_cmd.at(0) == std::string("rm"))
       remove("rm -rf ");
     if (v_cmd.at(0) == std::string("move"))
       moving();
